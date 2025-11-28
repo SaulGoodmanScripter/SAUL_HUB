@@ -1,4 +1,6 @@
-
+--===========================================
+-- Получаем нужное 
+--===========================================
 local Players = game:GetService("Players")
 local RunService = game:GetService("RunService")
 local Workspace = game:GetService("Workspace")
@@ -75,7 +77,7 @@ SidebarLine.Name = "SidebarLine"
 SidebarLine.Parent = game:GetService("CoreGui")
 
 --===========================================
--- БАЗА ДАННЫХ ИГР ПО ID МЕСТА (ИЗ SAUL HUB)
+-- БАЗА ДАННЫХ ИГР ПО ID МЕСТА
 --===========================================
 local GameDatabase = {
     [126509999114328] = { -- 99 Nights in Forest
@@ -102,8 +104,7 @@ local GameDatabase = {
     [537413528] = { -- Build A Boat For Treasure 
         name = "Build A Boat For Treasure",
         scripts = {
-            {"⛵ Build A Boat Script", "https://raw.githubusercontent.com/TheRealAsu/BABFT/refs/heads/main/Source.lua"}
-        },
+            {"⛵ Build A Boat Script", "https://raw.githubusercontent.com/TheRealAsu/BABFT/refs/heads/main/Source.lua"},Value 
          {"🥇Farm script", "https://raw.githubusercontent.com/Theo985/AetherX-Hub/refs/heads/main/BABFT"}
         },
     [126884695634066] = { -- Grow a Garden
