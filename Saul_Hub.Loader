@@ -106,7 +106,9 @@ local GameDatabase = {
         scripts = {
             {"⛵ Build A Boat Script", "https://raw.githubusercontent.com/TheRealAsu/BABFT/refs/heads/main/Source.lua"},Value 
          {"🥇Farm script", "https://raw.githubusercontent.com/Theo985/AetherX-Hub/refs/heads/main/BABFT"}
-        },
+        }
+     },
+
     [126884695634066] = { -- Grow a Garden
         name = "Grow a Garden", 
         scripts = {
