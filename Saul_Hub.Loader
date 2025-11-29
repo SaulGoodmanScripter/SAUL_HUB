@@ -98,7 +98,7 @@ local GameDatabase = {
         scripts = {
             {"🌶Chilli Hub", "https://raw.githubusercontent.com/tienkhanh1/spicy/main/Chilli.lua"},
             {"🧊Joiner(1m+)", "https://raw.githubusercontent.com/nootmaus/IceHub/refs/heads/main/Joiner"},
-            {"Aimbot Laser", "https://raw.githubusercontent.com/nootmaus/IceHubLaser/refs/heads/main/maus%3A"}
+            {"🎯Aimbot Laser", "https://raw.githubusercontent.com/nootmaus/IceHubLaser/refs/heads/main/maus%3A"}
         }
     },
     [2753915549] = { -- Blox Fruits
