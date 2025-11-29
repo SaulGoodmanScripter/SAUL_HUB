@@ -69,7 +69,7 @@ local GameDatabase = {
             {"⚡ Voidware Loader", "https://raw.githubusercontent.com/VapeVoidware/VW-Add/main/loader.lua"},
             {"💎Farm days and diamond", "https://raw.githubusercontent.com/caomod2077/Script/refs/heads/main/FNDayFarm.lua"},
             {"🌲Sapling dupe", "https://raw.githubusercontent.com/nootmaus/99nights/refs/heads/main/dupe.lua"},
-            {"Foxname Loader", https://raw.githubusercontent.com/caomod2077/Script/refs/heads/main/FoxnameHub.lua"}         
+            {"🦊Foxname Loader","https://raw.githubusercontent.com/caomod2077/Script/refs/heads/main/FoxnameHub.lua"}         
         }
     },
     [4924922222] = { -- Brookhaven
