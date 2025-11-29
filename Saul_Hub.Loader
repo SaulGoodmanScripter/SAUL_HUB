@@ -49,7 +49,7 @@ local Window = Library:Window({
     },
     CloseUIButton = {
         Enabled = true,
-        Text = "what does this\nbutton do"
+        Text = "Close/Open"
     }
 })
 
