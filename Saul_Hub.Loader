@@ -66,7 +66,10 @@ local GameDatabase = {
     [79546208627805] = { -- 99 Nights in Forest lobby 
         name = "99 Nights in Forest",
         scripts = {
-            {"⚡ Voidware Loader", "https://raw.githubusercontent.com/VapeVoidware/VW-Add/main/loader.lua"}
+            {"⚡ Voidware Loader", "https://raw.githubusercontent.com/VapeVoidware/VW-Add/main/loader.lua"},
+            {"💎Farm days and diamond", "https://raw.githubusercontent.com/caomod2077/Script/refs/heads/main/FNDayFarm.lua"},
+            {"🌲Sapling dupe", "https://raw.githubusercontent.com/nootmaus/99nights/refs/heads/main/dupe.lua"},
+            {"Foxname Loader", https://raw.githubusercontent.com/caomod2077/Script/refs/heads/main/FoxnameHub.lua"}         
         }
     },
     [4924922222] = { -- Brookhaven
@@ -93,7 +96,9 @@ local GameDatabase = {
     [109983668079237] = { -- Steal a Brainrot 
         name = "Steal a Brainrot",
         scripts = {
-            {"🧠 Steal a Brainrot Script", "https://raw.githubusercontent.com/tienkhanh1/spicy/main/Chilli.lua"}
+            {"🌶Chilli Hub", "https://raw.githubusercontent.com/tienkhanh1/spicy/main/Chilli.lua"},
+            {"🧊Joiner(1m+)", "https://raw.githubusercontent.com/nootmaus/IceHub/refs/heads/main/Joiner"},
+            {"Aimbot Laser", "https://raw.githubusercontent.com/nootmaus/IceHubLaser/refs/heads/main/maus%3A"}
         }
     },
     [2753915549] = { -- Blox Fruits
@@ -105,13 +110,13 @@ local GameDatabase = {
     [142823291] = { -- Murder Mystery 2
         name = "Murder Mystery 2", 
         scripts = {
-            {"🔪 MM2 Script", "https://raw.githubusercontent.com/CMD-X/CMD-X/master/Source"}
+            {"🔪 Vexon Hub", "https://raw.githubusercontent.com/DiosDi/VexonHub/refs/heads/main/VexonHub"}
         }
     },
     [286090429] = { -- Arsenal
         name = "Arsenal",
         scripts = {
-            {"🔫 Arsenal Script", "https://raw.githubusercontent.com/FluxusExec/Arsenal/main/script.lua"}
+            {"🔫 Arsenal Script", "https://raw.githubusercontent.com/HAIKATV/rp-/refs/heads/main/Arsenal.lua"}
         }
     }
 }
