@@ -154,7 +154,7 @@ local themes = {
                                 }
                         }
                 }
-        },
+        }
 },
 NewYear = {
     ['Shadow'] = Color3.fromRGB(40, 10, 10),
