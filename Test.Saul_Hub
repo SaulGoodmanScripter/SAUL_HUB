@@ -6,42 +6,11 @@ local LocalPlayer = Players.LocalPlayer
 local UserInputService = game:GetService("UserInputService")
 local SoundService = game:GetService("SoundService")
 
--- Звуковые эффекты
-local btnClickSound = Instance.new("Sound")
-btnClickSound.SoundId = "rbxassetid://12221967"
-btnClickSound.Volume = 0.5
-btnClickSound.Parent = SoundService
-
-local sliderSound = Instance.new("Sound")
-sliderSound.SoundId = "rbxassetid://12221976"
-sliderSound.Volume = 0.3
-sliderSound.Parent = SoundService
-
-local toggleSound = Instance.new("Sound")
-toggleSound.SoundId = "rbxassetid://12221976"
-toggleSound.Volume = 0.4
-toggleSound.Parent = SoundService
-
-local notifySound = Instance.new("Sound")
-notifySound.SoundId = "rbxassetid://13870660215"
-notifySound.Volume = 0.3
-notifySound.Parent = SoundService
-
-local function btnclick()
-    btnClickSound:Play()
-end
-
-local function slidersound()
-    sliderSound:Play()
-end
-
-local function togglesound()
-    toggleSound:Play()
-end
-
-local function notifysound()
-    notifySound:Play()
-end
+-- Просто создай пустые функции вместо звуков
+local function btnclick() end
+local function slidersound() end
+local function togglesound() end  
+local function notifysound() end
 
 -- Загружаем библиотеку
 local Library = loadstring(game:HttpGet("https://raw.githubusercontent.com/SaulGoodmanScripter/SAUL_HUB/refs/heads/main/Library%20"))()
