@@ -154,8 +154,7 @@ local themes = {
                                 }
                         }
                 }
-        }
-},
+        },                                                   
 NewYear = {
     ['Shadow'] = Color3.fromRGB(40, 10, 10),
     ['Background'] = Color3.fromRGB(60, 15, 15),
@@ -308,10 +307,10 @@ Winter = {
             ['Color Select'] = {
                 ['Background'] = Color3.fromRGB(25, 35, 50),
                 ['UIStroke'] = Color3.fromRGB(200, 220, 240),
-            }
-        }
-    }
-}
+                                }
+                        }
+                }
+        },         
 
 local ScreenGui = Instance.new("ScreenGui")
 ScreenGui.Name = "Dummy Kawaii"
