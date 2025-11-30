@@ -1,0 +1,795 @@
+-- Saul Hub Complete Version v3.2
+local Players = game:GetService("Players")
+local RunService = game:GetService("RunService")
+local Workspace = game:GetService("Workspace")
+local LocalPlayer = Players.LocalPlayer
+local UserInputService = game:GetService("UserInputService")
+local SoundService = game:GetService("SoundService")
+
+-- Звуковые эффекты
+local btnClickSound = Instance.new("Sound")
+btnClickSound.SoundId = "rbxassetid://12221967"
+btnClickSound.Volume = 0.5
+btnClickSound.Parent = SoundService
+
+local sliderSound = Instance.new("Sound")
+sliderSound.SoundId = "rbxassetid://12221976"
+sliderSound.Volume = 0.3
+sliderSound.Parent = SoundService
+
+local toggleSound = Instance.new("Sound")
+toggleSound.SoundId = "rbxassetid://12221976"
+toggleSound.Volume = 0.4
+toggleSound.Parent = SoundService
+
+local notifySound = Instance.new("Sound")
+notifySound.SoundId = "rbxassetid://13870660215"
+notifySound.Volume = 0.3
+notifySound.Parent = SoundService
+
+local function btnclick()
+    btnClickSound:Play()
+end
+
+local function slidersound()
+    sliderSound:Play()
+end
+
+local function togglesound()
+    toggleSound:Play()
+end
+
+local function notifysound()
+    notifySound:Play()
+end
+
+-- Загружаем библиотеку
+local Library = loadstring(game:HttpGet("https://raw.githubusercontent.com/SaulGoodmanScripter/SAUL_HUB/refs/heads/main/Library%20"))()
+local Window = Library:Window({
+    Title = "Saul",
+    Desc = "Hello, I'm Saul Goodman. Did you know that you have rights?",
+    Icon = 90660528092370,
+    Theme = "Dark",
+    Config = {
+        Keybind = Enum.KeyCode.LeftControl,
+        Size = UDim2.new(0, 500, 0, 300)
+    },
+    CloseUIButton = {
+        Enabled = true,
+        Text = "what does this\nbutton do"
+    }
+})
+
+-- БАЗА ДАННЫХ ИГР
+local GameDatabase = {
+    ["99_nights"] = {
+        name = "99 Nights in Forest",
+        placeIds = {126509999114328, 79546208627805},
+        scripts = {
+            {title = "🌙 Auto Farm (Days/Diamonds)", url = "https://raw.githubusercontent.com/MQPS7/99-Night-in-the-Forset/refs/heads/main/Gfarm"},
+            {title = "⚡ Voidware Loader", url = "https://raw.githubusercontent.com/VapeVoidware/VW-Add/main/loader.lua"},
+            {title = "🌲 Sapling dupe", url = "https://raw.githubusercontent.com/nootmaus/99nights/refs/heads/main/dupe.lua"}
+        }
+    },
+    
+    ["brookhaven"] = {
+        name = "Brookhaven",
+        placeIds = {4924922222},
+        scripts = {
+            {title = "🐀 R4d troll script", url = "https://raw.githubusercontent.com/M1ZZ001/BrookhavenR4D/main/Brookhaven%20R4D%20Script"},
+            {title = "🤡 Troll script", url = "https://raw.githubusercontent.com/as6cd0/SP_Hub/refs/heads/main/Brookhaven"}
+        }
+    },
+    
+    ["babft"] = {
+        name = "Build A Boat For Treasure",
+        placeIds = {537413528},
+        scripts = {
+            {title = "⛵ Build A Boat Script", url = "https://raw.githubusercontent.com/TheRealAsu/BABFT/refs/heads/main/Source.lua"}
+        }
+    },
+    
+    ["grow_garden"] = {
+        name = "Grow a Garden",
+        placeIds = {126884695634066},
+        scripts = {
+            {title = "🌱 Grow a Garden Script", url = "https://raw.githubusercontent.com/Kenniel123/Grow-a-garden/refs/heads/main/Grow%20A%20Garden"}
+        }
+    },
+    
+    ["steal_brainrot"] = {
+        name = "Steal a Brainrot",
+        placeIds = {109983668079237},
+        scripts = {
+            {title = "🌶️ Chilli Hub", url = "https://raw.githubusercontent.com/tienkhanh1/spicy/main/Chilli.lua"}
+        }
+    },
+    
+    ["blox_fruits"] = {
+        name = "Blox Fruits",
+        placeIds = {2753915549},
+        scripts = {
+            {title = "🍊 XP Farm", url = "https://raw.githubusercontent.com/wpisstestfprg/Volcano/refs/heads/main/VolcanoNewUpdated.luau"}
+        }
+    },
+    
+    ["mm2"] = {
+        name = "Murder Mystery 2",
+        placeIds = {142823291},
+        scripts = {
+            {title = "🔪 Vexon Hub", url = "https://raw.githubusercontent.com/DiosDi/VexonHub/refs/heads/main/VexonHub"}
+        }
+    },
+    
+    ["arsenal"] = {
+        name = "Arsenal",
+        placeIds = {286090429},
+        scripts = {
+            {title = "🔫 Arsenal Script", url = "https://raw.githubusercontent.com/HAIKATV/rp-/refs/heads/main/Arsenal.lua"}
+        }
+    }
+}
+
+-- Функция поиска игры по ID
+local function findGameByPlaceId(placeId)
+    for gameKey, gameData in pairs(GameDatabase) do
+        for _, gamePlaceId in ipairs(gameData.placeIds) do
+            if gamePlaceId == placeId then
+                return gameData
+            end
+        end
+    end
+    return nil
+end
+
+-- Функция подсчета игр
+local function countGames()
+    local count = 0
+    for _ in pairs(GameDatabase) do
+        count = count + 1
+    end
+    return count
+end
+
+-- Функция безопасной загрузки скрипта
+local function loadScriptSafe(url)
+    Window:Notify({
+        Title = "⏳ Загрузка...",
+        Desc = "Скрипт загружается",
+        Time = 2
+    })
+    
+    local success, result = pcall(function()
+        local scriptContent = game:HttpGet(url, true)
+        if scriptContent and scriptContent ~= "404: Not Found" then
+            return loadstring(scriptContent)()
+        else
+            error("Скрипт не найден по URL: " .. url)
+        end
+    end)
+
+    if success then
+        Window:Notify({
+            Title = "✅ Успех",
+            Desc = "Скрипт загружен и выполнен!",
+            Time = 3
+        })
+        notifysound()
+    else
+        local errorMsg = tostring(result):sub(1, 80)
+        Window:Notify({
+            Title = "❌ Ошибка загрузки",
+            Desc = errorMsg,
+            Time = 5
+        })
+        warn("Ошибка загрузки скрипта:", result)
+    end
+end
+
+-- ВКЛАДКА MAIN
+local Tab = Window:Tab({Title = "🎮 Main", Icon = "home"}) do
+    
+    Tab:Section({Title = "👤 Character Controls"})
+
+    Tab:Slider({
+        Title = "WalkSpeed",
+        Desc = "Adjust your character's movement speed", 
+        Min = 16,
+        Max = 200,
+        Rounding = 0,
+        Value = 16,
+        Callback = function(val)
+            local character = LocalPlayer.Character
+            if character and character:FindFirstChildOfClass("Humanoid") then
+                character:FindFirstChildOfClass("Humanoid").WalkSpeed = val
+            end
+            slidersound()
+        end
+    })
+
+    Tab:Slider({
+        Title = "JumpPower",
+        Desc = "Adjust your character's jump height",
+        Min = 50, 
+        Max = 500,
+        Rounding = 0,
+        Value = 50,
+        Callback = function(val)
+            local character = LocalPlayer.Character
+            if character and character:FindFirstChildOfClass("Humanoid") then
+                character:FindFirstChildOfClass("Humanoid").JumpPower = val
+            end
+            slidersound()
+        end
+    })
+
+    Tab:Button({
+        Title = "Reset",
+        Desc = "Reset walkspeed and jumppower to default", 
+        Callback = function()
+            btnclick()
+            local character = LocalPlayer.Character
+            if character and character:FindFirstChildOfClass("Humanoid") then
+                local humanoid = character:FindFirstChildOfClass("Humanoid")
+                humanoid.WalkSpeed = 16
+                humanoid.JumpPower = 50
+            end
+        end
+    })
+
+    -- Информация об обновлении
+    Tab:Section({Title = "📢 Latest Update"})
+
+    Tab:Label({
+        Title = "Saul Hub v3.2",
+        Desc = "🎉 Полностью переработанный интерфейс!\n✨ Улучшенная система определения игр\n🔧 Новый исполнитель кода\n🎯 Больше поддерживаемых игр"
+    })
+
+    Tab:Label({
+        Title = "Что нового:",
+        Desc = "• Умная база данных с несколькими ID\n• Безопасная загрузка скриптов\n• Улучшенные уведомления\n• Оптимизация для мобильных"
+    })
+
+    -- Системная информация
+    Tab:Section({Title = "📊 System Info"})
+
+    Tab:Label({
+        Title = "👤 Player",
+        Desc = LocalPlayer.Name
+    })
+
+    Tab:Label({
+        Title = "🎮 Game ID", 
+        Desc = tostring(game.PlaceId)
+    })
+
+    local currentGameData = findGameByPlaceId(game.PlaceId)
+    if currentGameData then
+        Tab:Label({
+            Title = "🎯 Detected Game",
+            Desc = currentGameData.name
+        })
+    end
+
+    Tab:Label({
+        Title = "⚡ Status",
+        Desc = "🟢 Saul Hub Active"
+    })
+
+    Tab:Button({
+        Title = "🔄 Restart Game",
+        Desc = "Teleport to current game",
+        Callback = function()
+            btnclick()
+            game:GetService("TeleportService"):Teleport(game.PlaceId)
+        end
+    })
+end
+
+-- ВКЛАДКА MOVEMENT
+local Tab = Window:Tab({Title = "🚀 Movement", Icon = "rocket"}) do
+    
+    Tab:Section({Title = "Movement Scripts"})
+
+    local noclipEnabled = false
+    local noclipConnection
+
+    Tab:Toggle({
+        Title = "Noclip",
+        Desc = "Walk through walls", 
+        Value = false,
+        Callback = function(v)
+            noclipEnabled = v
+            local character = LocalPlayer.Character
+
+            if v then
+                if character then
+                    for _, part in pairs(character:GetDescendants()) do
+                        if part:IsA("BasePart") then
+                            part.CanCollide = false
+                        end
+                    end
+                end
+
+                if noclipConnection then
+                    noclipConnection:Disconnect()
+                end
+
+                noclipConnection = RunService.Stepped:Connect(function()
+                    if noclipEnabled and LocalPlayer.Character then
+                        for _, part in pairs(LocalPlayer.Character:GetDescendants()) do
+                            if part:IsA("BasePart") then
+                                part.CanCollide = false
+                            end
+                        end
+                    end
+                end)
+            else
+                if noclipConnection then
+                    noclipConnection:Disconnect()
+                    noclipConnection = nil
+                end
+
+                if character then
+                    for _, part in pairs(character:GetDescendants()) do
+                        if part:IsA("BasePart") then
+                            part.CanCollide = true
+                        end
+                    end
+                end
+            end
+            togglesound()
+        end
+    })
+
+    Tab:Button({
+        Title = "Fly",
+        Desc = "Opens the flygui",
+        Callback = function()
+            btnclick()
+            loadstring(game:HttpGet("https://raw.githubusercontent.com/OBFhm5650lol/F/refs/heads/main/F"))()
+        end
+    })
+
+    local infJumpEnabled = false
+    local jumpConnection
+
+    Tab:Toggle({
+        Title = "Infinite Jump",
+        Desc = "Jump infinitely in the air",
+        Value = false,
+        Callback = function(v)
+            infJumpEnabled = v
+
+            if v then
+                jumpConnection = UserInputService.JumpRequest:Connect(function()
+                    if infJumpEnabled then
+                        local character = LocalPlayer.Character
+                        if character and character:FindFirstChildOfClass("Humanoid") then
+                            character:FindFirstChildOfClass("Humanoid"):ChangeState(Enum.HumanoidStateType.Jumping)
+                        end
+                    end
+                end)
+            else
+                if jumpConnection then
+                    jumpConnection:Disconnect()
+                    jumpConnection = nil
+                end
+            end
+            togglesound()
+        end
+    })
+
+    -- Дополнительные скрипты перемещения
+    Tab:Button({
+        Title = "🎯 Walkfling",
+        Desc = "Walkfling script",
+        Callback = function()
+            btnclick()
+            loadstring(game:HttpGet("https://raw.githubusercontent.com/7dksbpxuw8/Other/refs/heads/main/Walkfling"))()
+        end
+    })
+end
+
+-- ВКЛАДКА UNIVERSAL
+local Tab = Window:Tab({Title = "🔧 Universal", Icon = "tools"}) do
+    
+    Tab:Section({Title = "Universal Scripts"})
+
+    Tab:Button({
+        Title = "👁️ ESP Players",
+        Desc = "See players through walls",
+        Callback = function()
+            btnclick()
+            loadstring(game:HttpGet("https://raw.githubusercontent.com/SaulGoodmanScripter/SaulHub.Megascript/refs/heads/main/especially%20player%20"))()
+        end
+    })
+
+    Tab:Button({
+        Title = "⏰ Anti AFK",
+        Desc = "Prevent being kicked for AFK", 
+        Callback = function()
+            btnclick()
+            loadstring(game:HttpGet("https://raw.githubusercontent.com/ArgetnarYT/scripts/main/AntiAfk2.lua"))()
+        end
+    })
+
+    Tab:Button({
+        Title = "👻 Invisible",
+        Desc = "Become invisible to other players",
+        Callback = function()
+            btnclick()
+            loadstring(game:HttpGet("https://pastebin.com/raw/3Rnd9rHf"))()
+        end
+    })
+
+    Tab:Button({
+        Title = "💃 Emotes", 
+        Desc = "All emotes unlocked",
+        Callback = function()
+            btnclick()
+            loadstring(game:HttpGet("https://pastebin.com/raw/NXZp97wG"))()
+        end
+    })
+
+    Tab:Section({Title = "Utility Scripts"})
+
+    Tab:Button({
+        Title = "🔄 Rejoin Game",
+        Desc = "Quick rejoin current game",
+        Callback = function()
+            btnclick()
+            game:GetService("TeleportService"):Teleport(game.PlaceId)
+        end
+    })
+end
+
+-- ВКЛАДКА AUTO SCRIPTS (ОБНОВЛЕННАЯ ВЕРСИЯ)
+local Tab = Window:Tab({Title = "🎯 Auto Scripts", Icon = "settings"}) do
+    local currentGameId = game.PlaceId
+    local currentGameData = findGameByPlaceId(currentGameId)
+
+    if currentGameData then
+        -- Красивый заголовок с иконкой
+        Tab:Section({Title = "🎮 Обнаружена игра: " .. currentGameData.name})
+
+        -- Статус в виде Label с эмодзи
+        Tab:Label({
+            Title = "🟢 Игра поддерживается",
+            Desc = "Доступно " .. #currentGameData.scripts .. " скриптов для автоматического запуска"
+        })
+
+        for i, scriptData in ipairs(currentGameData.scripts) do
+            -- Разделитель между скриптами (кроме первого)
+            if i > 1 then
+                Tab:Label({
+                    Title = "────────────────────",
+                    Desc = ""
+                })
+            end
+
+            -- Секция для каждого скрипта
+            Tab:Section({Title = scriptData.title})
+
+            -- Code элемент с АВТОМАТИЧЕСКИМ копированием при клике
+            local codeElement = Tab:Code({
+                Title = "📄 Код для запуска",
+                Code = "loadstring(game:HttpGet('" .. scriptData.url .. "'))()",
+            })
+
+            -- Красивая кнопка запуска
+            Tab:Button({
+                Title = "🚀 Выполнить скрипт", 
+                Desc = "Автоматически загрузить и выполнить",
+                Callback = function()
+                    btnclick()
+                    Window:Notify({
+                        Title = "⏳ Запуск...",
+                        Desc = scriptData.title,
+                        Time = 2
+                    })
+                    loadScriptSafe(scriptData.url)
+                end
+            })
+        end
+
+        -- Футер
+        Tab:Section({Title = "✅ Готово"})
+        Tab:Label({
+            Title = "Все скрипты проверены",
+            Desc = "Можно безопасно запускать любой скрипт"
+        })
+
+    else
+        -- КРАСИВОЕ сообщение для неподдерживаемой игры
+        Tab:Section({Title = "❌ Игра не найдена в базе"})
+
+        -- Code элемент с информацией об игре
+        local gameInfoCode = "-- 🎮 Информация об игре\n"
+        gameInfoCode = gameInfoCode .. "ID места: " .. currentGameId .. "\n"
+        gameInfoCode = gameInfoCode .. "Название: " .. game:GetService("MarketplaceService"):GetProductInfo(currentGameId).Name .. "\n" 
+        gameInfoCode = gameInfoCode .. "Статус: Не поддерживается\n"
+        gameInfoCode = gameInfoCode .. "-- 💡 Используйте универсальные скрипты"
+
+        Tab:Code({
+            Title = "📊 Информация об игре",
+            Code = gameInfoCode
+        })
+
+        -- Кнопка для предложения игры
+        Tab:Button({
+            Title = "📝 Предложить игру",
+            Desc = "Отправить запрос на добавление",
+            Callback = function()
+                btnclick()
+                local gameInfo = "🎮 " .. game:GetService("MarketplaceService"):GetProductInfo(currentGameId).Name .. "\n🆔 " .. currentGameId
+                setclipboard(gameInfo)
+                Window:Notify({
+                    Title = "📋 Инфо скопировано", 
+                    Desc = "Данные игры готовы для отправки",
+                    Time = 4
+                })
+            end
+        })
+    end
+
+    -- Красивый список всех игр в виде Code элемента
+    Tab:Section({Title = "📚 Все поддерживаемые игры"})
+    
+    local allGamesCode = "-- 🎮 БИБЛИОТЕКА SAUL HUB --\n\n"
+    for gameKey, gameData in pairs(GameDatabase) do
+        allGamesCode = allGamesCode .. "🎯 " .. gameData.name .. "\n"
+        allGamesCode = allGamesCode .. "   📍 ID: " .. table.concat(gameData.placeIds, ", ") .. "\n"  
+        allGamesCode = allGamesCode .. "   🔧 Скриптов: " .. #gameData.scripts .. "\n\n"
+    end
+    allGamesCode = allGamesCode .. "Всего игр: " .. countGames()
+
+    Tab:Code({
+        Title = "📋 Полный список игр",
+        Code = allGamesCode
+    })
+end
+
+-- ВКЛАДКА EXECUTOR
+local Tab = Window:Tab({Title = "</> Executor", Icon = "code"}) do
+    local defaultScript = [[
+print("Hello Saul Executor!")
+
+-- Пример: Изменение скорости
+local player = game.Players.LocalPlayer
+if player.Character then
+    local humanoid = player.Character:FindFirstChildOfClass("Humanoid")
+    if humanoid then
+        humanoid.WalkSpeed = 50
+        humanoid.JumpPower = 100
+    end
+end
+]]
+
+    local currentScript = defaultScript
+
+    Tab:Section({Title = "⚡ Script Executor"})
+
+    local codeDisplay = Tab:Code({
+        Title = "📝 Текущий скрипт",
+        Code = currentScript
+    })
+
+    local scriptInfo = Tab:Label({
+        Title = "📊 Информация о скрипте",
+        Desc = "Символов: " .. #currentScript .. " | Строк: " .. #string.split(currentScript, "\n")
+    })
+
+    local scriptInput = Tab:Textbox({
+        Title = "✏️ Быстрое редактирование", 
+        Desc = "Или введите новый скрипт здесь",
+        Placeholder = "print('Быстрый ввод')",
+        Value = "",
+        ClearText = false,
+        Callback = function(text)
+            if text and text ~= "" then
+                currentScript = text
+                codeDisplay:SetCode(text)
+                updateScriptInfo()
+            end
+        end
+    })
+
+    -- Функция обновления информации
+    local function updateScriptInfo()
+        local charCount = #currentScript
+        local lineCount = #string.split(currentScript, "\n")
+        scriptInfo:SetDesc(string.format("Символов: %d | Строк: %d", charCount, lineCount))
+    end
+
+    Tab:Section({Title = "⚙️ Управление выполнением"})
+
+    Tab:Button({
+        Title = "🚀 Выполнить скрипт",
+        Desc = "Запустить текущий код",
+        Callback = function()
+            btnclick()
+
+            if not currentScript or currentScript:gsub("%s", "") == "" then
+                Window:Notify({
+                    Title = "⚠️ Внимание",
+                    Desc = "Скрипт пустой!",
+                    Time = 3
+                })
+                return
+            end
+
+            local success, result = pcall(function()
+                local fn, err = loadstring(currentScript)
+                if fn then
+                    return fn()
+                else
+                    error(err)
+                end
+            end)
+
+            if success then
+                Window:Notify({
+                    Title = "✅ Успех!",
+                    Desc = "Скрипт выполнен успешно",
+                    Time = 3
+                })
+            else
+                local errorMsg = tostring(result):sub(1, 100)
+                Window:Notify({
+                    Title = "❌ Ошибка выполнения",
+                    Desc = errorMsg .. "...",
+                    Time = 5
+                })
+            end
+        end
+    })
+
+    Tab:Button({
+        Title = "🔄 Загрузить пример",
+        Desc = "Загрузить пример скрипта",
+        Callback = function()
+            btnclick()
+            currentScript = defaultScript
+            codeDisplay:SetCode(defaultScript)
+            scriptInput:SetValue("")
+            updateScriptInfo()
+        end
+    })
+
+    Tab:Button({
+        Title = "🗑️ Очистить всё",
+        Desc = "Очистить оба поля",
+        Callback = function()
+            btnclick()
+            currentScript = ""
+            codeDisplay:SetCode("-- Скрипт очищен\n-- Введите новый код")
+            scriptInput:SetValue("")
+            updateScriptInfo()
+            Window:Notify({
+                Title = "🧹 Очищено",
+                Desc = "Все поля очищены",
+                Time = 2
+            })
+        end
+    })
+
+    -- Быстрые скрипты
+    Tab:Section({Title = "🎯 Быстрые скрипты"})
+
+    local quickScripts = {
+        {"🔄 Перезапуск игры", 'game:GetService("TeleportService"):Teleport(game.PlaceId)'},
+        {"👁️ ESP Игроков", [[
+for _, player in pairs(game.Players:GetPlayers()) do
+    if player ~= game.Players.LocalPlayer and player.Character then
+        local highlight = Instance.new("Highlight")
+        highlight.Parent = player.Character
+        highlight.FillColor = Color3.new(1, 0, 0)
+        highlight.Name = "SaulESP"
+    end
+end]]},
+        {"🚀 Супер скорость", [[
+local player = game.Players.LocalPlayer
+if player.Character then
+    local humanoid = player.Character:FindFirstChildOfClass("Humanoid")
+    if humanoid then
+        humanoid.WalkSpeed = 100
+    end
+end]]}
+    }
+
+    for i, scriptData in ipairs(quickScripts) do
+        Tab:Button({
+            Title = scriptData[1],
+            Desc = "Вставить шаблон скрипта",
+            Callback = function()
+                btnclick()
+                currentScript = scriptData[2]
+                codeDisplay:SetCode(currentScript)
+                scriptInput:SetValue("")
+                updateScriptInfo()
+                Window:Notify({
+                    Title = "🎯 Шаблон загружен",
+                    Desc = scriptData[1] .. " вставлен",
+                    Time = 3
+                })
+            end
+        })
+    end
+end
+
+-- ВКЛАДКА CREDITS
+local Tab = Window:Tab({Title = "👑 Credits", Icon = "code"}) do
+    Tab:Section({Title = "Script Made By @Saul_Hub"})
+
+    Tab:Label({
+        Title = "Saul",
+        Desc = "Создатель скрипта. Telegram channel:\n@SaulGoodmanScript",
+    })
+
+    Tab:Button({
+        Title = "Copy Telegram", 
+        Desc = "Copy @SaulGoodmanScript to clipboard",
+        Callback = function()
+            setclipboard("https://t.me/SaulGoodmanScript")
+            Window:Notify({
+                Title = "Copied",
+                Desc = "Telegram channel copied to clipboard", 
+                Time = 4
+            })
+            btnclick()
+        end
+    })
+
+    Tab:Label({
+        Title = "Lori script", 
+        Desc = "partner",
+    })
+
+    Tab:Button({
+        Title = "📋 Copy Telegram",
+        Desc = nil,
+        Callback = function()
+            setclipboard("https://t.me/loriscript")
+            Window:Notify({
+                Title = "Copied", 
+                Desc = "Lori script Telegram copied",
+                Time = 3
+            })
+            btnclick()
+        end
+    })
+
+    Tab:Section({Title = "🔧 Техническая информация"})
+
+    Tab:Label({
+        Title = "Версия Saul Hub",
+        Desc = "Complete Version v3.2"
+    })
+
+    Tab:Label({
+        Title = "Статус",
+        Desc = "🟢 Онлайн и работает"
+    })
+end
+
+-- УВЕДОМЛЕНИЕ ПРИ ЗАГРУЗКЕ
+local currentGameData = findGameByPlaceId(game.PlaceId)
+if currentGameData then
+    Window:Notify({
+        Title = "🎮 Обнаружена игра: " .. currentGameData.name,
+        Desc = "Автоматические скрипты доступны во вкладке 'Auto Scripts'",
+        Time = 7
+    })
+else
+    Window:Notify({
+        Title = "script made by Saul_Hub", 
+        Desc = "ID места: " .. game.PlaceId .. "\nИспользуйте универсальные скрипты",
+        Time = 5
+    })
+end
+
+print("⚡ Saul Hub v3.2 загружен! ID места: " .. game.PlaceId)
+if currentGameData then
+    print("🎯 Обнаружена игра: " .. currentGameData.name)
+end
