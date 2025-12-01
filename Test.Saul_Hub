@@ -413,6 +413,23 @@ local Tab = Window:Tab({Title = "🔧 Universal", Icon = "gift"}) do
 end
 
 
+
+
+-- ВКЛАДКА EXECUTOR
+local Tab = Window:Tab({Title = "</> Executor", Icon = "snowflake"}) do
+    local defaultScript = [[
+print("Hello Saul Executor!")
+
+-- Пример: Изменение скорости
+local player = game.Players.LocalPlayer
+if player.Character then
+    local humanoid = player.Character:FindFirstChildOfClass("Humanoid")
+    if humanoid then
+        humanoid.WalkSpeed = 50
+        humanoid.JumpPower = 100
+    end
+end
+]]
 -- ВКЛАДКА AUTO SCRIPTS (С CODE ЭЛЕМЕНТАМИ)
 local Tab = Window:Tab({Title = "🎯 Auto Scripts", Icon = "tree-pine"}) do
     local currentGameId = game.PlaceId
@@ -459,10 +476,10 @@ local Tab = Window:Tab({Title = "🎯 Auto Scripts", Icon = "tree-pine"}) do
             Code = gameInfoCode
         })
     end
-end
-    -- Красивый список всех игр в виде Code элемента
+
+    -- Красивый список всех игр в виде Code элемента (ВНЕ if/else)
     Tab:Section({Title = "📚 Все поддерживаемые игры"})
-    
+
     local allGamesCode = "-- 🎮 БИБЛИОТЕКА SAUL HUB --\n\n"
     for gameKey, gameData in pairs(GameDatabase) do
         allGamesCode = allGamesCode .. "🎯 " .. gameData.name .. "\n"
@@ -476,23 +493,6 @@ end
         Code = allGamesCode
     })
 end
-
--- ВКЛАДКА EXECUTOR
-local Tab = Window:Tab({Title = "</> Executor", Icon = "snowflake"}) do
-    local defaultScript = [[
-print("Hello Saul Executor!")
-
--- Пример: Изменение скорости
-local player = game.Players.LocalPlayer
-if player.Character then
-    local humanoid = player.Character:FindFirstChildOfClass("Humanoid")
-    if humanoid then
-        humanoid.WalkSpeed = 50
-        humanoid.JumpPower = 100
-    end
-end
-]]
-
     local currentScript = defaultScript
 
     Tab:Section({Title = "⚡ Script Executor"})
