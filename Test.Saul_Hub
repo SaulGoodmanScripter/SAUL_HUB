@@ -661,7 +661,7 @@ for i, scriptData in ipairs(quickScripts) do
 end
 
 -- ВКЛАДКА AUTO SCRIPTS
-local Tab5 = Window:Tab({Title = "🎯 Авто-скрипты", Icon = "Stars"})
+local Tab5 = Window:Tab({Title = "🎯 Auto-scripts", Icon = "bell"})
 
 local currentGameId = game.PlaceId
 local currentGameData = findGameByPlaceId(currentGameId)
