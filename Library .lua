@@ -1,7 +1,7 @@
 Library = {}
 SaveTheme = {}
 local themes = {
-    index = {'NewYear', 'Amethyst', 'Dark', 'Sapphire, 'Amber', 'Topaz},
+    index = {'NewYear', 'Amethyst', 'Dark', 'Sapphire', 'Amber', 'Topaz'},
     
     Dark = {
         ['Shadow'] = Color3.fromRGB(15, 15, 15),
