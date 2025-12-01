@@ -412,74 +412,54 @@ local Tab = Window:Tab({Title = "🔧 Universal", Icon = "gift"}) do
     })
 end
 
--- ВКЛАДКА AUTO SCRIPTS (ОБНОВЛЕННАЯ ВЕРСИЯ)
+
+-- ВКЛАДКА AUTO SCRIPTS (С CODE ЭЛЕМЕНТАМИ)
 local Tab = Window:Tab({Title = "🎯 Auto Scripts", Icon = "tree-pine"}) do
     local currentGameId = game.PlaceId
     local currentGameData = findGameByPlaceId(currentGameId)
 
     if currentGameData then
-        -- Красивый заголовок с иконкой
         Tab:Section({Title = "🎮 Обнаружена игра: " .. currentGameData.name})
 
-        -- Статус в виде Label с эмодзи
         Tab:Label({
             Title = "🟢 Игра поддерживается",
-            Desc = "Доступно " .. #currentGameData.scripts .. " скриптов для автоматического запуска"
+            Desc = "Доступно " .. #currentGameData.scripts .. " скриптов"
         })
-            -- Code элемент с АВТОМАТИЧЕСКИМ копированием при клике
-            local codeElement = Tab:Code({
-                Title = "📄 Код для запуска",
-                Code = "loadstring(game:HttpGet('" .. scriptData.url .. "'))()",
+
+        -- Для каждого скрипта: Code элемент + Кнопка
+        for _, scriptData in ipairs(currentGameData.scripts) do
+            -- Code элемент с кодом для копирования
+            Tab:Code({
+                Title = "📄 " .. scriptData.title,
+                Code = "loadstring(game:HttpGet('" .. scriptData.url .. "'))()"
             })
 
-            -- Красивая кнопка запуска
+            -- Кнопка запуска
             Tab:Button({
-                Title = "🚀 Выполнить скрипт", 
-                Desc = "Автоматически загрузить и выполнить",
+                Title = "🚀 Выполнить " .. scriptData.title,
+                Desc = "Автоматический запуск",
                 Callback = function()
                     btnclick()
-                    Window:Notify({
-                        Title = "⏳ Запуск...",
-                        Desc = scriptData.title,
-                        Time = 2
-                    })
                     loadScriptSafe(scriptData.url)
                 end
             })
         end
     else
-        -- КРАСИВОЕ сообщение для неподдерживаемой игры
         Tab:Section({Title = "❌ Игра не найдена в базе"})
 
         -- Code элемент с информацией об игре
-        local gameInfoCode = "-- 🎮 Информация об игре\n"
+        local gameInfoCode = "-- 🎮 ИНФОРМАЦИЯ ОБ ИГРЕ --\n"
         gameInfoCode = gameInfoCode .. "ID места: " .. currentGameId .. "\n"
-        gameInfoCode = gameInfoCode .. "Название: " .. game:GetService("MarketplaceService"):GetProductInfo(currentGameId).Name .. "\n" 
+        gameInfoCode = gameInfoCode .. "Название: " .. game:GetService("MarketplaceService"):GetProductInfo(currentGameId).Name .. "\n"
         gameInfoCode = gameInfoCode .. "Статус: Не поддерживается\n"
         gameInfoCode = gameInfoCode .. "-- 💡 Используйте универсальные скрипты"
 
         Tab:Code({
-            Title = "📊 Информация об игре",
+            Title = "📊 Информация",
             Code = gameInfoCode
         })
-
-        -- Кнопка для предложения игры
-        Tab:Button({
-            Title = "📝 Предложить игру",
-            Desc = "Отправить запрос на добавление",
-            Callback = function()
-                btnclick()
-                local gameInfo = "🎮 " .. game:GetService("MarketplaceService"):GetProductInfo(currentGameId).Name .. "\n🆔 " .. currentGameId
-                setclipboard(gameInfo)
-                Window:Notify({
-                    Title = "📋 Инфо скопировано", 
-                    Desc = "Данные игры готовы для отправки",
-                    Time = 4
-                })
-            end
-        })
     end
-
+end
     -- Красивый список всех игр в виде Code элемента
     Tab:Section({Title = "📚 Все поддерживаемые игры"})
     
