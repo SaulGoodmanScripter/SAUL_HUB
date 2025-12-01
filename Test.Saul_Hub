@@ -156,7 +156,7 @@ local function loadScriptSafe(url)
 end
 
 -- ВКЛАДКА MAIN
-local Tab = Window:Tab({Title = "🎮 Main", Icon = "home"}) do
+local Tab = Window:Tab({Title = "🎮 Main", Icon = "tree-pine"}) do
     
     Tab:Section({Title = "👤 Character Controls"})
 
@@ -256,8 +256,7 @@ local Tab = Window:Tab({Title = "🎮 Main", Icon = "home"}) do
 end
 
 -- ВКЛАДКА MOVEMENT
-local Tab = Window:Tab({Title = "🚀 Movement", Icon = "rocket"}) do
-    
+local Tab = Window:Tab({Title = "🚀 Movement", Icon = "snowflake"}) do
     Tab:Section({Title = "Movement Scripts"})
 
     local noclipEnabled = false
@@ -361,7 +360,7 @@ local Tab = Window:Tab({Title = "🚀 Movement", Icon = "rocket"}) do
 end
 
 -- ВКЛАДКА UNIVERSAL
-local Tab = Window:Tab({Title = "🔧 Universal", Icon = "tools"}) do
+local Tab = Window:Tab({Title = "🔧 Universal", Icon = "gift"}) do
     
     Tab:Section({Title = "Universal Scripts"})
 
@@ -414,7 +413,7 @@ local Tab = Window:Tab({Title = "🔧 Universal", Icon = "tools"}) do
 end
 
 -- ВКЛАДКА AUTO SCRIPTS (ОБНОВЛЕННАЯ ВЕРСИЯ)
-local Tab = Window:Tab({Title = "🎯 Auto Scripts", Icon = "settings"}) do
+local Tab = Window:Tab({Title = "🎯 Auto Scripts", Icon = "tree-pine"}) do
     local currentGameId = game.PlaceId
     local currentGameData = findGameByPlaceId(currentGameId)
 
@@ -427,19 +426,6 @@ local Tab = Window:Tab({Title = "🎯 Auto Scripts", Icon = "settings"}) do
             Title = "🟢 Игра поддерживается",
             Desc = "Доступно " .. #currentGameData.scripts .. " скриптов для автоматического запуска"
         })
-
-        for i, scriptData in ipairs(currentGameData.scripts) do
-            -- Разделитель между скриптами (кроме первого)
-            if i > 1 then
-                Tab:Label({
-                    Title = "────────────────────",
-                    Desc = ""
-                })
-            end
-
-            -- Секция для каждого скрипта
-            Tab:Section({Title = scriptData.title})
-
             -- Code элемент с АВТОМАТИЧЕСКИМ копированием при клике
             local codeElement = Tab:Code({
                 Title = "📄 Код для запуска",
@@ -461,14 +447,6 @@ local Tab = Window:Tab({Title = "🎯 Auto Scripts", Icon = "settings"}) do
                 end
             })
         end
-
-        -- Футер
-        Tab:Section({Title = "✅ Готово"})
-        Tab:Label({
-            Title = "Все скрипты проверены",
-            Desc = "Можно безопасно запускать любой скрипт"
-        })
-
     else
         -- КРАСИВОЕ сообщение для неподдерживаемой игры
         Tab:Section({Title = "❌ Игра не найдена в базе"})
@@ -520,7 +498,7 @@ local Tab = Window:Tab({Title = "🎯 Auto Scripts", Icon = "settings"}) do
 end
 
 -- ВКЛАДКА EXECUTOR
-local Tab = Window:Tab({Title = "</> Executor", Icon = "code"}) do
+local Tab = Window:Tab({Title = "</> Executor", Icon = "snowflake"}) do
     local defaultScript = [[
 print("Hello Saul Executor!")
 
@@ -688,7 +666,7 @@ end]]}
 end
 
 -- ВКЛАДКА CREDITS
-local Tab = Window:Tab({Title = "👑 Credits", Icon = "code"}) do
+local Tab = Window:Tab({Title = "👑 Credits", Icon = "gift"}) do
     Tab:Section({Title = "Script Made By @Saul_Hub"})
 
     Tab:Label({
