@@ -770,9 +770,9 @@ local newYearGreetings = {
 }
 
 -- После загрузки хаба
-task.wait(1)
+task.wait(5)
 Window:Notify({
     Title = newYearGreetings[math.random(1, #newYearGreetings)],
     Desc = "Спасибо что выбираете Saul Hub!\nКрепкого здоровья и удачи в 2025! 🥳",
-    Time = 8
+    Time = 15
 })
