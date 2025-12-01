@@ -1,7 +1,7 @@
 Library = {}
 SaveTheme = {}
 local themes = {
-    index = {'Dark', 'Amethyst', 'NewYear', 'Winter', 'Autumn', 'Halloween', 'Summer'},
+    index = {'NewYear', 'Amethyst', 'Dark', 'Sapphire, 'Amber', 'Topaz},
     
     Dark = {
         ['Shadow'] = Color3.fromRGB(15, 15, 15),
@@ -156,150 +156,198 @@ local themes = {
             }
         }
     },
+
 NewYear = {
-    -- Основные цвета (всегда одинаковые)
-    ['Shadow'] = Color3.fromRGB(120, 20, 20),
-    ['Background'] = Color3.fromRGB(180, 40, 40),
-    ['Page'] = Color3.fromRGB(160, 30, 30),
-    ['Main'] = Color3.fromRGB(255, 215, 0),          -- Золотой
-    ['Text & Icon'] = Color3.fromRGB(255, 240, 180),  -- Кремовый
+    -- Основные цвета
+    ['Shadow'] = Color3.fromRGB(120, 20, 20),           -- Бархатный красный
+    ['Background'] = Color3.fromRGB(180, 40, 40),       -- Яркий праздничный красный
+    ['Page'] = Color3.fromRGB(160, 30, 30),            -- Насыщенный красный
+    ['Main'] = Color3.fromRGB(255, 215, 0),            -- Золото ёлочных игрушек
+    ['Text & Icon'] = Color3.fromRGB(255, 200, 50),   -- Свет гирлянд
     
-    -- ТОГГЛ (Toggle)
-    ['Function.Toggle.Background'] = Color3.fromRGB(150, 35, 35),
-    ['Function.Toggle.True.Toggle Background'] = Color3.fromRGB(200, 50, 50),   -- Красный
-    ['Function.Toggle.True.Toggle Value'] = Color3.fromRGB(255, 215, 0),        -- Золотой
-    ['Function.Toggle.False.Toggle Background'] = Color3.fromRGB(130, 25, 25),  -- Тёмно-красный
-    ['Function.Toggle.False.Toggle Value'] = Color3.fromRGB(100, 20, 20),       -- Очень тёмный красный
+    -- Праздничные акцентные цвета
+    ['Snow White'] = Color3.fromRGB(255, 255, 255),    -- Снежная белизна
+    ['Tree Green'] = Color3.fromRGB(50, 205, 50),      -- Ёлочная зелень
+    ['Ice Blue'] = Color3.fromRGB(30, 144, 255),       -- Ледяной синий
+    ['Berry Red'] = Color3.fromRGB(220, 20, 60),       -- Ягодный красный
     
-    -- ЛЕЙБЛ (Label)
-    ['Function.Label.Background'] = Color3.fromRGB(150, 35, 35),  -- Красный
-    
-    -- КНОПКА (Button)
-    ['Function.Button.Background'] = Color3.fromRGB(150, 35, 35),  -- Красный
-    ['Function.Button.Click'] = Color3.fromRGB(255, 240, 180),     -- Кремовый
-    
-    -- СЛАЙДЕР (Slider)
-    ['Function.Slider.Background'] = Color3.fromRGB(150, 35, 35),          -- Красный
-    ['Function.Slider.Value Background'] = Color3.fromRGB(120, 20, 20),    -- Тёмно-красный
-    ['Function.Slider.Value Stroke'] = Color3.fromRGB(255, 240, 180),      -- Кремовый
-    ['Function.Slider.Slider Bar'] = Color3.fromRGB(200, 50, 50),          -- Ярко-красный
-    ['Function.Slider.Slider Bar Value'] = Color3.fromRGB(255, 215, 0),    -- Золотой
-    ['Function.Slider.Circle Value'] = Color3.fromRGB(255, 240, 180),      -- Кремовый
-    
-    -- ВЫПАДАЮЩИЙ СПИСОК (Dropdown)
-    ['Function.Dropdown.Background'] = Color3.fromRGB(150, 35, 35),          -- Красный
-    ['Function.Dropdown.Value Background'] = Color3.fromRGB(120, 20, 20),    -- Тёмно-красный
-    ['Function.Dropdown.Value Stroke'] = Color3.fromRGB(255, 240, 180),      -- Кремовый
-    ['Function.Dropdown.Dropdown Select.Background'] = Color3.fromRGB(120, 20, 20),   -- Тёмно-красный
-    ['Function.Dropdown.Dropdown Select.Search'] = Color3.fromRGB(140, 30, 30),       -- Средний красный
-    ['Function.Dropdown.Dropdown Select.Item Background'] = Color3.fromRGB(150, 35, 35),  -- Красный
-    
-    -- КОД (Code)
-    ['Function.Code.Background'] = ColorSequence.new{
-        ColorSequenceKeypoint.new(0, Color3.fromRGB(150, 35, 35)),  -- Красный
-        ColorSequenceKeypoint.new(1, Color3.fromRGB(150, 35, 35))   -- Красный
-    },
-    ['Function.Code.Background Code'] = Color3.fromRGB(170, 45, 45),       -- Ярко-красный
-    ['Function.Code.Background Code Value'] = Color3.fromRGB(130, 25, 25), -- Тёмно-красный
-    ['Function.Code.ScrollingFrame Code'] = Color3.fromRGB(255, 215, 0),   -- Золотой
-    
-    -- ТЕКСТОВОЕ ПОЛЕ (Textbox)
-    ['Function.Textbox.Background'] = Color3.fromRGB(150, 35, 35),          -- Красный
-    ['Function.Textbox.Value Background'] = Color3.fromRGB(120, 20, 20),    -- Тёмно-красный
-    ['Function.Textbox.Value Stroke'] = Color3.fromRGB(255, 240, 180),      -- Кремовый
-    
-    -- КЛАВИША (Keybind)
-    ['Function.Keybind.Background'] = Color3.fromRGB(150, 35, 35),          -- Красный
-    ['Function.Keybind.Value Background'] = Color3.fromRGB(120, 20, 20),    -- Тёмно-красный
-    ['Function.Keybind.Value Stroke'] = Color3.fromRGB(255, 240, 180),      -- Кремовый
-    ['Function.Keybind.True.Toggle Background'] = Color3.fromRGB(200, 50, 50),   -- Ярко-красный
-    ['Function.Keybind.True.Toggle Value'] = Color3.fromRGB(255, 215, 0),        -- Золотой
-    ['Function.Keybind.False.Toggle Background'] = Color3.fromRGB(130, 25, 25),  -- Тёмно-красный
-    ['Function.Keybind.False.Toggle Value'] = Color3.fromRGB(100, 20, 20),       -- Очень тёмный красный
-    
-    -- ВЫБОР ЦВЕТА (Color Picker)
-    ['Function.Color Picker.Background'] = Color3.fromRGB(150, 35, 35),     -- Красный
-    ['Function.Color Picker.Color Select.Background'] = Color3.fromRGB(120, 20, 20),  -- Тёмно-красный
-    ['Function.Color Picker.Color Select.UIStroke'] = Color3.fromRGB(255, 240, 180),  -- Кремовый
-}
-    Winter = {
-        ['Shadow'] = Color3.fromRGB(30, 50, 80),
-        ['Background'] = Color3.fromRGB(50, 80, 120),
-        ['Page'] = Color3.fromRGB(40, 65, 100),
-        ['Main'] = Color3.fromRGB(220, 240, 255),
-        ['Text & Icon'] = Color3.fromRGB(240, 248, 255),
-        ['Function'] = {
-            ['Toggle'] = {
-                ['Background'] = Color3.fromRGB(60, 90, 130),
-                ['True'] = {
-                    ['Toggle Background'] = Color3.fromRGB(80, 120, 160),
-                    ['Toggle Value'] = Color3.fromRGB(220, 240, 255),
-                },
-                ['False'] = {
-                    ['Toggle Background'] = Color3.fromRGB(50, 75, 110),
-                    ['Toggle Value'] = Color3.fromRGB(70, 100, 140),
-                }
+    ['Function'] = {
+        ['Toggle'] = {
+            ['Background'] = Color3.fromRGB(150, 35, 35),
+            ['True'] = {
+                ['Toggle Background'] = Color3.fromRGB(200, 50, 50),
+                ['Toggle Value'] = Color3.fromRGB(255, 215, 0),  -- Золотой
             },
-            ['Label'] = {
-                ['Background'] = Color3.fromRGB(60, 90, 130),
+            ['False'] = {
+                ['Toggle Background'] = Color3.fromRGB(130, 25, 25),
+                ['Toggle Value'] = Color3.fromRGB(100, 20, 20),
+            }
+        },
+        
+        ['Label'] = {
+            ['Background'] = Color3.fromRGB(150, 35, 35),
+        },
+        
+        ['Dropdown'] = {
+            ['Background'] = Color3.fromRGB(150, 35, 35),
+            ['Value Background'] = Color3.fromRGB(120, 20, 20),
+            ['Value Stroke'] = Color3.fromRGB(255, 240, 180),
+            ['Dropdown Select'] = {
+                ['Background'] = Color3.fromRGB(120, 20, 20),
+                ['Search'] = Color3.fromRGB(140, 30, 30),
+                ['Item Background'] = Color3.fromRGB(150, 35, 35),
+            }
+        },
+        
+        ['Slider'] = {
+            ['Background'] = Color3.fromRGB(150, 35, 35),
+            ['Value Background'] = Color3.fromRGB(120, 20, 20),
+            ['Value Stroke'] = Color3.fromRGB(255, 240, 180),
+            ['Slider Bar'] = Color3.fromRGB(200, 50, 50),
+            ['Slider Bar Value'] = Color3.fromRGB(255, 215, 0),  -- Золотой
+            ['Circle Value'] = Color3.fromRGB(255, 240, 180),
+        },
+        
+        ['Code'] = {
+            ['Background'] = ColorSequence.new{
+                ColorSequenceKeypoint.new(0, Color3.fromRGB(150, 35, 35)),
+                ColorSequenceKeypoint.new(1, Color3.fromRGB(150, 35, 35))
             },
-            ['Dropdown'] = {
-                ['Background'] = Color3.fromRGB(60, 90, 130),
-                ['Value Background'] = Color3.fromRGB(30, 50, 80),
-                ['Value Stroke'] = Color3.fromRGB(240, 248, 255),
-                ['Dropdown Select'] = {
-                    ['Background'] = Color3.fromRGB(30, 50, 80),
-                    ['Search'] = Color3.fromRGB(40, 65, 100),
-                    ['Item Background'] = Color3.fromRGB(60, 90, 130),
-                }
+            ['Background Code'] = Color3.fromRGB(170, 45, 45),
+            ['Background Code Value'] = Color3.fromRGB(130, 25, 25),
+            ['ScrollingFrame Code'] = Color3.fromRGB(255, 215, 0),  -- Золотой
+        },
+        
+        ['Button'] = {
+            ['Background'] = Color3.fromRGB(150, 35, 35),
+            ['Click'] = Color3.fromRGB(255, 240, 180),
+        },
+        
+        ['Textbox'] = {
+            ['Background'] = Color3.fromRGB(150, 35, 35),
+            ['Value Background'] = Color3.fromRGB(120, 20, 20),
+            ['Value Stroke'] = Color3.fromRGB(255, 240, 180),
+        },
+        
+        ['Keybind'] = {
+            ['Background'] = Color3.fromRGB(150, 35, 35),
+            ['Value Background'] = Color3.fromRGB(120, 20, 20),
+            ['Value Stroke'] = Color3.fromRGB(255, 240, 180),
+            ['True'] = {
+                ['Toggle Background'] = Color3.fromRGB(200, 50, 50),
+                ['Toggle Value'] = Color3.fromRGB(255, 215, 0),  -- Золотой
             },
-            ['Slider'] = {
-                ['Background'] = Color3.fromRGB(60, 90, 130),
-                ['Value Background'] = Color3.fromRGB(30, 50, 80),
-                ['Value Stroke'] = Color3.fromRGB(240, 248, 255),
-                ['Slider Bar'] = Color3.fromRGB(80, 120, 160),
-                ['Slider Bar Value'] = Color3.fromRGB(220, 240, 255),
-                ['Circle Value'] = Color3.fromRGB(240, 248, 255)
-            },
-            ['Code'] = {
-                ['Background'] = ColorSequence.new{ColorSequenceKeypoint.new(0, Color3.fromRGB(60, 90, 130)), ColorSequenceKeypoint.new(1, Color3.fromRGB(60, 90, 130))},
-                ['Background Code'] = Color3.fromRGB(70, 100, 140),
-                ['Background Code Value'] = Color3.fromRGB(50, 75, 110),
-                ['ScrollingFrame Code'] = Color3.fromRGB(200, 220, 240)
-            },
-            ['Button'] = {
-                ['Background'] = Color3.fromRGB(60, 90, 130),
-                ['Click'] = Color3.fromRGB(240, 248, 255)
-            },
-            ['Textbox'] = {
-                ['Background'] = Color3.fromRGB(60, 90, 130),
-                ['Value Background'] = Color3.fromRGB(30, 50, 80),
-                ['Value Stroke'] = Color3.fromRGB(240, 248, 255),
-            },
-            ['Keybind'] = {
-                ['Background'] = Color3.fromRGB(60, 90, 130),
-                ['Value Background'] = Color3.fromRGB(30, 50, 80),
-                ['Value Stroke'] = Color3.fromRGB(240, 248, 255),
-                ['True'] = {
-                    ['Toggle Background'] = Color3.fromRGB(80, 120, 160),
-                    ['Toggle Value'] = Color3.fromRGB(220, 240, 255),
-                },
-                ['False'] = {
-                    ['Toggle Background'] = Color3.fromRGB(50, 75, 110),
-                    ['Toggle Value'] = Color3.fromRGB(70, 100, 140),
-                }
-            },
-            ['Color Picker'] = {
-                ['Background'] = Color3.fromRGB(60, 90, 130),
-                ['Color Select'] = {
-                    ['Background'] = Color3.fromRGB(30, 50, 80),
-                    ['UIStroke'] = Color3.fromRGB(240, 248, 255),
-                }
+            ['False'] = {
+                ['Toggle Background'] = Color3.fromRGB(130, 25, 25),
+                ['Toggle Value'] = Color3.fromRGB(100, 20, 20),
+            }
+        },
+        
+        ['Color Picker'] = {
+            ['Background'] = Color3.fromRGB(150, 35, 35),
+            ['Color Select'] = {
+                ['Background'] = Color3.fromRGB(120, 20, 20),
+                ['UIStroke'] = Color3.fromRGB(255, 240, 180),
             }
         }
-    },
-
-    Autumn = {
+    }
+},
+Sapphire = {
+    -- Основные цвета
+    ['Shadow'] = Color3.fromRGB(30, 50, 80),        -- Глубокий синий снежной ночи
+    ['Background'] = Color3.fromRGB(50, 80, 120),   -- Ледяной синий
+    ['Page'] = Color3.fromRGB(40, 65, 100),         -- Морозный оттенок
+    ['Main'] = Color3.fromRGB(220, 240, 255),       -- Снежно-белый
+    ['Text & Icon'] = Color3.fromRGB(240, 248, 255), -- AliceBlue (ледяной свет)
+    
+    -- Дополнительные зимние цвета
+    ['Snow White'] = Color3.fromRGB(255, 255, 255), -- Чистый снег
+    ['Ice Blue'] = Color3.fromRGB(173, 216, 230),   -- Голубой лёд
+    ['Frost'] = Color3.fromRGB(220, 240, 255),      -- Иней
+    ['Night Blue'] = Color3.fromRGB(25, 25, 112),   -- Ночное небо
+    
+    ['Function'] = {
+        ['Toggle'] = {
+            ['Background'] = Color3.fromRGB(60, 90, 130),
+            ['True'] = {
+                ['Toggle Background'] = Color3.fromRGB(80, 120, 160),
+                ['Toggle Value'] = Color3.fromRGB(220, 240, 255), -- Снежный
+            },
+            ['False'] = {
+                ['Toggle Background'] = Color3.fromRGB(50, 75, 110),
+                ['Toggle Value'] = Color3.fromRGB(70, 100, 140),
+            }
+        },
+        
+        ['Label'] = {
+            ['Background'] = Color3.fromRGB(60, 90, 130),
+        },
+        
+        ['Dropdown'] = {
+            ['Background'] = Color3.fromRGB(60, 90, 130),
+            ['Value Background'] = Color3.fromRGB(30, 50, 80),
+            ['Value Stroke'] = Color3.fromRGB(240, 248, 255),
+            ['Dropdown Select'] = {
+                ['Background'] = Color3.fromRGB(30, 50, 80),
+                ['Search'] = Color3.fromRGB(40, 65, 100),
+                ['Item Background'] = Color3.fromRGB(60, 90, 130),
+            }
+        },
+        
+        ['Slider'] = {
+            ['Background'] = Color3.fromRGB(60, 90, 130),
+            ['Value Background'] = Color3.fromRGB(30, 50, 80),
+            ['Value Stroke'] = Color3.fromRGB(240, 248, 255),
+            ['Slider Bar'] = Color3.fromRGB(80, 120, 160),
+            ['Slider Bar Value'] = Color3.fromRGB(220, 240, 255), -- Снежный
+            ['Circle Value'] = Color3.fromRGB(240, 248, 255),
+        },
+        
+        ['Code'] = {
+            ['Background'] = ColorSequence.new{
+                ColorSequenceKeypoint.new(0, Color3.fromRGB(60, 90, 130)),
+                ColorSequenceKeypoint.new(1, Color3.fromRGB(60, 90, 130))
+            },
+            ['Background Code'] = Color3.fromRGB(70, 100, 140),
+            ['Background Code Value'] = Color3.fromRGB(50, 75, 110),
+            ['ScrollingFrame Code'] = Color3.fromRGB(200, 220, 240), -- Лёгкий голубой
+        },
+        
+        ['Button'] = {
+            ['Background'] = Color3.fromRGB(60, 90, 130),
+            ['Click'] = Color3.fromRGB(240, 248, 255),
+        },
+        
+        ['Textbox'] = {
+            ['Background'] = Color3.fromRGB(60, 90, 130),
+            ['Value Background'] = Color3.fromRGB(30, 50, 80),
+            ['Value Stroke'] = Color3.fromRGB(240, 248, 255),
+        },
+        
+        ['Keybind'] = {
+            ['Background'] = Color3.fromRGB(60, 90, 130),
+            ['Value Background'] = Color3.fromRGB(30, 50, 80),
+            ['Value Stroke'] = Color3.fromRGB(240, 248, 255),
+            ['True'] = {
+                ['Toggle Background'] = Color3.fromRGB(80, 120, 160),
+                ['Toggle Value'] = Color3.fromRGB(220, 240, 255), -- Снежный
+            },
+            ['False'] = {
+                ['Toggle Background'] = Color3.fromRGB(50, 75, 110),
+                ['Toggle Value'] = Color3.fromRGB(70, 100, 140),
+            }
+        },
+        
+        ['Color Picker'] = {
+            ['Background'] = Color3.fromRGB(60, 90, 130),
+            ['Color Select'] = {
+                ['Background'] = Color3.fromRGB(30, 50, 80),
+                ['UIStroke'] = Color3.fromRGB(240, 248, 255),
+            }
+        }
+    }
+},
+    Amber = {
         ['Shadow'] = Color3.fromRGB(80, 50, 10),
         ['Background'] = Color3.fromRGB(120, 70, 20),
         ['Page'] = Color3.fromRGB(100, 60, 15),
@@ -453,7 +501,7 @@ NewYear = {
         }
     },
 
-    Summer = {
+    Topaz = {
         ['Shadow'] = Color3.fromRGB(20, 80, 100),
         ['Background'] = Color3.fromRGB(30, 120, 150),
         ['Page'] = Color3.fromRGB(25, 100, 125),
