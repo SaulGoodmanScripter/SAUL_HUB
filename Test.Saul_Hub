@@ -167,7 +167,7 @@ local function loadScriptSafe(url)
 end
 
 -- ВКЛАДКА MAIN
-local Tab = Window:Tab({Title = "🎮 Главная", Icon = "tree-pine"})
+local Tab = Window:Tab({Title = "🎮 Main", Icon = "tree-pine"})
 
 Tab:Section({Title = "👤 Управление персонажем"})
 
@@ -295,7 +295,7 @@ Tab:Button({
 })
 
 -- ВКЛАДКА MOVEMENT
-local Tab2 = Window:Tab({Title = "🚀 Перемещение", Icon = "snowflake"})
+local Tab2 = Window:Tab({Title = "🚀 Movement", Icon = "snowflake"})
 
 Tab2:Section({Title = "Скрипты перемещения"})
 
@@ -412,7 +412,7 @@ Tab2:Button({
 })
 
 -- ВКЛАДКА UNIVERSAL
-local Tab3 = Window:Tab({Title = "🔧 Универсальное", Icon = "gift"})
+local Tab3 = Window:Tab({Title = "🔧 Universal", Icon = "gift"})
 
 Tab3:Section({Title = "Универсальные скрипты"})
 
@@ -478,7 +478,7 @@ Tab3:Button({
 })
 
 -- ВКЛАДКА EXECUTOR
-local Tab4 = Window:Tab({Title = "</> Исполнитель", Icon = "code"})
+local Tab4 = Window:Tab({Title = "</> Executor", Icon = "code"})
 
 Tab4:Section({Title = "⚡ Исполнитель скриптов"})
 
@@ -661,7 +661,7 @@ for i, scriptData in ipairs(quickScripts) do
 end
 
 -- ВКЛАДКА AUTO SCRIPTS
-local Tab5 = Window:Tab({Title = "🎯 Авто-скрипты", Icon = "zap"})
+local Tab5 = Window:Tab({Title = "🎯 Авто-скрипты", Icon = "Stars"})
 
 local currentGameId = game.PlaceId
 local currentGameData = findGameByPlaceId(currentGameId)
