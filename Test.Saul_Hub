@@ -37,18 +37,19 @@ local GameDatabase = {
         name = "99 Nights in Forest",
         placeIds = {126509999114328, 79546208627805},
         scripts = {
-            {title = "🌙 Auto Farm", url = "https://raw.githubusercontent.com/MQPS7/99-Night-in-the-Forset/main/Gfarm"},
-            {title = "⚡ Voidware", url = "https://raw.githubusercontent.com/VapeVoidware/VW-Add/main/loader.lua"},
-            {title = "🌲 Sapling Dupe", url = "https://raw.githubusercontent.com/nootmaus/99nights/main/dupe.lua"}
+            {title = "⚡ Voidware Loader", url = "https://raw.githubusercontent.com/VapeVoidware/VW-Add/main/loader.lua"},
+            {title = "💎 Farm days and diamond", url = "https://raw.githubusercontent.com/caomod2077/Script/refs/heads/main/FNDayFarm.lua"},
+            {title = "🌲 Sapling dupe", url = "https://raw.githubusercontent.com/nootmaus/99nights/refs/heads/main/dupe.lua"},
+            {title = "🦊 Foxname Loader", url = "https://raw.githubusercontent.com/caomod2077/Script/refs/heads/main/FoxnameHub.lua"}
         }
     },
 
     ["brookhaven"] = {
-        name = "Brookhaven RP",
+        name = "Brookhaven",
         placeIds = {4924922222},
         scripts = {
-            {title = "🐀 R4D Troll Script", url = "https://raw.githubusercontent.com/M1ZZ001/BrookhavenR4D/main/Brookhaven%20R4D%20Script"},
-            {title = "🤡 Troll GUI", url = "https://raw.githubusercontent.com/as6cd0/SP_Hub/main/Brookhaven"}
+            {title = "🐀 R4d troll script", url = "https://raw.githubusercontent.com/M1ZZ001/BrookhavenR4D/main/Brookhaven%20R4D%20Script"},
+            {title = "🤡 Troll script", url = "https://raw.githubusercontent.com/as6cd0/SP_Hub/refs/heads/main/Brookhaven"}
         }
     },
 
@@ -56,17 +57,35 @@ local GameDatabase = {
         name = "Build A Boat For Treasure",
         placeIds = {537413528},
         scripts = {
-            {title = "⛵ BABFT Script", url = "https://raw.githubusercontent.com/TheRealAsu/BABFT/main/Source.lua"},
-            {title = "⚡ Auto Farm", url = "https://raw.githubusercontent.com/MaximumADHD/BABFT-Farm/main/script.lua"}
+            {title = "⛵ Build A Boat Script", url = "https://raw.githubusercontent.com/TheRealAsu/BABFT/refs/heads/main/Source.lua"},
+            {title = "🥇 Farm script", url = "https://raw.githubusercontent.com/Theo985/AetherX-Hub/refs/heads/main/BABFT"},
+            {title = "➕️ lots of slots", url = "https://raw.githubusercontent.com/SaulGoodmanScripter/Script-/refs/heads/main/build%20A%20Boat%20slots"}
+        }
+    },
+
+    ["grow_garden"] = {
+        name = "Grow a Garden",
+        placeIds = {126884695634066},
+        scripts = {
+            {title = "🌱 Grow a Garden Script", url = "https://raw.githubusercontent.com/Kenniel123/Grow-a-garden/refs/heads/main/Grow%20A%20Garden"}
+        }
+    },
+
+    ["steal_brainrot"] = {
+        name = "Steal a Brainrot",
+        placeIds = {109983668079237},
+        scripts = {
+            {title = "🌶 Chilli Hub", url = "https://raw.githubusercontent.com/tienkhanh1/spicy/main/Chilli.lua"},
+            {title = "🧊 Joiner(1m+)", url = "https://raw.githubusercontent.com/nootmaus/IceHub/refs/heads/main/Joiner"},
+            {title = "🎯 Aimbot Laser", url = "https://raw.githubusercontent.com/nootmaus/IceHubLaser/refs/heads/main/maus%3A"}
         }
     },
 
     ["blox_fruits"] = {
         name = "Blox Fruits",
-        placeIds = {2753915549, 4442272183, 7449423635},
+        placeIds = {2753915549},
         scripts = {
-            {title = "🍊 Blox Fruits Hub", url = "https://raw.githubusercontent.com/wpisstestfprg/Volcano/main/VolcanoNewUpdated.luau"},
-            {title = "⚔️ Auto Farm", url = "https://raw.githubusercontent.com/ScriptHubOP/script/main/Blox%20Fruits.lua"}
+            {title = "🍊 XP Farm", url = "https://raw.githubusercontent.com/wpisstestfprg/Volcano/refs/heads/main/VolcanoNewUpdated.luau"}
         }
     },
 
@@ -74,54 +93,18 @@ local GameDatabase = {
         name = "Murder Mystery 2",
         placeIds = {142823291},
         scripts = {
-            {title = "🔪 Vexon Hub", url = "https://raw.githubusercontent.com/DiosDi/VexonHub/main/VexonHub"},
-            {title = "🎭 Murder GUI", url = "https://raw.githubusercontent.com/scriptwaregg/MM2/main/MM2.lua"}
+            {title = "🔪 Vexon Hub", url = "https://raw.githubusercontent.com/DiosDi/VexonHub/refs/heads/main/VexonHub"}
         }
     },
 
     ["arsenal"] = {
         name = "Arsenal",
-        placeIds = {286090429, 5602055394},
+        placeIds = {286090429},
         scripts = {
-            {title = "🔫 Arsenal Script", url = "https://raw.githubusercontent.com/HAIKATV/rp-/main/Arsenal.lua"},
-            {title = "🎯 Aimbot", url = "https://raw.githubusercontent.com/scriptwaregg/Arsenal/main/Arsenal.lua"}
-        }
-    },
-
-    ["bedwars"] = {
-        name = "BedWars",
-        placeIds = {6872265039},
-        scripts = {
-            {title = "🛏️ Vape BedWars", url = "https://raw.githubusercontent.com/7GrandDadPGN/VapeV4ForRoblox/main/NewBedwars.lua"},
-            {title = "⚡ Voidware BW", url = "https://raw.githubusercontent.com/VoidwareLoader/Voidware/main/BedWars.lua"}
-        }
-    },
-
-    ["doomspire"] = {
-        name = "Doomspire Brickbattle",
-        placeIds = {1168263273},
-        scripts = {
-            {title = "💣 Doomspire GUI", url = "https://raw.githubusercontent.com/scriptwaregg/Doomspire/main/Doomspire.lua"}
-        }
-    },
-
-    ["tower_of_hell"] = {
-        name = "Tower of Hell",
-        placeIds = {1962086868},
-        scripts = {
-            {title = "🏆 ToH Script", url = "https://raw.githubusercontent.com/scriptwaregg/ToH/main/ToH.lua"}
-        }
-    },
-
-    ["royale_high"] = {
-        name = "Royale High",
-        placeIds = {735030788},
-        scripts = {
-            {title = "👑 Royale High Farm", url = "https://raw.githubusercontent.com/ScriptHubOP/script/main/Royale%20High.lua"}
+            {title = "🔫 Arsenal Script", url = "https://raw.githubusercontent.com/HAIKATV/rp-/refs/heads/main/Arsenal.lua"}
         }
     }
 }
-
 -- Функция поиска игры по ID
 local function findGameByPlaceId(placeId)
     for gameKey, gameData in pairs(GameDatabase) do
