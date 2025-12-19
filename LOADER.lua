@@ -1,4 +1,6 @@
 --[[
+By SaulGoodmanScripter
+Telegram channel: https://t.me/SaulGoodmanScript
 
 ░██████╗░█████╗░██╗░░░██╗██╗░░░░░
 ██╔════╝██╔══██╗██║░░░██║██║░░░░░
