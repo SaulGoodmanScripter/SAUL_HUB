@@ -1,4 +1,19 @@
--- Saul Hub Complete Version v3.3 (Новогодняя версия)
+--[[
+
+░██████╗░█████╗░██╗░░░██╗██╗░░░░░
+██╔════╝██╔══██╗██║░░░██║██║░░░░░
+╚█████╗░███████║██║░░░██║██║░░░░░
+░╚═══██╗██╔══██║██║░░░██║██║░░░░░
+██████╔╝██║░░██║╚██████╔╝███████╗
+╚═════╝░╚═╝░░╚═╝░╚═════╝░╚══════╝
+
+██╗░░██╗██╗░░░██╗██████╗░
+██║░░██║██║░░░██║██╔══██╗
+███████║██║░░░██║██████╦╝
+██╔══██║██║░░░██║██╔══██╗
+██║░░██║╚██████╔╝██████╦╝
+╚═╝░░╚═╝░╚═════╝░╚═════╝░
+]]
 local Players = game:GetService("Players")
 local RunService = game:GetService("RunService")
 local Workspace = game:GetService("Workspace")
@@ -8,7 +23,7 @@ local SoundService = game:GetService("SoundService")
 local TeleportService = game:GetService("TeleportService")
 local MarketplaceService = game:GetService("MarketplaceService")
 
--- Просто создай пустые функции вместо звуков
+-- Пустые звуки
 local function btnclick() end
 local function slidersound() end
 local function togglesound() end  
@@ -17,27 +32,28 @@ local function notifysound() end
 -- Загружаем библиотеку
 local Library = loadstring(game:HttpGet("https://raw.githubusercontent.com/SaulGoodmanScripter/library/refs/heads/main/The%20main%20code"))()
 local Window = Library:Window({
-    Title = "🎄 Saul Hub - Новогодняя версия",
-    Desc = "С Новым Годом! Пусть все скрипты летают! 🎅",
+    Title = "Saul Hub",
+    Desc = "Hello,I'm Saul Goodman.Did you know that you have rights?",
     Icon = 92155476988079,
-    Theme = "NewYear",
+    Theme = "Dark",
     Config = {
         Keybind = Enum.KeyCode.LeftControl,
         Size = UDim2.new(0, 550, 0, 350)
     },
     CloseUIButton = {
         Enabled = true,
-        Text = "С Новым Годом! 🎁"
+        Text = "CLOSE/OPEN"
     }
 })
 
--- БАЗА ДАННЫХ ИГР (УЛУЧШЕННАЯ)
+-- БАЗА ДАННЫХ ИГР
 local GameDatabase = {
     ["99_nights"] = {
         name = "99 Nights in Forest",
         placeIds = {126509999114328, 79546208627805},
         scripts = {
             {title = "⚡ Voidware Loader", url = "https://raw.githubusercontent.com/VapeVoidware/VW-Add/main/loader.lua"},
+            {Title = "☁️ Sky base", url = "https://pastebin.com/raw/5PqzEXBQ"},
             {title = "💎 Farm days and diamond", url = "https://raw.githubusercontent.com/caomod2077/Script/refs/heads/main/FNDayFarm.lua"},
             {title = "🌲 Sapling dupe", url = "https://raw.githubusercontent.com/nootmaus/99nights/refs/heads/main/dupe.lua"},
             {title = "🦊 Foxname Loader", url = "https://raw.githubusercontent.com/caomod2077/Script/refs/heads/main/FoxnameHub.lua"}
@@ -49,6 +65,7 @@ local GameDatabase = {
         placeIds = {4924922222},
         scripts = {
             {title = "🐀 R4d troll script", url = "https://raw.githubusercontent.com/M1ZZ001/BrookhavenR4D/main/Brookhaven%20R4D%20Script"},
+            {Title = "🚨REDz Hub", url = "https://pastefy.app/9OoVFBCU/raw"},
             {title = "🤡 Troll script", url = "https://raw.githubusercontent.com/as6cd0/SP_Hub/refs/heads/main/Brookhaven"}
         }
     },
@@ -70,13 +87,13 @@ local GameDatabase = {
             {title = "🌱 Grow a Garden Script", url = "https://raw.githubusercontent.com/Kenniel123/Grow-a-garden/refs/heads/main/Grow%20A%20Garden"}
         }
     },
-
     ["steal_brainrot"] = {
         name = "Steal a Brainrot",
         placeIds = {109983668079237},
         scripts = {
             {title = "🌶 Chilli Hub", url = "https://raw.githubusercontent.com/tienkhanh1/spicy/main/Chilli.lua"},
-            {title = "🧊 Joiner(1m+)", url = "https://raw.githubusercontent.com/nootmaus/IceHub/refs/heads/main/Joiner"},
+            {title = "🚪 Joiner(1m+)", url = "https://raw.githubusercontent.com/nootmaus/IceHub/refs/heads/main/Joiner"},
+            {title = "🧊 Ice hub", url = "https://pastefy.app/9OoVFBCU/raw"},
             {title = "🎯 Aimbot Laser", url = "https://raw.githubusercontent.com/nootmaus/IceHubLaser/refs/heads/main/maus%3A"}
         }
     },
@@ -93,7 +110,8 @@ local GameDatabase = {
         name = "Murder Mystery 2",
         placeIds = {142823291},
         scripts = {
-            {title = "🔪 Vexon Hub", url = "https://raw.githubusercontent.com/DiosDi/VexonHub/refs/heads/main/VexonHub"}
+            {title = "🔪 Vexon Hub", url = "https://raw.githubusercontent.com/DiosDi/VexonHub/refs/heads/main/VexonHub"},
+            {title = "💀 Traw Hub", url = "https://raw.githubusercontent.com/TomScripts/mm2/refs/heads/main/mm2"}
         }
     },
 
