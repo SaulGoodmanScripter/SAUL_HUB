@@ -59,7 +59,7 @@ local GameDatabase = {
         scripts = {
             {title = "⛵ Build A Boat Script", url = "https://raw.githubusercontent.com/TheRealAsu/BABFT/refs/heads/main/Source.lua"},
             {title = "🥇 Farm script", url = "https://raw.githubusercontent.com/Theo985/AetherX-Hub/refs/heads/main/BABFT"},
-            {title = "➕️ lots of slots", url = "https://raw.githubusercontent.com/SaulGoodmanScripter/Script-/refs/heads/main/build%20A%20Boat%20slots"}
+            {title = "➕️ lots of slots", url = "https://pastebin.com/raw/wQ7gyPC7"}
         }
     },
 
