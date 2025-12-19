@@ -15,7 +15,7 @@ local function togglesound() end
 local function notifysound() end
 
 -- Загружаем библиотеку
-local Library = loadstring(game:HttpGet("https://raw.githubusercontent.com/SaulGoodmanScripter/SAUL_HUB/refs/heads/main/Library%20.lua"))()
+local Library = loadstring(game:HttpGet("https://raw.githubusercontent.com/SaulGoodmanScripter/library/refs/heads/main/The%20main%20code"))()
 local Window = Library:Window({
     Title = "🎄 Saul Hub - Новогодняя версия",
     Desc = "С Новым Годом! Пусть все скрипты летают! 🎅",
