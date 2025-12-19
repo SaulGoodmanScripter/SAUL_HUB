@@ -421,7 +421,7 @@ Tab3:Button({
     Desc = "Видеть игроков сквозь стены",
     Callback = function()
         btnclick()
-        loadstring(game:HttpGet("https://raw.githubusercontent.com/SaulGoodmanScripter/SaulHub.Megascript/main/especially%20player%20"))()
+        loadstring(game:HttpGet("https://pastebin.com/raw/5Df0hp03"))()
     end
 })
 
