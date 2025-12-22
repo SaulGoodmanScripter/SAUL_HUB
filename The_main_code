@@ -13,6 +13,8 @@
 ██╔══██║██║░░░██║██╔══██╗
 ██║░░██║╚██████╔╝██████╦╝
 ╚═╝░░╚═╝░╚═════╝░╚═════╝░
+
++ Admin Panel Functions by NoobzyScripter
 ]]
 local Players = game:GetService("Players")
 local RunService = game:GetService("RunService")
@@ -22,6 +24,8 @@ local UserInputService = game:GetService("UserInputService")
 local SoundService = game:GetService("SoundService")
 local TeleportService = game:GetService("TeleportService")
 local MarketplaceService = game:GetService("MarketplaceService")
+local TweenService = game:GetService("TweenService")
+local CoreGui = game:GetService("CoreGui")
 
 -- Пустые звуки
 local function btnclick() end
@@ -45,6 +49,147 @@ local Window = Library:Window({
         Text = "CLOSE/OPEN"
     }
 })
+
+-- Функции из Admin Panel
+local function createLoadingScreen()
+    local ScreenGui = Instance.new("ScreenGui")
+    ScreenGui.Name = "AdminHubLoading"
+    ScreenGui.Parent = CoreGui
+    ScreenGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
+
+    local LoadingFrame = Instance.new("Frame")
+    LoadingFrame.Size = UDim2.new(1, 0, 1, 0)
+    LoadingFrame.BackgroundColor3 = Color3.fromRGB(10, 10, 20)
+    LoadingFrame.BackgroundTransparency = 0.2
+    LoadingFrame.Parent = ScreenGui
+    LoadingFrame.ZIndex = 100
+
+    local UIGradient = Instance.new("UIGradient")
+    UIGradient.Color = ColorSequence.new({
+        ColorSequenceKeypoint.new(0, Color3.fromRGB(10, 10, 20)),
+        ColorSequenceKeypoint.new(1, Color3.fromRGB(50, 0, 100))
+    })
+    UIGradient.Rotation = 45
+    UIGradient.Parent = LoadingFrame
+
+    local LoadingText = Instance.new("TextLabel")
+    LoadingText.Size = UDim2.new(0, 400, 0, 100)
+    LoadingText.Position = UDim2.new(0.5, -200, 0.4, -50)
+    LoadingText.BackgroundTransparency = 1
+    LoadingText.Text = "Loading Admin Panel..."
+    LoadingText.TextColor3 = Color3.fromRGB(0, 255, 255)
+    LoadingText.Font = Enum.Font.SciFi
+    LoadingText.TextSize = 36
+    LoadingText.TextStrokeTransparency = 0.8
+    LoadingText.TextStrokeColor3 = Color3.fromRGB(255, 0, 255)
+    LoadingText.Parent = LoadingFrame
+
+    TweenService:Create(LoadingText, TweenInfo.new(2, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut, -1, true), {
+        Position = UDim2.new(0.5, -200, 0.4, -30)
+    }):Play()
+
+    for i = 1, 8 do
+        local Particle = Instance.new("Frame")
+        Particle.Size = UDim2.new(0, 10, 0, 10)
+        Particle.BackgroundColor3 = Color3.fromRGB(0, 255, 255)
+        Particle.BackgroundTransparency = 0.5
+        Particle.Parent = LoadingFrame
+        local UICorner = Instance.new("UICorner")
+        UICorner.CornerRadius = UDim.new(1, 0)
+        UICorner.Parent = Particle
+
+        local angle = i * (360 / 8)
+        RunService.RenderStepped:Connect(function(delta)
+            angle = angle + delta * 100
+            Particle.Position = UDim2.new(0.5, math.cos(math.rad(angle)) * 100, 0.5, math.sin(math.rad(angle)) * 100)
+        end)
+    end
+
+    task.delay(2, function()
+        TweenService:Create(LoadingFrame, TweenInfo.new(1, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
+            BackgroundTransparency = 1
+        }):Play()
+        TweenService:Create(LoadingText, TweenInfo.new(1, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
+            TextTransparency = 1
+        }):Play()
+        task.delay(1, function()
+            ScreenGui:Destroy()
+        end)
+    end)
+end
+
+-- Запускаем загрузочный экран
+createLoadingScreen()
+
+-- Глобальные переменные для функций Admin Panel
+local espEnabled = false
+local highlights = {}
+local infiniteJump = false
+local jumpConnection
+local noclip = false
+local noclipConnection
+local godMode = false
+local hitboxEnabled = false
+local toolSizeMultiplier = false
+local aimEnabled = false
+local aimConnection
+local flingEnabled = false
+local flingConnection
+local particleBurstEnabled = false
+local particleConnection
+local randomizeColorsEnabled = false
+local randomizeConnection
+local playersInvisible = false
+local isInvisible = false
+
+-- Функции ESP
+local function addHighlight(player)
+    if player ~= LocalPlayer and player.Character then
+        local highlight = Instance.new("Highlight")
+        highlight.Adornee = player.Character
+        highlight.FillColor = Color3.fromRGB(0, 255, 255)
+        highlight.OutlineColor = Color3.fromRGB(255, 0, 255)
+        highlight.FillTransparency = 0.3
+        highlight.OutlineTransparency = 0
+        highlight.Parent = player.Character
+        highlights[player] = highlight
+    end
+    player.CharacterAdded:Connect(function(character)
+        if espEnabled and player ~= LocalPlayer then
+            local highlight = Instance.new("Highlight")
+            highlight.Adornee = character
+            highlight.FillColor = Color3.fromRGB(0, 255, 255)
+            highlight.OutlineColor = Color3.fromRGB(255, 0, 255)
+            highlight.FillTransparency = 0.3
+            highlight.OutlineTransparency = 0
+            highlight.Parent = character
+            highlights[player] = highlight
+        end
+    end)
+end
+
+local function removeHighlight(player)
+    if highlights[player] then
+        highlights[player]:Destroy()
+        highlights[player] = nil
+    end
+end
+
+-- Функция AimBot
+local function getClosestPlayer()
+    local closestPlayer = nil
+    local closestDistance = math.huge
+    for _, player in pairs(Players:GetPlayers()) do
+        if player ~= LocalPlayer and player.Character and player.Character:FindFirstChild("HumanoidRootPart") then
+            local distance = (LocalPlayer.Character.HumanoidRootPart.Position - player.Character.HumanoidRootPart.Position).Magnitude
+            if distance < closestDistance then
+                closestDistance = distance
+                closestPlayer = player
+            end
+        end
+    end
+    return closestPlayer
+end
 
 -- БАЗА ДАННЫХ ИГР
 local GameDatabase = {
@@ -123,6 +268,7 @@ local GameDatabase = {
         }
     }
 }
+
 -- Функция поиска игры по ID
 local function findGameByPlaceId(placeId)
     for gameKey, gameData in pairs(GameDatabase) do
@@ -133,15 +279,6 @@ local function findGameByPlaceId(placeId)
         end
     end
     return nil
-end
-
--- Функция подсчета игр
-local function countGames()
-    local count = 0
-    for _ in pairs(GameDatabase) do
-        count = count + 1
-    end
-    return count
 end
 
 -- Функция безопасной загрузки скрипта
@@ -259,73 +396,66 @@ Tab:Button({
     end
 })
 
+-- Функции гравитации из Admin Panel
+local gravityEnabled = true
+local gravityValue = workspace.Gravity
+
+Tab:Section({Title = "🌌 Гравитация"})
+
+Tab:Toggle({
+    Title = "Включить/Выключить гравитацию",
+    Desc = "Позволяет включать/выключать гравитацию",
+    Value = true,
+    Callback = function(v)
+        gravityEnabled = v
+        if gravityEnabled then
+            workspace.Gravity = gravityValue
+        else
+            workspace.Gravity = 0
+        end
+        togglesound()
+    end
+})
+
+Tab:Slider({
+    Title = "Значение гравитации",
+    Desc = "Установите значение гравитации",
+    Min = 0,
+    Max = 500,
+    Rounding = 0,
+    Value = workspace.Gravity,
+    Callback = function(val)
+        gravityValue = val
+        if gravityEnabled then
+            workspace.Gravity = gravityValue
+        end
+        slidersound()
+    end
+})
+
 Tab:Section({Title = "📢 Новости обновления"})
 
 Tab:Label({
-    Title = "🎉 Saul Hub v3.3",
-    Desc = "🎄 Новогоднее обновление!\n✨ Новая тема NewYear\n🎯 +5 новых игр\n⚡ Улучшенная стабильность"
+    Title = "🎉 Saul Hub v3.4",
+    Desc = "🎄 Новогоднее обновление!\n✨ + Admin Panel Functions\n🎯 Новые функции: ESP, AimBot, Noclip\n⚡ Улучшенная стабильность"
 })
 
 Tab:Label({
     Title = "Что нового:",
-    Desc = "• Праздничный интерфейс\n• Улучшенная система загрузки\n• Авто-обновление настроек\n• Фикс всех известных багов"
-})
-
--- Системная информация
-Tab:Section({Title = "📊 Системная информация"})
-
-local currentGameData = findGameByPlaceId(game.PlaceId)
-
-Tab:Label({
-    Title = "👤 Игрок",
-    Desc = LocalPlayer.Name .. " (Level: " .. (LocalPlayer.Character and "Online" or "Offline") .. ")"
-})
-
-Tab:Label({
-    Title = "🎮 ID игры",
-    Desc = tostring(game.PlaceId)
-})
-
-if currentGameData then
-    Tab:Label({
-        Title = "🎯 Обнаружена игра",
-        Desc = currentGameData.name .. " ✅"
-    })
-else
-    Tab:Label({
-        Title = "🎯 Обнаружена игра",
-        Desc = "Неизвестная игра ❌"
-    })
-end
-
-Tab:Label({
-    Title = "⚡ Статус",
-    Desc = "🟢 Saul Hub активен | v3.3"
-})
-
-Tab:Button({
-    Title = "🔄 Перезапустить игру",
-    Desc = "Перезапустить текущую игру",
-    Callback = function()
-        btnclick()
-        TeleportService:Teleport(game.PlaceId)
-    end
+    Desc = "• Функции из Admin Panel\n• ESP игроков\n• AimBot система\n• Гравитация\n• X-Ray режим\n• И многое другое!"
 })
 
 -- ВКЛАДКА MOVEMENT
 local Tab2 = Window:Tab({Title = "🚀 Movement", Icon = "snowflake"})
 
-Tab2:Section({Title = "Скрипты перемещения"})
-
-local noclipEnabled = false
-local noclipConnection
+Tab2:Section({Title = "Основные функции"})
 
 Tab2:Toggle({
     Title = "👻 Noclip",
     Desc = "Ходить сквозь стены",
     Value = false,
     Callback = function(v)
-        noclipEnabled = v
+        noclip = v
         local character = LocalPlayer.Character
 
         if v then
@@ -342,7 +472,7 @@ Tab2:Toggle({
             end
 
             noclipConnection = RunService.Stepped:Connect(function()
-                if noclipEnabled and LocalPlayer.Character then
+                if noclip and LocalPlayer.Character then
                     for _, part in pairs(LocalPlayer.Character:GetDescendants()) do
                         if part:IsA("BasePart") then
                             part.CanCollide = false
@@ -368,28 +498,16 @@ Tab2:Toggle({
     end
 })
 
-Tab2:Button({
-    Title = "🕊️ Fly GUI",
-    Desc = "Открыть меню полета",
-    Callback = function()
-        btnclick()
-        loadstring(game:HttpGet("https://raw.githubusercontent.com/OBFhm5650lol/F/main/F"))()
-    end
-})
-
-local infJumpEnabled = false
-local jumpConnection
-
 Tab2:Toggle({
     Title = "🏀 Infinite Jump",
     Desc = "Бесконечные прыжки",
     Value = false,
     Callback = function(v)
-        infJumpEnabled = v
+        infiniteJump = v
 
         if v then
             jumpConnection = UserInputService.JumpRequest:Connect(function()
-                if infJumpEnabled and LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("Humanoid") then
+                if infiniteJump and LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("Humanoid") then
                     LocalPlayer.Character.Humanoid:ChangeState(Enum.HumanoidStateType.Jumping)
                 end
             end)
@@ -404,46 +522,327 @@ Tab2:Toggle({
 })
 
 Tab2:Button({
-    Title = "⚡ Speed Walk",
-    Desc = "Увеличение скорости ходьбы",
+    Title = "🕊️ Fly GUI",
+    Desc = "Открыть меню полета",
     Callback = function()
         btnclick()
-        local character = LocalPlayer.Character
-        if character and character:FindFirstChild("Humanoid") then
-            character.Humanoid.WalkSpeed = 100
-            Window:Notify({
-                Title = "⚡ Успешно",
-                Desc = "Скорость установлена на 100",
-                Time = 3
-            })
-        end
+        loadstring(game:HttpGet("https://raw.githubusercontent.com/OBFhm5650lol/F/main/F"))()
     end
 })
 
-Tab2:Button({
-    Title = "🎯 Walkfling",
-    Desc = "Скрипт Walkfling",
+-- ВКЛАДКА VISUAL
+local Tab3 = Window:Tab({Title = "👁️ Visual", Icon = "eye"})
+
+Tab3:Section({Title = "ESP и визуальные эффекты"})
+
+Tab3:Toggle({
+    Title = "👁️ ESP Игроков",
+    Desc = "Видеть игроков сквозь стены",
+    Value = false,
+    Callback = function(v)
+        espEnabled = v
+        if v then
+            for _, player in pairs(Players:GetPlayers()) do
+                addHighlight(player)
+            end
+            
+            Players.PlayerAdded:Connect(function(player)
+                addHighlight(player)
+            end)
+            
+            Players.PlayerRemoving:Connect(function(player)
+                removeHighlight(player)
+            end)
+        else
+            for player, _ in pairs(highlights) do
+                removeHighlight(player)
+            end
+            highlights = {}
+        end
+        togglesound()
+    end
+})
+
+Tab3:Toggle({
+    Title = "🎯 AimBot",
+    Desc = "Автоматическое прицеливание на ближайшего игрока",
+    Value = false,
+    Callback = function(v)
+        aimEnabled = v
+        if v then
+            aimConnection = RunService.RenderStepped:Connect(function()
+                local closestPlayer = getClosestPlayer()
+                if closestPlayer and closestPlayer.Character and LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("HumanoidRootPart") then
+                    local head = closestPlayer.Character:FindFirstChild("Head")
+                    if head then
+                        workspace.CurrentCamera.CFrame = CFrame.new(workspace.CurrentCamera.CFrame.Position, head.Position)
+                    end
+                end
+            end)
+        else
+            if aimConnection then
+                aimConnection:Disconnect()
+                aimConnection = nil
+            end
+        end
+        togglesound()
+    end
+})
+
+Tab3:Toggle({
+    Title = "🌀 Spin",
+    Desc = "Быстрое вращение персонажа",
+    Value = false,
+    Callback = function(v)
+        flingEnabled = v
+        if v then
+            flingConnection = RunService.Heartbeat:Connect(function()
+                if LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("HumanoidRootPart") then
+                    LocalPlayer.Character.HumanoidRootPart.CFrame = LocalPlayer.Character.HumanoidRootPart.CFrame * CFrame.Angles(0, math.rad(100), 0)
+                end
+            end)
+        else
+            if flingConnection then
+                flingConnection:Disconnect()
+                flingConnection = nil
+            end
+        end
+        togglesound()
+    end
+})
+
+Tab3:Toggle({
+    Title = "✨ Particle Burst",
+    Desc = "Создание частиц вокруг персонажа",
+    Value = false,
+    Callback = function(v)
+        particleBurstEnabled = v
+        if v then
+            particleConnection = RunService.Heartbeat:Connect(function()
+                if LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("HumanoidRootPart") then
+                    local rootPart = LocalPlayer.Character.HumanoidRootPart
+                    for i = 1, 3 do
+                        local particle = Instance.new("Part")
+                        particle.Size = Vector3.new(0.5, 0.5, 0.5)
+                        particle.Shape = Enum.PartType.Ball
+                        particle.BrickColor = BrickColor.new(Color3.fromRGB(math.random(0, 255), math.random(0, 255), math.random(0, 255)))
+                        particle.Material = Enum.Material.Neon
+                        particle.Anchored = true
+                        particle.CanCollide = false
+                        particle.Position = rootPart.Position + Vector3.new(math.random(-5, 5), math.random(0, 5), math.random(-5, 5))
+                        particle.Parent = workspace
+
+                        local velocity = Vector3.new(math.random(-10, 10), math.random(5, 15), math.random(-10, 10))
+                        TweenService:Create(particle, TweenInfo.new(1, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
+                            Position = particle.Position + velocity,
+                            Transparency = 1
+                        }):Play()
+                        task.delay(1, function()
+                            particle:Destroy()
+                        end)
+                    end
+                end
+            end)
+        elseif particleConnection then
+            particleConnection:Disconnect()
+            particleConnection = nil
+        end
+        togglesound()
+    end
+})
+
+Tab3:Toggle({
+    Title = "🎨 Random Colors",
+    Desc = "Случайное изменение цветов объектов",
+    Value = false,
+    Callback = function(v)
+        randomizeColorsEnabled = v
+        if v then
+            randomizeConnection = RunService.Heartbeat:Connect(function()
+                for _, obj in pairs(workspace:GetDescendants()) do
+                    if obj:IsA("BasePart") then
+                        obj.BrickColor = BrickColor.Random()
+                    end
+                end
+            end)
+        elseif randomizeConnection then
+            randomizeConnection:Disconnect()
+            randomizeConnection = nil
+        end
+        togglesound()
+    end
+})
+
+Tab3:Toggle({
+    Title = "👻 Players Visibility",
+    Desc = "Сделать других игроков невидимыми",
+    Value = false,
+    Callback = function(v)
+        playersInvisible = v
+        for _, player in pairs(Players:GetPlayers()) do
+            if player ~= LocalPlayer and player.Character then
+                for _, part in pairs(player.Character:GetDescendants()) do
+                    if part:IsA("BasePart") then
+                        part.Transparency = v and 1 or 0
+                        part.CanCollide = not v
+                    elseif part:IsA("Decal") then
+                        part.Transparency = v and 1 or 0
+                    end
+                end
+            end
+        end
+        togglesound()
+    end
+})
+
+Tab3:Toggle({
+    Title = "🔍 XRay",
+    Desc = "Видеть объекты сквозь стены",
+    Value = false,
+    Callback = function(v)
+        isInvisible = v
+        for _, object in pairs(game:GetDescendants()) do
+            if (object:IsA("BasePart") or object:IsA("Decal") or object:IsA("Texture")) and
+               not object:IsDescendantOf(game.Players) and not object:IsA("SpawnLocation") then
+                object.Transparency = v and 0.8 or 0
+            end
+        end
+        togglesound()
+    end
+})
+
+-- ВКЛАДКА POWER
+local Tab4 = Window:Tab({Title = "⚡ Power", Icon = "zap"})
+
+Tab4:Section({Title = "Силовые функции"})
+
+Tab4:Toggle({
+    Title = "🛡️ God Mode",
+    Desc = "Бессмертие персонажа",
+    Value = false,
+    Callback = function(v)
+        godMode = v
+        if LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("Humanoid") then
+            local humanoid = LocalPlayer.Character.Humanoid
+            if v then
+                humanoid.MaxHealth = math.huge
+                humanoid.Health = math.huge
+            else
+                humanoid.MaxHealth = 100
+                humanoid.Health = 100
+            end
+        end
+        togglesound()
+    end
+})
+
+Tab4:Toggle({
+    Title = "🎯 Hitbox x6",
+    Desc = "Увеличение хитбокса в 6 раз",
+    Value = false,
+    Callback = function(v)
+        hitboxEnabled = v
+        if LocalPlayer.Character then
+            for _, part in pairs(LocalPlayer.Character:GetDescendants()) do
+                if part:IsA("BasePart") and part.Name ~= "HumanoidRootPart" then
+                    if v then
+                        part.Size = part.Size * 6
+                        part.Massless = true
+                    else
+                        part.Size = part.Size / 6
+                        part.Massless = false
+                    end
+                end
+            end
+        end
+        togglesound()
+    end
+})
+
+Tab4:Toggle({
+    Title = "🔧 Tool Size x4",
+    Desc = "Увеличение размеров инструментов в 4 раза",
+    Value = false,
+    Callback = function(v)
+        toolSizeMultiplier = v
+        for _, tool in pairs(LocalPlayer.Backpack:GetChildren()) do
+            if tool:IsA("Tool") then
+                for _, part in pairs(tool:GetDescendants()) do
+                    if part:IsA("BasePart") then
+                        if v then
+                            part.Size = part.Size * 4
+                        else
+                            part.Size = part.Size / 4
+                        end
+                    end
+                end
+            end
+        end
+        togglesound()
+    end
+})
+
+Tab4:Section({Title = "Специальные скрипты"})
+
+local specialScripts = {
+    {"🕳️ Black Hole", "https://raw.githubusercontent.com/RbxNoobScripter/Shhh-/refs/heads/main/Basic.lua"},
+    {"🧠 Telekinesis", "https://raw.githubusercontent.com/RbxNoobScripter/REAL-SIGMA-SCRIPT-/refs/heads/main/Main.lua"},
+    {"🚀 Fly", "https://raw.githubusercontent.com/RbxNoobScripter/FlyingSigma/refs/heads/main/Goida.lua"},
+    {"👽 SCP BY G10", "https://pastefy.app/YsJgITXR/raw"},
+    {"🤪 Sus", "https://raw.githubusercontent.com/RbxNoobScripter/nahhhbrrr/refs/heads/main/base.lua"},
+    {"⚡ InfiniteYield", "https://raw.githubusercontent.com/EdgeIY/infiniteyield/master/source"},
+    {"🤖 SpamBot + Walk-Bot", "https://raw.githubusercontent.com/RbxNoobScripter/Admin-panel-Script-/refs/heads/main/qwerty.lua"},
+    {"💻 Lua IDE", "https://raw.githubusercontent.com/RbxNoobScripter/Admin-panel-Script-/refs/heads/main/ytrewq1234556666.lua"}
+}
+
+for _, scriptData in ipairs(specialScripts) do
+    Tab4:Button({
+        Title = scriptData[1],
+        Desc = "Загрузить скрипт",
+        Callback = function()
+            btnclick()
+            loadScriptSafe(scriptData[2])
+        end
+    })
+end
+
+Tab4:Button({
+    Title = "💥 Screen Flash",
+    Desc = "Эффект вспышки на экране",
     Callback = function()
         btnclick()
-        loadstring(game:HttpGet("https://raw.githubusercontent.com/7dksbpxuw8/Other/main/Walkfling"))()
+        local ScreenGui = Instance.new("ScreenGui")
+        ScreenGui.Parent = CoreGui
+        local flash = Instance.new("Frame")
+        flash.Size = UDim2.new(1, 0, 1, 0)
+        flash.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+        flash.BackgroundTransparency = 0
+        flash.Parent = ScreenGui
+        
+        TweenService:Create(flash, TweenInfo.new(0.5, Enum.EasingStyle.Quad), {
+            BackgroundTransparency = 1
+        }):Play()
+        task.delay(0.5, function()
+            ScreenGui:Destroy()
+        end)
+    end
+})
+
+Tab4:Button({
+    Title = "📸 Freecam",
+    Desc = "Режим свободной камеры",
+    Callback = function()
+        btnclick()
+        loadstring(game:HttpGet("https://pastebin.com/raw/P4reNRiQ"))()
     end
 })
 
 -- ВКЛАДКА UNIVERSAL
-local Tab3 = Window:Tab({Title = "🔧 Universal", Icon = "gift"})
+local Tab5 = Window:Tab({Title = "🔧 Universal", Icon = "gift"})
 
-Tab3:Section({Title = "Универсальные скрипты"})
+Tab5:Section({Title = "Универсальные скрипты"})
 
-Tab3:Button({
-    Title = "👁️ ESP Игроков",
-    Desc = "Видеть игроков сквозь стены",
-    Callback = function()
-        btnclick()
-        loadstring(game:HttpGet("https://pastebin.com/raw/5Df0hp03"))()
-    end
-})
-
-Tab3:Button({
+Tab5:Button({
     Title = "⏰ Anti AFK",
     Desc = "Защита от кика за бездействие",
     Callback = function()
@@ -452,16 +851,7 @@ Tab3:Button({
     end
 })
 
-Tab3:Button({
-    Title = "👻 Невидимость",
-    Desc = "Стать невидимым для других",
-    Callback = function()
-        btnclick()
-        loadstring(game:HttpGet("https://pastebin.com/raw/3Rnd9rHf"))()
-    end
-})
-
-Tab3:Button({
+Tab5:Button({
     Title = "💃 Все эмоции",
     Desc = "Разблокировать все эмоции",
     Callback = function()
@@ -470,9 +860,31 @@ Tab3:Button({
     end
 })
 
-Tab3:Section({Title = "Утилиты"})
+Tab5:Section({Title = "Телепортация"})
 
-Tab3:Button({
+-- Функция телепортации к игрокам
+local function createTeleportButtons()
+    for _, player in pairs(Players:GetPlayers()) do
+        if player ~= LocalPlayer then
+            Tab5:Button({
+                Title = "👤 TP to " .. player.Name,
+                Desc = "Телепортироваться к игроку",
+                Callback = function()
+                    btnclick()
+                    if player.Character and player.Character:FindFirstChild("HumanoidRootPart") and 
+                       LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("HumanoidRootPart") then
+                        LocalPlayer.Character.HumanoidRootPart.CFrame = player.Character.HumanoidRootPart.CFrame
+                    end
+                end
+            })
+        end
+    end
+end
+
+-- Создаем кнопки телепортации
+createTeleportButtons()
+
+Tab5:Button({
     Title = "🔄 Быстрый реджойн",
     Desc = "Мгновенный реджойн игры",
     Callback = function()
@@ -481,7 +893,7 @@ Tab3:Button({
     end
 })
 
-Tab3:Button({
+Tab5:Button({
     Title = "📋 Копировать ID",
     Desc = "Скопировать ID игры в буфер",
     Callback = function()
@@ -496,12 +908,12 @@ Tab3:Button({
 })
 
 -- ВКЛАДКА EXECUTOR
-local Tab4 = Window:Tab({Title = "</> Executor", Icon = "code"})
+local Tab6 = Window:Tab({Title = "</> Executor", Icon = "code"})
 
-Tab4:Section({Title = "⚡ Исполнитель скриптов"})
+Tab6:Section({Title = "⚡ Исполнитель скриптов"})
 
 local defaultScript = [[-- 🎄 Saul Hub Executor
-print("Hello from Saul Hub v3.3!")
+print("Hello from Saul Hub v3.4!")
 
 -- Пример: Быстрый старт
 local player = game.Players.LocalPlayer
@@ -520,12 +932,12 @@ end
 
 local currentScript = defaultScript
 
-local codeDisplay = Tab4:Code({
+local codeDisplay = Tab6:Code({
     Title = "📝 Текущий скрипт",
     Code = currentScript
 })
 
-local scriptInfo = Tab4:Label({
+local scriptInfo = Tab6:Label({
     Title = "📊 Информация",
     Desc = "Символов: " .. #currentScript .. " | Строк: " .. select(2, string.gsub(currentScript, "\n", "")) + 1
 })
@@ -536,7 +948,7 @@ local function updateScriptInfo()
     scriptInfo:SetDesc(string.format("Символов: %d | Строк: %d", charCount, lineCount))
 end
 
-local scriptInput = Tab4:Textbox({
+local scriptInput = Tab6:Textbox({
     Title = "✏️ Быстрое редактирование",
     Desc = "Введите новый скрипт",
     Placeholder = "print('Новый год наступил! 🎄')",
@@ -551,9 +963,9 @@ local scriptInput = Tab4:Textbox({
     end
 })
 
-Tab4:Section({Title = "⚙️ Управление"})
+Tab6:Section({Title = "⚙️ Управление"})
 
-Tab4:Button({
+Tab6:Button({
     Title = "🚀 Выполнить",
     Desc = "Запустить текущий скрипт",
     Callback = function()
@@ -600,7 +1012,7 @@ Tab4:Button({
     end
 })
 
-Tab4:Button({
+Tab6:Button({
     Title = "🔄 Пример",
     Desc = "Загрузить пример скрипта",
     Callback = function()
@@ -612,7 +1024,7 @@ Tab4:Button({
     end
 })
 
-Tab4:Button({
+Tab6:Button({
     Title = "🗑️ Очистить",
     Desc = "Очистить все поля",
     Callback = function()
@@ -629,76 +1041,27 @@ Tab4:Button({
     end
 })
 
-Tab4:Section({Title = "🎯 Быстрые скрипты"})
-
-local quickScripts = {
-    {"🔄 Режойн", 'game:GetService("TeleportService"):Teleport(game.PlaceId)'},
-    {"👁️ ESP", [[
-for _, player in pairs(game.Players:GetPlayers()) do
-    if player ~= game.Players.LocalPlayer and player.Character then
-        local highlight = Instance.new("Highlight")
-        highlight.Parent = player.Character
-        highlight.FillColor = Color3.new(1, 0, 0)
-        highlight.OutlineColor = Color3.new(1, 1, 0)
-        highlight.Name = "SaulESP"
-    end
-end
-print("ESP активирован!")]]},
-    {"⚡ Супер скорость", [[
-local player = game.Players.LocalPlayer
-if player.Character then
-    local humanoid = player.Character:FindFirstChild("Humanoid")
-    if humanoid then
-        humanoid.WalkSpeed = 150
-        humanoid.JumpPower = 200
-        print("Супер скорость активирована!")
-    end
-end]]},
-    {"🎄 Новогоднее сообщение", [[
-for _, player in pairs(game.Players:GetPlayers()) do
-    game:GetService("ReplicatedStorage").DefaultChatSystemChatEvents.SayMessageRequest:FireAllClients(
-        "🎄 С Новым Годом от Saul Hub! 🎅",
-        "All"
-    )
-end
-print("Поздравление отправлено!")]]}
-}
-
-for i, scriptData in ipairs(quickScripts) do
-    Tab4:Button({
-        Title = scriptData[1],
-        Desc = "Вставить шаблон",
-        Callback = function()
-            btnclick()
-            currentScript = scriptData[2]
-            codeDisplay:SetCode(currentScript)
-            scriptInput:SetValue("")
-            updateScriptInfo()
-        end
-    })
-end
-
 -- ВКЛАДКА AUTO SCRIPTS
-local Tab5 = Window:Tab({Title = "🎯 Auto-scripts", Icon = "bell"})
+local Tab7 = Window:Tab({Title = "🎯 Auto-scripts", Icon = "bell"})
 
 local currentGameId = game.PlaceId
 local currentGameData = findGameByPlaceId(currentGameId)
 
 if currentGameData then
-    Tab5:Section({Title = "🎮 Обнаружена игра: " .. currentGameData.name})
+    Tab7:Section({Title = "🎮 Обнаружена игра: " .. currentGameData.name})
 
-    Tab5:Label({
+    Tab7:Label({
         Title = "🟢 Игра поддерживается",
         Desc = "Доступно " .. #currentGameData.scripts .. " скриптов"
     })
 
     for _, scriptData in ipairs(currentGameData.scripts) do
-        Tab5:Code({
+        Tab7:Code({
             Title = "📄 " .. scriptData.title,
             Code = "loadstring(game:HttpGet('" .. scriptData.url .. "'))()"
         })
 
-        Tab5:Button({
+        Tab7:Button({
             Title = "🚀 " .. scriptData.title,
             Desc = "Автоматический запуск",
             Callback = function()
@@ -708,58 +1071,30 @@ if currentGameData then
         })
     end
 else
-    Tab5:Section({Title = "❌ Игра не найдена"})
+    Tab7:Section({Title = "❌ Игра не найдена"})
 
     local gameName = "Неизвестная игра"
     pcall(function()
         gameName = MarketplaceService:GetProductInfo(currentGameId).Name
     end)
 
-    Tab5:Label({
+    Tab7:Label({
         Title = "ℹ️ Информация об игре",
         Desc = gameName .. "\nID: " .. currentGameId
     })
-
-    Tab5:Button({
-        Title = "🔍 Проверить обновления",
-        Desc = "Проверить наличие скриптов",
-        Callback = function()
-            btnclick()
-            Window:Notify({
-                Title = "🔍 Поиск...",
-                Desc = "Ищем скрипты для " .. gameName,
-                Time = 4
-            })
-        end
-    })
 end
-
-Tab5:Section({Title = "📚 Все игры"})
-
-local allGamesCode = "-- 🎮 БИБЛИОТЕКА SAUL HUB v3.3 --\n\n"
-for gameKey, gameData in pairs(GameDatabase) do
-    allGamesCode = allGamesCode .. "🎯 " .. gameData.name .. "\n"
-    allGamesCode = allGamesCode .. "   📍 ID: " .. table.concat(gameData.placeIds, ", ") .. "\n"
-    allGamesCode = allGamesCode .. "   🔧 Скриптов: " .. #gameData.scripts .. "\n\n"
-end
-allGamesCode = allGamesCode .. "Всего игр: " .. countGames() .. " 🎄"
-
-Tab5:Code({
-    Title = "📋 Полный список",
-    Code = allGamesCode
-})
 
 -- ВКЛАДКА CREDITS
-local Tab6 = Window:Tab({Title = "👑 Авторы", Icon = "heart"})
+local Tab8 = Window:Tab({Title = "👑 Авторы", Icon = "heart"})
 
-Tab6:Section({Title = "👑 Разработчики"})
+Tab8:Section({Title = "👑 Разработчики"})
 
-Tab6:Label({
+Tab8:Label({
     Title = "🎅 Saul Goodman",
     Desc = "Создатель и главный разработчик\nTelegram: @SaulGoodmanScript"
 })
 
-Tab6:Button({
+Tab8:Button({
     Title = "📋 Копировать Telegram",
     Callback = function()
         setclipboard("https://t.me/SaulGoodmanScript")
@@ -772,12 +1107,12 @@ Tab6:Button({
     end
 })
 
-Tab6:Label({
+Tab8:Label({
     Title = "🤝 Lori Script",
     Desc = "Партнер проекта\nTelegram: @loriscript"
 })
 
-Tab6:Button({
+Tab8:Button({
     Title = "📋 Копировать Telegram",
     Callback = function()
         setclipboard("https://t.me/loriscript")
@@ -790,24 +1125,29 @@ Tab6:Button({
     end
 })
 
-Tab6:Section({Title = "📊 Техническая информация"})
+Tab8:Label({
+    Title = "🛠️ NoobzyScripter",
+    Desc = "Creator Admin Panel\nФункции Admin Panel\nSpecial thanks for great features!"
+})
 
-Tab6:Label({
+Tab8:Section({Title = "📊 Техническая информация"})
+
+Tab8:Label({
     Title = "Версия",
-    Desc = "Saul Hub v3.3 (New Year Edition)"
+    Desc = "Saul Hub v3.4 (Admin Panel Edition)"
 })
 
-Tab6:Label({
+Tab8:Label({
     Title = "Статус",
-    Desc = "🟢 Онлайн | 🎄 Праздничный режим"
+    Desc = "🟢 Онлайн | ⚡ Функции Admin Panel активны"
 })
 
-Tab6:Label({
+Tab8:Label({
     Title = "Игроков онлайн",
     Desc = #Players:GetPlayers() .. " из " .. Players.MaxPlayers
 })
 
-Tab6:Button({
+Tab8:Button({
     Title = "🎮 Discord сервер",
     Desc = "Присоединяйтесь к нашему сообществу",
     Callback = function()
@@ -849,12 +1189,13 @@ end
 -- Новогоднее поздравление через 5 секунд
 task.wait(5)
 Window:Notify({
-    Title = newYearGreetings[math.random(1, #newYearGreetings)],
-    Desc = "Спасибо что используете Saul Hub!\nКрепкого здоровья и удачи в 2026! 🥳",
+    Title = "🎉 Обновление v4.0!",
+    Desc = "Добавлены функции из Admin Panel!\nESP • AimBot • GodMode • Noclip • И многое другое!",
     Time = 10
 })
 
-print("🎄 Saul Hub v3.3 загружен!")
+print("🎄 Saul Hub v4.0 загружен!")
+print("⚡ Admin Panel functions integrated!")
 print("🎮 ID игры: " .. game.PlaceId)
 if currentGameData then
     print("🎯 Обнаружена игра: " .. currentGameData.name)
@@ -862,4 +1203,5 @@ else
     print("⚠️ Игра не найдена в базе")
 end
 print("👤 Игрок: " .. LocalPlayer.Name)
+print("👑 Создатели: Saul Goodman, Lori Script, NoobzyScripter")
 print("🎉 С Новым Годом! 🎅")
