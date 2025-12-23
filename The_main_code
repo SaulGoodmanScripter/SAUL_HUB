@@ -583,27 +583,7 @@ Tab3:Toggle({
     end
 })
 
-Tab3:Toggle({
-    Title = "🎨 Random Colors",
-    Desc = "Случайное изменение цветов объектов",
-    Value = false,
-    Callback = function(v)
-        randomizeColorsEnabled = v
-        if v then
-            randomizeConnection = RunService.Heartbeat:Connect(function()
-                for _, obj in pairs(workspace:GetDescendants()) do
-                    if obj:IsA("BasePart") then
-                        obj.BrickColor = BrickColor.Random()
-                    end
-                end
-            end)
-        elseif randomizeConnection then
-            randomizeConnection:Disconnect()
-            randomizeConnection = nil
-        end
-        togglesound()
-    end
-})
+
 
 Tab3:Toggle({
     Title = "👻 Players Visibility",
