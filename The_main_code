@@ -627,21 +627,6 @@ Tab3:Toggle({
     end
 })
 
-Tab3:Toggle({
-    Title = "🔍 XRay",
-    Desc = "Видеть объекты сквозь стены",
-    Value = false,
-    Callback = function(v)
-        isInvisible = v
-        for _, object in pairs(game:GetDescendants()) do
-            if (object:IsA("BasePart") or object:IsA("Decal") or object:IsA("Texture")) and
-               not object:IsDescendantOf(game.Players) and not object:IsA("SpawnLocation") then
-                object.Transparency = v and 0.8 or 0
-            end
-        end
-        togglesound()
-    end
-})
 
 -- ВКЛАДКА POWER
 local Tab4 = Window:Tab({Title = "⚡ Power", Icon = "zap"})
