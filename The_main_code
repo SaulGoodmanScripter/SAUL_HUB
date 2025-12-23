@@ -13,8 +13,6 @@
 ██╔══██║██║░░░██║██╔══██╗
 ██║░░██║╚██████╔╝██████╦╝
 ╚═╝░░╚═╝░╚═════╝░╚═════╝░
-
-+ Admin Panel Functions by NoobzyScripter
 ]]
 local Players = game:GetService("Players")
 local RunService = game:GetService("RunService")
@@ -369,7 +367,7 @@ Tab:Section({Title = "📢 Новости обновления"})
 
 Tab:Label({
     Title = "🎉 Saul Hub v4.0",
-    Desc = "🎄 Новогоднее обновление!\n✨ + Admin Panel Functions\n🎯 Новые функции: ESP, AimBot, Noclip\n⚡ Улучшенная стабильность"
+    Desc = "🎄 Новогоднее обновление удаленно\n✨ + Admin Panel Functions\n🎯 Новые функции: ESP, AimBot, Noclip\n⚡ Улучшенная стабильность"
 })
 
 Tab:Label({
@@ -633,51 +631,7 @@ Tab4:Toggle({
     end
 })
 
-Tab4:Toggle({
-    Title = "🎯 Hitbox x6",
-    Desc = "Увеличение хитбокса в 6 раз",
-    Value = false,
-    Callback = function(v)
-        hitboxEnabled = v
-        if LocalPlayer.Character then
-            for _, part in pairs(LocalPlayer.Character:GetDescendants()) do
-                if part:IsA("BasePart") and part.Name ~= "HumanoidRootPart" then
-                    if v then
-                        part.Size = part.Size * 6
-                        part.Massless = true
-                    else
-                        part.Size = part.Size / 6
-                        part.Massless = false
-                    end
-                end
-            end
-        end
-        togglesound()
-    end
-})
 
-Tab4:Toggle({
-    Title = "🔧 Tool Size x4",
-    Desc = "Увеличение размеров инструментов в 4 раза",
-    Value = false,
-    Callback = function(v)
-        toolSizeMultiplier = v
-        for _, tool in pairs(LocalPlayer.Backpack:GetChildren()) do
-            if tool:IsA("Tool") then
-                for _, part in pairs(tool:GetDescendants()) do
-                    if part:IsA("BasePart") then
-                        if v then
-                            part.Size = part.Size * 4
-                        else
-                            part.Size = part.Size / 4
-                        end
-                    end
-                end
-            end
-        end
-        togglesound()
-    end
-})
 
 Tab4:Section({Title = "Специальные скрипты"})
 
