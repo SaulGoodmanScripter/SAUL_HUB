@@ -935,7 +935,7 @@ local Tab8 = Window:Tab({Title = "👑 Авторы", Icon = "heart"})
 Tab8:Section({Title = "👑 Разработчики"})
 
 Tab8:Label({
-    Title = "🎅 Saul Goodman",
+    Title = "👤 Saul Goodman",
     Desc = "Создатель и главный разработчик\nTelegram: @SaulGoodmanScript"
 })
 
@@ -969,12 +969,6 @@ Tab8:Button({
         btnclick()
     end
 })
-
-Tab8:Label({
-    Title = "🛠️ NoobzyScripter",
-    Desc = "Creator Admin Panel\nФункции Admin Panel\nSpecial thanks for great features!"
-})
-
 Tab8:Section({Title = "📊 Техническая информация"})
 
 Tab8:Label({
@@ -992,30 +986,6 @@ Tab8:Label({
     Desc = #Players:GetPlayers() .. " из " .. Players.MaxPlayers
 })
 
-Tab8:Button({
-    Title = "🎮 Discord сервер",
-    Desc = "Присоединяйтесь к нашему сообществу",
-    Callback = function()
-        btnclick()
-        Window:Notify({
-            Title = "🎮 Discord",
-            Desc = "Ссылка скопирована в буфер",
-            Time = 3
-        })
-        setclipboard("https://discord.gg/saulhub")
-    end
-})
-
--- НОВОГОДНИЕ ПОЗДРАВЛЕНИЯ
-local newYearGreetings = {
-    "🎄 С Новым Годом от Saul Hub!",
-    "✨ Пусть в 2026 все скрипты летают!",
-    "🎁 Желаем бесконечного FPS и 0 лагов!",
-    "⛄ С праздником, дорогой скриптер!",
-    "🎅 Удачи в новом году!",
-    "🌟 Пусть все желания сбудутся!"
-}
-
 -- Уведомление при загрузке
 if currentGameData then
     Window:Notify({
@@ -1030,23 +1000,3 @@ else
         Time = 5
     })
 end
-
--- Новогоднее поздравление через 5 секунд
-task.wait(5)
-Window:Notify({
-    Title = "🎉 Обновление v4.0!",
-    Desc = "Добавлены функции из Admin Panel!\nESP • AimBot • GodMode • Noclip • И многое другое!",
-    Time = 10
-})
-
-print("🎄 Saul Hub v4.0 загружен!")
-print("⚡ Admin Panel functions integrated!")
-print("🎮 ID игры: " .. game.PlaceId)
-if currentGameData then
-    print("🎯 Обнаружена игра: " .. currentGameData.name)
-else
-    print("⚠️ Игра не найдена в базе")
-end
-print("👤 Игрок: " .. LocalPlayer.Name)
-print("👑 Создатели: Saul Goodman, Lori Script, NoobzyScripter")
-print("🎉 С Новым Годом! 🎅")
