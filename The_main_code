@@ -368,7 +368,7 @@ Tab:Slider({
 Tab:Section({Title = "📢 Новости обновления"})
 
 Tab:Label({
-    Title = "🎉 Saul Hub v3.4",
+    Title = "🎉 Saul Hub v4.0",
     Desc = "🎄 Новогоднее обновление!\n✨ + Admin Panel Functions\n🎯 Новые функции: ESP, AimBot, Noclip\n⚡ Улучшенная стабильность"
 })
 
@@ -717,13 +717,7 @@ Tab4:Toggle({
 Tab4:Section({Title = "Специальные скрипты"})
 
 local specialScripts = {
-    {"🕳️ Black Hole", "https://raw.githubusercontent.com/RbxNoobScripter/Shhh-/refs/heads/main/Basic.lua"},
-    {"🧠 Telekinesis", "https://raw.githubusercontent.com/RbxNoobScripter/REAL-SIGMA-SCRIPT-/refs/heads/main/Main.lua"},
-    {"🚀 Fly", "https://raw.githubusercontent.com/RbxNoobScripter/FlyingSigma/refs/heads/main/Goida.lua"},
-    {"👽 SCP BY G10", "https://pastefy.app/YsJgITXR/raw"},
-    {"🤪 Sus", "https://raw.githubusercontent.com/RbxNoobScripter/nahhhbrrr/refs/heads/main/base.lua"},
     {"⚡ InfiniteYield", "https://raw.githubusercontent.com/EdgeIY/infiniteyield/master/source"},
-    {"🤖 SpamBot + Walk-Bot", "https://raw.githubusercontent.com/RbxNoobScripter/Admin-panel-Script-/refs/heads/main/qwerty.lua"},
     {"💻 Lua IDE", "https://raw.githubusercontent.com/RbxNoobScripter/Admin-panel-Script-/refs/heads/main/ytrewq1234556666.lua"}
 }
 
@@ -845,7 +839,7 @@ local Tab6 = Window:Tab({Title = "</> Executor", Icon = "code"})
 Tab6:Section({Title = "⚡ Исполнитель скриптов"})
 
 local defaultScript = [[-- 🎄 Saul Hub Executor
-print("Hello from Saul Hub v3.4!")
+print("bye from Saul Hub v3.4!")
 
 -- Пример: Быстрый старт
 local player = game.Players.LocalPlayer
@@ -1066,7 +1060,7 @@ Tab8:Section({Title = "📊 Техническая информация"})
 
 Tab8:Label({
     Title = "Версия",
-    Desc = "Saul Hub v3.4 (Admin Panel Edition)"
+    Desc = "Saul Hub v4.0(Admin Panel Edition)"
 })
 
 Tab8:Label({
