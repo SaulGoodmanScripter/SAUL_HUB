@@ -130,6 +130,7 @@ local GameDatabase = {
             {title = "⚡ Voidware Loader", url = "https://raw.githubusercontent.com/VapeVoidware/VW-Add/main/loader.lua"},
             {Title = "☁️ Sky base", url = "https://pastebin.com/raw/5PqzEXBQ"},
             {title = "💎 Farm days and diamond", url = "https://raw.githubusercontent.com/caomod2077/Script/refs/heads/main/FNDayFarm.lua"},
+            {Title = "👨‍💼 Saul Hub|day and diamond farm", url = "https://raw.githubusercontent.com/SaulGoodmanScripter/Saul_games/refs/heads/main/day_and_diamond_farm"},
             {title = "🌲 Sapling dupe", url = "https://raw.githubusercontent.com/nootmaus/99nights/refs/heads/main/dupe.lua"},
             {title = "🦊 Foxname Loader", url = "https://raw.githubusercontent.com/caomod2077/Script/refs/heads/main/FoxnameHub.lua"}
         }
@@ -150,6 +151,7 @@ local GameDatabase = {
         placeIds = {537413528},
         scripts = {
             {title = "⛵ Build A Boat Script", url = "https://raw.githubusercontent.com/TheRealAsu/BABFT/refs/heads/main/Source.lua"},
+            {title = "Saul Hub|BABFT script", url = "https://raw.githubusercontent.com/SaulGoodmanScripter/Saul_games/refs/heads/main/BABFT-Farm"
             {title = "🥇 Farm script", url = "https://raw.githubusercontent.com/Theo985/AetherX-Hub/refs/heads/main/BABFT"},
             {title = "➕️ lots of slots", url = "https://pastebin.com/raw/wQ7gyPC7"}
         }
