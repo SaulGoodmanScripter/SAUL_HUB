@@ -164,6 +164,13 @@ local GameDatabase = {
             {title = "🌱 Grow a Garden Script", url = "https://raw.githubusercontent.com/Kenniel123/Grow-a-garden/refs/heads/main/Grow%20A%20Garden"}
         }
     },
+    ["Plants_Vs_brainrot"] = {
+        name = "Plants vs Brainrot",
+        placeIds = {127742093697776},
+        scripts = {
+            {title = "⚔️ Plants vs Brainrot Script", url = "https://raw.githubusercontent.com/Walvy666/Triplesix/main/loader.lua"}
+        }
+    },
 ["Find_the_brainrot"] = {
         name = "Grow a Garden",
         placeIds = {136407404714539},
