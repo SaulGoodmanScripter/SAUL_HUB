@@ -135,13 +135,6 @@ local GameDatabase = {
             {title = "🦊 Foxname Loader", url = "https://raw.githubusercontent.com/caomod2077/Script/refs/heads/main/FoxnameHub.lua"}
         }
     },
-    ["find the brainrot"] = {
-        name " "Find The brainrot",
-        placeIds = {136407404714539},
-        scripts = {
-            {title = "🔍Find the brainrot", url = "https://pastebin.com/raw/5GEzkS6p"}
-         }
-     },
 
     ["brookhaven"] = {
         name = "Brookhaven",
@@ -169,6 +162,13 @@ local GameDatabase = {
         placeIds = {126884695634066},
         scripts = {
             {title = "🌱 Grow a Garden Script", url = "https://raw.githubusercontent.com/Kenniel123/Grow-a-garden/refs/heads/main/Grow%20A%20Garden"}
+        }
+    },
+["Find_the_brainrot"] = {
+        name = "Grow a Garden",
+        placeIds = {136407404714539},
+        scripts = {
+            {title = "🔍 Find The Brainrot", url = "https://pastebin.com/raw/5GEzkS6p"}
         }
     },
     ["steal_brainrot"] = {
