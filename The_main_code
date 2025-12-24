@@ -135,6 +135,13 @@ local GameDatabase = {
             {title = "🦊 Foxname Loader", url = "https://raw.githubusercontent.com/caomod2077/Script/refs/heads/main/FoxnameHub.lua"}
         }
     },
+    ["find the brainrot"] = {
+        name " "Find The brainrot",
+        placeIds = {136407404714539},
+        scripts = {
+            {title = "🔍Find the brainrot", url = "https://pastebin.com/raw/5GEzkS6p"}
+         }
+     },
 
     ["brookhaven"] = {
         name = "Brookhaven",
@@ -144,7 +151,7 @@ local GameDatabase = {
             {Title = "🚨REDz Hub", url = "https://pastefy.app/9OoVFBCU/raw"},
             {title = "🤡 Troll script", url = "https://raw.githubusercontent.com/as6cd0/SP_Hub/refs/heads/main/Brookhaven"}
         }
-    },
+     },
 
     ["babft"] = {
         name = "Build A Boat For Treasure",
