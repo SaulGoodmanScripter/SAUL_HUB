@@ -145,6 +145,16 @@ local GameDatabase = {
             {title = "🤡 Troll script", url = "https://raw.githubusercontent.com/as6cd0/SP_Hub/refs/heads/main/Brookhaven"}
         }
      },
+    ["dead_rails"] = {
+        name = "Dead Rails",
+        placeIds = {116495829188952},
+        scripts = {
+            {title = "🏜 Money farm", url = "https://raw.githubusercontent.com/yoursvexyyy/dead--rails/refs/heads/main/autosellvaluables"},
+            {title = "🦅 EasyScript|Bond farm", url = "https://raw.githubusercontent.com/JustKondzio0010/deadrailsbondfarm/refs/heads/main/dead"},
+           {title = "📜 Laws hub|Bond farm", url = "https://raw.githubusercontent.com/platformdiamond/Lawhub/refs/heads/main/Lawhub"},
+           {title = "🕺 Hutao Hub", url = "https://raw.githubusercontent.com/SLK-gaming/Dead-Rails/refs/heads/main/Hutao-Hub-V4.lua"}
+        }
+    },
 
     ["babft"] = {
         name = "Build A Boat For Treasure",
