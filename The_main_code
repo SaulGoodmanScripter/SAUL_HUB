@@ -196,6 +196,13 @@ local GameDatabase = {
             {title = "🍊 XP Farm", url = "https://raw.githubusercontent.com/wpisstestfprg/Volcano/refs/heads/main/VolcanoNewUpdated.luau"}
         }
     },
+    ["Natural_Disaster"] = {
+        name = "Natural Disasters",
+        placeIds = {189707},
+        scripts = {
+            {title = "🪓 Axe Hub", url = "https://raw.githubusercontent.com/zeroidxx/axe-hub/refs/heads/main/axehub%20nds.txt"}
+        }
+    },
 
     ["mm2"] = {
         name = "Murder Mystery 2",
