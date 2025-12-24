@@ -147,7 +147,7 @@ local GameDatabase = {
      },
     ["dead_rails"] = {
         name = "Dead Rails",
-        placeIds = {116495829188952},
+        placeIds = {116495829188952, 70876832253163},
         scripts = {
             {title = "🏜 Money farm", url = "https://raw.githubusercontent.com/yoursvexyyy/dead--rails/refs/heads/main/autosellvaluables"},
             {title = "🦅 EasyScript|Bond farm", url = "https://raw.githubusercontent.com/JustKondzio0010/deadrailsbondfarm/refs/heads/main/dead"},
