@@ -866,16 +866,103 @@ Tab5:Button({
         })
     end
 })
-
 -- ВКЛАДКА EXECUTOR
 local Tab6 = Window:Tab({Title = "</> Executor", Icon = "code"})
 
-Tab6:Section({Title = "⚡ Исполнитель скриптов"})
+Tab6:Section({Title = "⚡ Executor Parodies"})
+
+-- Список эксплоитов с иконками
+local executors = {
+    {
+        name = "Synapse X",
+        icon = "💠",
+        desc = "Самый мощный эксплоит",
+        url = "https://raw.githubusercontent.com/SaulGoodmanScripter/Executers/refs/heads/main/Synapse.lua"
+    },
+    {
+        name = "Krnl",
+        icon = "🔹",
+        desc = "Популярный бесплатный эксплоит",
+        url = "https://raw.githubusercontent.com/SaulGoodmanScripter/Executers/refs/heads/main/Krnl.lua"
+    },
+    {
+        name = "Arceus X",
+        icon = "✨",
+        desc = "Android/iOS эксплоит",
+        url = "https://raw.githubusercontent.com/SaulGoodmanScripter/Executers/refs/heads/main/Arceus-X.lua"
+    },
+    {
+        name = "Codex",
+        icon = "📜",
+        desc = "Лёгкий и быстрый эксплоит",
+        url = "https://raw.githubusercontent.com/SaulGoodmanScripter/Executers/refs/heads/main/Codex.Lua"
+    },
+    {
+        name = "Kiwi X",
+        icon = "🥝",
+        desc = "Улучшенный Kiwi эксплоит",
+        url = "https://raw.githubusercontent.com/SaulGoodmanScripter/Executers/refs/heads/main/Kiwi.lua"
+    },
+    {
+        name = "Krypton",
+        icon = "💎",
+        desc = "Эксплоит для продвинутых",
+        url = "https://raw.githubusercontent.com/SaulGoodmanScripter/Executers/refs/heads/main/Krypton.Lua"
+    }
+}
+
+-- Кнопки для каждого эксплоита
+for _, exec in ipairs(executors) do
+    Tab6:Button({
+        Title = exec.icon .. " " .. exec.name,
+        Desc = exec.desc,
+        Callback = function()
+            btnclick()
+            
+            Window:Notify({
+                Title = exec.icon .. " Загрузка " .. exec.name,
+                Desc = "Пожалуйста, подождите...",
+                Time = 3
+            })
+            
+            -- Загружаем скрипт эксплоита
+            local success, result = pcall(function()
+                local scriptContent = game:HttpGet(exec.url, true)
+                if scriptContent then
+                    local fn = loadstring(scriptContent)
+                    if fn then
+                        fn()
+                        Window:Notify({
+                            Title = "✅ " .. exec.name .. " Загружен",
+                            Desc = "Интерфейс эксплоита активирован!",
+                            Time = 4
+                        })
+                        notifysound()
+                    else
+                        error("Ошибка компиляции")
+                    end
+                else
+                    error("Не удалось загрузить скрипт")
+                end
+            end)
+            
+            if not success then
+                Window:Notify({
+                    Title = "❌ Ошибка",
+                    Desc = "Не удалось загрузить " .. exec.name,
+                    Time = 5
+                })
+            end
+        end
+    })
+end
+
+Tab6:Section({Title = "📝 Custom Script Executor"})
 
 local defaultScript = [[-- 🎄 Saul Hub Executor
-print("bye from Saul Hub v3.4!")
+print("Hello from Saul Hub!")
 
--- Пример: Быстрый старт
+-- Пример скрипта
 local player = game.Players.LocalPlayer
 
 if player.Character then
@@ -885,10 +972,7 @@ if player.Character then
         humanoid.JumpPower = 100
         print("Скорость установлена!")
     end
-end
-
--- С Новым Годом! 🎅
-]]
+end]]
 
 local currentScript = defaultScript
 
@@ -909,9 +993,9 @@ local function updateScriptInfo()
 end
 
 local scriptInput = Tab6:Textbox({
-    Title = "✏️ Быстрое редактирование",
-    Desc = "Введите новый скрипт",
-    Placeholder = "print('Новый год наступил! 🎄')",
+    Title = "✏️ Редактировать скрипт",
+    Desc = "Введите ваш Lua код",
+    Placeholder = "print('Привет от Saul Hub!')",
     Value = "",
     ClearText = false,
     Callback = function(text)
@@ -923,7 +1007,7 @@ local scriptInput = Tab6:Textbox({
     end
 })
 
-Tab6:Section({Title = "⚙️ Управление"})
+Tab6:Section({Title = "⚙️ Управление скриптами"})
 
 Tab6:Button({
     Title = "🚀 Выполнить",
@@ -965,7 +1049,7 @@ Tab6:Button({
             local errorMsg = tostring(result):sub(1, 100)
             Window:Notify({
                 Title = "❌ Ошибка",
-                Desc = errorMsg,
+                Desc = "Ошибка: " .. errorMsg,
                 Time = 5
             })
         end
@@ -973,33 +1057,101 @@ Tab6:Button({
 })
 
 Tab6:Button({
-    Title = "🔄 Пример",
-    Desc = "Загрузить пример скрипта",
+    Title = "📋 Вставить из буфера",
+    Desc = "Вставить скрипт из буфера обмена",
     Callback = function()
         btnclick()
-        currentScript = defaultScript
-        codeDisplay:SetCode(defaultScript)
-        scriptInput:SetValue("")
-        updateScriptInfo()
+        pcall(function()
+            local clipboard = game:HttpGet("http://127.0.0.1:6463/rpc?v=1", true)
+            if clipboard then
+                currentScript = clipboard
+                codeDisplay:SetCode(clipboard)
+                updateScriptInfo()
+                Window:Notify({
+                    Title = "📋 Вставлено",
+                    Desc = "Скрипт загружен из буфера",
+                    Time = 3
+                })
+            end
+        end)
     end
 })
 
 Tab6:Button({
     Title = "🗑️ Очистить",
-    Desc = "Очистить все поля",
+    Desc = "Очистить редактор",
     Callback = function()
         btnclick()
-        currentScript = "-- Скрипт очищен\n-- Введите новый код здесь"
+        currentScript = "-- Введите ваш код здесь"
         codeDisplay:SetCode(currentScript)
         scriptInput:SetValue("")
         updateScriptInfo()
         Window:Notify({
             Title = "🧹 Очищено",
-            Desc = "Все поля очищены",
+            Desc = "Редактор очищен",
             Time = 2
         })
     end
 })
+
+Tab6:Button({
+    Title = "🎯 Примеры",
+    Desc = "Быстрые примеры скриптов",
+    Callback = function()
+        btnclick()
+        
+        local examples = {
+            "fly = false\nspeed = 1\nfunction startFly()\n    repeat wait()\n        if fly and game.Players.LocalPlayer.Character then\n            local char = game.Players.LocalPlayer.Character\n            char.Humanoid.PlatformStand = true\n            local bv = Instance.new('BodyVelocity')\n            bv.Parent = char.HumanoidRootPart\n            bv.Velocity = Vector3.new()\n        end\n    until not fly\nend",
+            "for _, v in pairs(game.Players:GetPlayers()) do\n    if v ~= game.Players.LocalPlayer then\n        print('Игрок: ' .. v.Name)\n    end\nend",
+            "local light = Instance.new('PointLight')\nlight.Parent = game.Players.LocalPlayer.Character.HumanoidRootPart\nlight.Brightness = 5\nlight.Range = 20\nlight.Color = Color3.fromRGB(255, 0, 0)"
+        }
+        
+        currentScript = examples[math.random(1, #examples)]
+        codeDisplay:SetCode(currentScript)
+        updateScriptInfo()
+        
+        Window:Notify({
+            Title = "🎯 Пример загружен",
+            Desc = "Готов к выполнению!",
+            Time = 3
+        })
+    end
+})
+
+-- Информация о текущем эксплоите
+Tab6:Section({Title = "ℹ️ Информация"})
+
+Tab6:Label({
+    Title = "🎭 Пародии на эксплоиты",
+    Desc = "Эти скрипты создают интерфейсы,\nпохожие на популярные эксплоиты\n(только UI, не функционал)"
+})
+
+-- Автоматическое определение, если есть эксплоит
+spawn(function()
+    wait(2)
+    local exploitDetected = false
+    local exploitName = ""
+    
+    -- Проверка на наличие известных эксплоитов
+    if syn and syn.request then
+        exploitDetected = true
+        exploitName = "Synapse X"
+    elseif KRNL_LOADED then
+        exploitDetected = true
+        exploitName = "Krnl"
+    elseif identifyexecutor and identifyexecutor() then
+        exploitDetected = true
+        exploitName = identifyexecutor()
+    end
+    
+    if exploitDetected then
+        Window:Notify({
+            Title = "🔍 Обнаружен эксплоит",
+            Desc = "Используется: " .. exploitName,
+            Time = 5
+        })
+    end
+end)
 
 -- ВКЛАДКА AUTO SCRIPTS
 local Tab7 = Window:Tab({Title = "🎯 Auto-scripts", Icon = "bell"})
