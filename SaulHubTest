@@ -500,7 +500,208 @@ Tab2:Section({Title = "🤖 Авто-действия"})
 local autoJumpEnabled = false
 local autoJumpHeight = 50
 local autoJumpConnection
+-- В Tab2 добавить секцию:
+Tab2:Section({Title = "📱🎯 Click Teleport"})
 
+local clickTPEnabled = false
+local tpKey = "T" -- Для ПК
+local visualRay = true
+local maxDistance = 500
+local tpMode = "Both" -- "PC", "Mobile", "Both"
+
+-- UI для телефона
+local phoneTPGui = Instance.new("ScreenGui")
+phoneTPGui.Name = "SaulPhoneTP"
+phoneTPGui.Parent = LocalPlayer:WaitForChild("PlayerGui")
+phoneTPGui.ResetOnSpawn = false
+
+-- Кнопка телепорта для телефона
+local phoneTPButton = Instance.new("TextButton")
+phoneTPButton.Name = "PhoneTPButton"
+phoneTPButton.Text = "🎯 TP"
+phoneTPButton.Size = UDim2.new(0, 80, 0, 80)
+phoneTPButton.Position = UDim2.new(0.5, -40, 0.9, -80)
+phoneTPButton.AnchorPoint = Vector2.new(0.5, 0.5)
+phoneTPButton.BackgroundColor3 = Color3.fromRGB(30, 136, 229)
+phoneTPButton.TextColor3 = Color3.white
+phoneTPButton.Font = Enum.Font.GothamBold
+phoneTPButton.TextSize = 18
+phoneTPButton.Visible = false
+phoneTPButton.Parent = phoneTPGui
+
+-- Стилизация кнопки
+local corner = Instance.new("UICorner", phoneTPButton)
+corner.CornerRadius = UDim.new(1, 0) -- Круглая кнопка
+
+local stroke = Instance.new("UIStroke", phoneTPButton)
+stroke.Color = Color3.fromRGB(255, 255, 255)
+stroke.Thickness = 3
+
+-- Прозрачность при нажатии
+phoneTPButton.MouseButton1Down:Connect(function()
+    phoneTPButton.BackgroundTransparency = 0.5
+end)
+
+phoneTPButton.MouseButton1Up:Connect(function()
+    phoneTPButton.BackgroundTransparency = 0
+end)
+
+Tab2:Toggle({
+    Title = "🎯 Click TP",
+    Desc = "Телепорт по клику/тапу",
+    Value = false,
+    Callback = function(v)
+        clickTPEnabled = v
+        
+        if v then
+            phoneTPButton.Visible = UserInputService.TouchEnabled
+        else
+            phoneTPButton.Visible = false
+        end
+        
+        togglesound()
+    end
+})
+
+Tab2:Dropdown({
+    Title = "Режим",
+    Desc = "Для ПК или телефона",
+    List = {"ПК и телефон", "Только ПК", "Только телефон"},
+    Value = "ПК и телефон",
+    Callback = function(val)
+        tpMode = val
+        if val == "Только ПК" then
+            phoneTPButton.Visible = false
+        elseif val == "Только телефон" then
+            phoneTPButton.Visible = UserInputService.TouchEnabled and clickTPEnabled
+        else
+            phoneTPButton.Visible = UserInputService.TouchEnabled and clickTPEnabled
+        end
+    end
+})
+
+Tab2:Slider({
+    Title = "Дальность",
+    Desc = "Макс. дистанция телепорта",
+    Min = 50,
+    Max = 1000,
+    Rounding = 0,
+    Value = 500,
+    Callback = function(val)
+        maxDistance = val
+        slidersound()
+    end
+})
+
+Tab2:Toggle({
+    Title = "✨ Эффекты",
+    Desc = "Визуальные эффекты телепорта",
+    Value = true,
+    Callback = function(v)
+        visualRay = v
+        togglesound()
+    end
+})
+
+-- Функция телепорта
+local function teleportToPosition(targetPos)
+    local char = LocalPlayer.Character
+    if not char then return end
+    
+    local rootPart = char:FindFirstChild("HumanoidRootPart")
+    if not rootPart then return end
+    
+    -- Проверяем дистанцию
+    local distance = (rootPart.Position - targetPos).Magnitude
+    if distance > maxDistance then
+        targetPos = rootPart.Position + (targetPos - rootPart.Position).Unit * maxDistance
+    end
+    
+    -- Добавляем высоту
+    targetPos = Vector3.new(targetPos.X, targetPos.Y + 3, targetPos.Z)
+    
+    -- Визуальные эффекты
+    if visualRay then
+        spawn(function()
+            local beam = Instance.new("Part")
+            beam.Size = Vector3.new(0.2, 0.2, distance)
+            beam.Material = Enum.Material.Neon
+            beam.BrickColor = BrickColor.new("Bright blue")
+            beam.Transparency = 0.3
+            beam.Anchored = true
+            beam.CanCollide = false
+            beam.CFrame = CFrame.new((rootPart.Position + targetPos) / 2, targetPos)
+            beam.Parent = workspace
+            
+            local tween = TweenService:Create(beam, TweenInfo.new(0.5), {
+                Transparency = 1
+            })
+            tween:Play()
+            
+            wait(0.5)
+            beam:Destroy()
+        end)
+    end
+    
+    -- Телепортируем
+    rootPart.CFrame = CFrame.new(targetPos)
+    
+    -- Уведомление
+    Window:Notify({
+        Title = "🎯 Телепортирован",
+        Desc = string.format("Дистанция: %.1f studs", distance),
+        Time = 2
+    })
+end
+
+-- Обработчик для ПК (мышь)
+local mouse = LocalPlayer:GetMouse()
+
+mouse.Button1Down:Connect(function()
+    if clickTPEnabled and (tpMode == "ПК и телефон" or tpMode == "Только ПК") 
+       and not UserInputService.TouchEnabled then
+        
+        local target = mouse.Hit.Position
+        teleportToPosition(target)
+    end
+end)
+
+-- Обработчик для телефона (кнопка)
+phoneTPButton.MouseButton1Click:Connect(function()
+    if clickTPEnabled and (tpMode == "ПК и телефон" or tpMode == "Только телефон") then
+        
+        -- Получаем направление взгляда камеры
+        local camera = workspace.CurrentCamera
+        local origin = camera.CFrame.Position
+        local direction = camera.CFrame.LookVector
+        
+        -- Бросаем луч
+        local raycastParams = RaycastParams.new()
+        raycastParams.FilterType = Enum.RaycastFilterType.Exclude
+        raycastParams.FilterDescendantsInstances = {LocalPlayer.Character}
+        
+        local raycastResult = workspace:Raycast(origin, direction * maxDistance, raycastParams)
+        
+        if raycastResult then
+            teleportToPosition(raycastResult.Position)
+        else
+            -- Телепорт вдаль, если нет столкновения
+            teleportToPosition(origin + direction * maxDistance)
+        end
+    end
+end)
+
+-- Горячая клавиша для ПК
+UserInputService.InputBegan:Connect(function(input, gameProcessed)
+    if gameProcessed then return end
+    
+    if input.KeyCode == Enum.KeyCode[tpKey] and clickTPEnabled 
+       and not UserInputService.TouchEnabled then
+        
+        local target = mouse.Hit.Position
+        teleportToPosition(target)
+    end
+end)
 Tab2:Toggle({
     Title = "🤸 Auto Jump",
     Desc = "Автоматически прыгать",
