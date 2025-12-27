@@ -493,6 +493,65 @@ Tab2:Button({
     end
 })
 
+-- В Tab2 после других функций добавить:
+
+Tab2:Section({Title = "🤖 Авто-действия"})
+
+local autoJumpEnabled = false
+local autoJumpHeight = 50
+local autoJumpConnection
+
+Tab2:Toggle({
+    Title = "🤸 Auto Jump",
+    Desc = "Автоматически прыгать",
+    Value = false,
+    Callback = function(v)
+        autoJumpEnabled = v
+        
+        if v then
+            autoJumpConnection = RunService.Heartbeat:Connect(function()
+                if autoJumpEnabled and LocalPlayer.Character then
+                    local humanoid = LocalPlayer.Character:FindFirstChildOfClass("Humanoid")
+                    if humanoid and humanoid.FloorMaterial ~= Enum.Material.Air then
+                        humanoid:ChangeState(Enum.HumanoidStateType.Jumping)
+                    end
+                end
+            end)
+        else
+            if autoJumpConnection then
+                autoJumpConnection:Disconnect()
+                autoJumpConnection = nil
+            end
+        end
+        togglesound()
+    end
+})
+
+Tab2:Slider({
+    Title = "Высота прыжка",
+    Desc = "Высота авто-прыжков",
+    Min = 20,
+    Max = 200,
+    Rounding = 0,
+    Value = 50,
+    Callback = function(val)
+        autoJumpHeight = val
+        if LocalPlayer.Character and LocalPlayer.Character:FindFirstChildOfClass("Humanoid") then
+            LocalPlayer.Character.Humanoid.JumpPower = val
+        end
+        slidersound()
+    end
+})
+
+Tab2:Toggle({
+    Title = "🔄 Smart Jump",
+    Desc = "Автоматически настраивает высоту",
+    Value = true,
+    Callback = function(v)
+        togglesound()
+    end
+})
+
 -- ВКЛАДКА VISUAL
 local Tab3 = Window:Tab({Title = "👁️ Visual", Icon = "eye"})
 
