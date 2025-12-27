@@ -804,48 +804,154 @@ Tab4:Toggle({
         togglesound()
     end
 })
--- В Tab4 добавить секцию:
-Tab4:Section({Title = "🖱️ Advanced Auto Clicker"})
+-- В Tab4:
+Tab4:Section({Title = "📱 Virtual Auto Clicker"})
 
-local autoClickerEnabled = false
-local clickSpeed = 10 -- CPS
-local clickButton = 1 -- 1 = Left, 2 = Right
-local clickRange = 50
-local visualEffects = true
+local virtualClickEnabled = false
+local clickPosition = Vector2.new(500, 500) -- центр экрана
+local clickInterval = 0.5
+local clickType = "Tap" -- Tap, Hold, Swipe
 
 Tab4:Toggle({
-    Title = "🖱️ Auto Clicker",
-    Desc = "Автоматические клики",
+    Title = "📱 Virtual Click",
+    Desc = "Виртуальные клики (работает на телефонах)",
     Value = false,
     Callback = function(v)
-        autoClickerEnabled = v
+        virtualClickEnabled = v
         togglesound()
     end
 })
 
 Tab4:Slider({
-    Title = "Скорость (CPS)",
-    Desc = "Кликов в секунду",
-    Min = 1,
-    Max = 50,
-    Rounding = 0,
-    Value = 10,
+    Title = "Интервал",
+    Desc = "Задержка между кликами",
+    Min = 0.1,
+    Max = 2,
+    Rounding = 1,
+    Value = 0.5,
     Callback = function(val)
-        clickSpeed = val
+        clickInterval = val
         slidersound()
     end
 })
 
 Tab4:Dropdown({
-    Title = "Кнопка мыши",
-    Desc = "Эмулируемая кнопка",
-    List = {"Левая", "Правая", "Обе"},
-    Value = "Левая",
+    Title = "Тип клика",
+    Desc = "Вид виртуального ввода",
+    List = {"Тап", "Удержание", "Свайп"},
+    Value = "Тап",
     Callback = function(val)
-        clickButton = (val == "Левая" and 1) or (val == "Правая" and 2) or 3
+        clickType = val
     end
 })
 
+Tab4:Button({
+    Title = "🎮 Тест виртуального ввода",
+    Desc = "Протестировать на экране",
+    Callback = function()
+        btnclick()
+        simulateVirtualClick()
+        Window:Notify({
+            Title = "📱 Тест",
+            Desc = "Виртуальный клик отправлен",
+            Time = 2
+        })
+    end
+})
+
+-- Функция виртуального клика
+local function simulateVirtualClick()
+    local VirtualInputManager = game:GetService("VirtualInputManager")
+    local GuiService = game:GetService("GuiService")
+    
+    -- Получаем размер экрана
+    local viewportSize = workspace.CurrentCamera.ViewportSize
+    local centerPos = Vector2.new(viewportSize.X / 2, viewportSize.Y / 2)
+    
+    if clickType == "Тап" then
+        -- Виртуальный тап (нажатие и отпускание)
+        VirtualInputManager:SendMouseButtonEvent(
+            centerPos.X, centerPos.Y, -- позиция
+            0, -- кнопка (0 = левая)
+            true, -- нажатие
+            game, -- game
+            1 -- ?
+        )
+        
+        wait(0.05)
+        
+        VirtualInputManager:SendMouseButtonEvent(
+            centerPos.X, centerPos.Y,
+            0,
+            false, -- отпускание
+            game,
+            1
+        )
+        
+    elseif clickType == "Удержание" then
+        -- Долгое нажатие
+        VirtualInputManager:SendMouseButtonEvent(
+            centerPos.X, centerPos.Y,
+            0,
+            true,
+            game,
+            1
+        )
+        
+        wait(0.5) -- удерживаем 0.5 секунд
+        
+        VirtualInputManager:SendMouseButtonEvent(
+            centerPos.X, centerPos.Y,
+            0,
+            false,
+            game,
+            1
+        )
+        
+    elseif clickType == "Свайп" then
+        -- Свайп (перетаскивание)
+        local startPos = Vector2.new(centerPos.X - 50, centerPos.Y)
+        local endPos = Vector2.new(centerPos.X + 50, centerPos.Y)
+        
+        -- Начало касания
+        VirtualInputManager:SendMouseButtonEvent(
+            startPos.X, startPos.Y,
+            0,
+            true,
+            game,
+            1
+        )
+        
+        -- Двигаем палец
+        for i = 1, 10 do
+            local pos = startPos:Lerp(endPos, i/10)
+            VirtualInputManager:SendMouseMoveEvent(
+                pos.X, pos.Y,
+                game
+            )
+            wait(0.02)
+        end
+        
+        -- Отпускаем
+        VirtualInputManager:SendMouseButtonEvent(
+            endPos.X, endPos.Y,
+            0,
+            false,
+            game,
+            1
+        )
+    end
+end
+
+-- Автокликер
+spawn(function()
+    while wait() do
+        if virtualClickEnabled then
+            simulateVirtualClick()
+            wait(clickInterval)
+        end
+    end
+end)
 Tab4:Toggle({
     Title = "✨ Визуальные эффекты",
     Desc = "Показывать эффекты кликов",
