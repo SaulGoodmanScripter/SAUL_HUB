@@ -639,115 +639,88 @@ Tab3:Toggle({
 })
 -- В Tab3 после других секций добавить:
 
-Tab3:Section({Title = "📦 Дублирование предметов"})
+Tab3:Section({Title = "📦 Duplicator"})
 
-Tab3:Label({
-    Title = "🎯 Дупликатор предметов",
-    Desc = "Дублирует предмет в ваших руках в рюкзак"
+-- Кнопка дюпа
+Tab3:Button({
+    Title = "🔄 Dupe Item",
+    Desc = "Скопировать предмет в руках (F)",
+    Callback = function()
+        btnclick()
+        
+        local player = game.Players.LocalPlayer
+        local character = player.Character
+        
+        if not character then
+            Window:Notify({
+                Title = "❌ Ошибка",
+                Desc = "Персонаж не загружен",
+                Time = 3
+            })
+            return
+        end
+        
+        local tool = character:FindFirstChildOfClass("Tool")
+        if tool then
+            local success, err = pcall(function()
+                local clone = tool:Clone()
+                clone.Parent = player.Backpack
+                
+                Window:Notify({
+                    Title = "✅ Успех",
+                    Desc = "Предмет '" .. tool.Name .. "' дюпнут!",
+                    Time = 3
+                })
+            end)
+            
+            if not success then
+                Window:Notify({
+                    Title = "❌ Ошибка",
+                    Desc = "Ошибка при копировании",
+                    Time = 3
+                })
+            end
+        else
+            Window:Notify({
+                Title = "⚠️ Внимание",
+                Desc = "Возьми предмет в руки!",
+                Time = 3
+            })
+        end
+    end
 })
+
+-- Тоггл для горячей клавиши
+local hotkeyEnabled = true
 
 Tab3:Toggle({
     Title = "🔑 Горячая клавиша F",
-    Desc = "Дюпить предмет по нажатию F",
+    Desc = "Дюпить по нажатию F",
     Value = true,
     Callback = function(v)
-        if v then
-            UserInputService.InputBegan:Connect(function(input, gameProcessed)
-                if gameProcessed then return end
-                if input.KeyCode == Enum.KeyCode.F then
-                    -- Вызов функции дюпа
-                    dupItem()
-                end
-            end)
-        end
+        hotkeyEnabled = v
         togglesound()
     end
 })
 
-Tab3:Button({
-    Title = "🔄 Dupe Item",
-    Desc = "Скопировать предмет в руках",
-    Callback = function()
-        btnclick()
-        dupItem()
-    end
-})
-
--- Функция дюпа
-local function dupItem()
-    local player = game.Players.LocalPlayer
-    local character = player.Character
+-- Обработчик горячей клавиши
+UserInputService.InputBegan:Connect(function(input, gameProcessed)
+    if gameProcessed or not hotkeyEnabled then return end
     
-    if not character then
-        Window:Notify({
-            Title = "❌ Ошибка",
-            Desc = "Персонаж не загружен",
-            Time = 3
-        })
-        return
-    end
-    
-    local humanoid = character:FindFirstChildOfClass("Humanoid")
-    if not humanoid then
-        Window:Notify({
-            Title = "❌ Ошибка",
-            Desc = "Хуманоид не найден",
-            Time = 3
-        })
-        return
-    end
-    
-    local tool = character:FindFirstChildOfClass("Tool")
-    if tool then
-        local success, err = pcall(function()
-            local clone = tool:Clone()
-            clone.Parent = player.Backpack
-            
-            -- Уведомление об успехе
-            Window:Notify({
-                Title = "✅ Успех",
-                Desc = "Предмет '" .. tool.Name .. "' дюпнут!",
-                Time = 3
-            })
-            
-            -- Автоматическое удаление дубликатов при выбрасывании
-            tool:GetPropertyChangedSignal("Parent"):Connect(function()
-                if tool.Parent ~= player.Character and tool.Parent ~= player.Backpack then
-                    local removedCount = 0
-                    for _, item in pairs(player.Backpack:GetChildren()) do
-                        if item:IsA("Tool") and item.Name == tool.Name then
-                            item:Destroy()
-                            removedCount = removedCount + 1
-                        end
-                    end
-                    
-                    if removedCount > 0 then
-                        Window:Notify({
-                            Title = "🗑️ Очистка",
-                            Desc = "Удалено " .. removedCount .. " дубликатов",
-                            Time = 3
-                        })
-                    end
-                end
-            end)
+    if input.KeyCode == Enum.KeyCode.F then
+        -- Имитируем клик по кнопке
+        local success = pcall(function()
+            -- Вызываем callback кнопки дюпа
+            Tab3.Buttons["🔄 Dupe Item"].Callback()
         end)
-        
-        if not success then
-            Window:Notify({
-                Title = "❌ Ошибка",
-                Desc = "Ошибка: " .. tostring(err),
-                Time = 5
-            })
-        end
-    else
-        Window:Notify({
-            Title = "⚠️ Внимание",
-            Desc = "Держи предмет в руках!",
-            Time = 3
-        })
     end
-end
+end)
 
+-- Инструкция
+Tab3:Label({
+    Title = "📝 Как использовать:",
+    Desc = "1. Возьми предмет в руки\n2. Нажми F или кнопку выше\n3. Предмет появится в рюкзаке"
+})
 -- ВКЛАДКА POWER
 local Tab4 = Window:Tab({Title = "⚡ Power", Icon = "zap"})
 
