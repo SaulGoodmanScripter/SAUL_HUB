@@ -804,8 +804,53 @@ Tab4:Toggle({
         togglesound()
     end
 })
+-- В Tab4 добавить:
+Tab4:Section({Title = "🖱️ Auto Clicker"})
 
+local autoClick = false
+local clickDelay = 0.2
+Tab4:Toggle({
+    Title = "🖱️ Auto Click",
+    Desc = "Автоклик по " .. clickDelay .. "с",
+    Value = false,
+    Callback = function(v)
+        autoClick = v
+        togglesound()
+    end
+})
 
+Tab4:Slider({
+    Title = "Скорость",
+    Desc = "Задержка между кликами",
+    Min = 0.05,
+    Max = 1,
+    Rounding = 2,
+    Value = 0.2,
+    Callback = function(val)
+        clickDelay = val
+        slidersound()
+    end
+})
+
+-- Тот же spawn, что и выше, расширяем:
+spawn(function()
+    while wait(0.1) do
+        if autoJump and LocalPlayer.Character then
+            local humanoid = LocalPlayer.Character:FindFirstChildOfClass("Humanoid")
+            if humanoid and humanoid.FloorMaterial ~= Enum.Material.Air then
+                humanoid:ChangeState(Enum.HumanoidStateType.Jumping)
+            end
+        end
+        
+        if autoClick and LocalPlayer.Character then
+            local tool = LocalPlayer.Character:FindFirstChildOfClass("Tool")
+            if tool then
+                tool:Activate()
+                wait(clickDelay)
+            end
+        end
+    end
+end)
 
 Tab4:Section({Title = "Специальные скрипты"})
 
