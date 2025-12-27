@@ -804,6 +804,88 @@ Tab4:Toggle({
         togglesound()
     end
 })
+-- В Tab4 добавить секцию:
+Tab4:Section({Title = "🛡️ Anti-Void Protection"})
+
+local antiVoidEnabled = false
+local voidYLevel = -10 -- уровень, ниже которого считается "void"
+local teleportPosition = Vector3.new(0, 50, 0) -- позиция телепортации
+local checkInterval = 0.1
+
+Tab4:Toggle({
+    Title = "🛡️ Anti-Void",
+    Desc = "Защита от падения в бездну",
+    Value = false,
+    Callback = function(v)
+        antiVoidEnabled = v
+        togglesound()
+    end
+})
+
+Tab4:Slider({
+    Title = "Уровень Void",
+    Desc = "Y координата, ниже которой телепортирует",
+    Min = -100,
+    Max = 50,
+    Rounding = 0,
+    Value = -10,
+    Callback = function(val)
+        voidYLevel = val
+        slidersound()
+    end
+})
+
+Tab4:Button({
+    Title = "📍 Set Safe Position",
+    Desc = "Установить текущую позицию как безопасную",
+    Callback = function()
+        btnclick()
+        local char = LocalPlayer.Character
+        if char and char:FindFirstChild("HumanoidRootPart") then
+            teleportPosition = char.HumanoidRootPart.Position + Vector3.new(0, 5, 0)
+            Window:Notify({
+                Title = "📍 Позиция сохранена",
+                Desc = string.format("X:%.1f Y:%.1f Z:%.1f", 
+                    teleportPosition.X, teleportPosition.Y, teleportPosition.Z),
+                Time = 3
+            })
+        end
+    end
+})
+
+-- Функция Anti-Void
+local antiVoidConnection
+spawn(function()
+    while wait(checkInterval) do
+        if antiVoidEnabled and LocalPlayer.Character then
+            local char = LocalPlayer.Character
+            local rootPart = char:FindFirstChild("HumanoidRootPart")
+            
+            if rootPart and rootPart.Position.Y < voidYLevel then
+                -- Телепортируем на безопасную позицию
+                rootPart.CFrame = CFrame.new(teleportPosition)
+                
+                -- Визуальный эффект
+                Window:Notify({
+                    Title = "🛡️ Anti-Void Сработал!",
+                    Desc = string.format("Телепортирован с Y:%.1f", rootPart.Position.Y),
+                    Time = 3
+                })
+                
+                -- Звуковой эффект (если есть)
+                pcall(function()
+                    local sound = Instance.new("Sound")
+                    sound.SoundId = "rbxassetid://911882909"
+                    sound.Volume = 0.5
+                    sound.Parent = workspace
+                    sound:Play()
+                    wait(1)
+                    sound:Destroy()
+                end)
+            end
+        end
+    end
+end)
 -- В Tab4:
 Tab4:Section({Title = "📱 Virtual Auto Clicker"})
 
