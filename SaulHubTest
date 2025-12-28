@@ -118,46 +118,6 @@ local function getClosestPlayer()
     return closestPlayer
 end
 
--- Функция безопасной загрузки скрипта
-local function loadScriptSafe(url)
-    Window:Notify({
-        Title = "⏳ Loading...",
-        Desc = "Please,wait",
-        Time = 2
-    })
-
-    local success, result = pcall(function()
-        local scriptContent = game:HttpGet(url, true)
-        if scriptContent and scriptContent ~= "404: Not Found" then
-            local loadedFunction = loadstring(scriptContent)
-            if loadedFunction then
-                return loadedFunction()
-            else
-                error("Script compilation error")
-            end
-        else
-            error("Script not found")
-        end
-    end)
-
-    if success then
-        Window:Notify({
-            Title = "✅ successfully",
-            Desc = "The script has been successfully launched!",
-            Time = 3
-        })
-        notifysound()
-    else
-        local errorMsg = tostring(result):sub(1, 100)
-        Window:Notify({
-            Title = "❌ Ошибка",
-            Desc = errorMsg,
-            Time = 5
-        })
-        warn("Ошибка загрузки скрипта:", result)
-    end
-end
-
 -- ВКЛАДКА MAIN
 local Tab = Window:Tab({Title = "🎮 Main", Icon = "Home"})
 
@@ -1532,25 +1492,10 @@ end)
 -- ВКЛАДКА AUTO SCRIPTS
 local Tab7 = Window:Tab({Title = "🎯 Auto-scripts", Icon = "bell"})
 
--- База данных игр с поиском по названию
+-- ПОЛНАЯ БАЗА ДАННЫХ (все ссылки)
 local GameDatabase = {
-    "99 Nights in Forest 🌲",
-    "Brookhaven 🏠",
-    "Dead Rails 🚂",
-    "Build A Boat For Treasure ⛵",
-    "Grow a Garden 🌱",
-    "Plants vs Brainrot 🌻",
-    "Find The Brainrot 🔍",
-    "Steal a Brainrot 🎭",
-    "Blox Fruits 🍊",
-    "Natural Disasters 🌪️",
-    "Murder Mystery 2 🔪",
-    "Arsenal 🔫"
-}
-
--- Полные данные по играм
-local FullGameData = {
-    ["99 Nights in Forest 🌲"] = {
+    ["99_nights"] = {
+        name = "99 Nights in Forest",
         placeIds = {126509999114328, 79546208627805},
         scripts = {
             {title = "⚡ Voidware Loader", url = "https://raw.githubusercontent.com/VapeVoidware/VW-Add/main/loader.lua"},
@@ -1561,7 +1506,8 @@ local FullGameData = {
             {title = "🦊 Foxname Loader", url = "https://raw.githubusercontent.com/caomod2077/Script/refs/heads/main/FoxnameHub.lua"}
         }
     },
-    ["Brookhaven 🏠"] = {
+    ["brookhaven"] = {
+        name = "Brookhaven",
         placeIds = {4924922222},
         scripts = {
             {title = "🐀 R4d troll script", url = "https://raw.githubusercontent.com/M1ZZ001/BrookhavenR4D/main/Brookhaven%20R4D%20Script"},
@@ -1569,7 +1515,8 @@ local FullGameData = {
             {title = "🤡 Troll script", url = "https://raw.githubusercontent.com/as6cd0/SP_Hub/refs/heads/main/Brookhaven"}
         }
     },
-    ["Dead Rails 🚂"] = {
+    ["dead_rails"] = {
+        name = "Dead Rails",
         placeIds = {116495829188952, 70876832253163},
         scripts = {
             {title = "🏜 Money farm", url = "https://raw.githubusercontent.com/yoursvexyyy/dead--rails/refs/heads/main/autosellvaluables"},
@@ -1577,222 +1524,301 @@ local FullGameData = {
             {title = "📜 Laws hub|Bond farm", url = "https://raw.githubusercontent.com/platformdiamond/Lawhub/refs/heads/main/Lawhub"},
             {title = "🕺 Hutao Hub", url = "https://raw.githubusercontent.com/SLK-gaming/Dead-Rails/refs/heads/main/Hutao-Hub-V4.lua"}
         }
+    },
+    ["babft"] = {
+        name = "Build A Boat For Treasure",
+        placeIds = {537413528},
+        scripts = {
+            {title = "⛵ Build A Boat Script", url = "https://raw.githubusercontent.com/TheRealAsu/BABFT/refs/heads/main/Source.lua"},
+            {title = "Saul Hub|BABFT script", url = "https://raw.githubusercontent.com/SaulGoodmanScripter/Saul_games/refs/heads/main/BABFT-Farm"},
+            {title = "🥇 Farm script", url = "https://raw.githubusercontent.com/Theo985/AetherX-Hub/refs/heads/main/BABFT"},
+            {title = "➕️ lots of slots", url = "https://pastebin.com/raw/wQ7gyPC7"}
+        }
+    },
+    ["grow_garden"] = {
+        name = "Grow a Garden",
+        placeIds = {126884695634066},
+        scripts = {
+            {title = "🌱 Grow a Garden Script", url = "https://raw.githubusercontent.com/Kenniel123/Grow-a-garden/refs/heads/main/Grow%20A%20Garden"}
+        }
+    },
+    ["Plants_Vs_brainrot"] = {
+        name = "Plants vs Brainrot",
+        placeIds = {127742093697776},
+        scripts = {
+            {title = "⚔️ Plants vs Brainrot Script", url = "https://raw.githubusercontent.com/Walvy666/Triplesix/main/loader.lua"}
+        }
+    },
+    ["Find_the_brainrot"] = {
+        name = "Find The Brainrot",
+        placeIds = {136407404714539},
+        scripts = {
+            {title = "🔍 Find The Brainrot", url = "https://pastebin.com/raw/5GEzkS6p"}
+        }
+    },
+    ["steal_brainrot"] = {
+        name = "Steal a Brainrot",
+        placeIds = {109983668079237},
+        scripts = {
+            {title = "🌶 Chilli Hub", url = "https://raw.githubusercontent.com/tienkhanh1/spicy/main/Chilli.lua"},
+            {title = "🚪 Joiner(1m+)", url = "https://raw.githubusercontent.com/nootmaus/IceHub/refs/heads/main/Joiner"},
+            {title = "🧊 Ice hub", url = "https://pastefy.app/9OoVFBCU/raw"},
+            {title = "🎯 Aimbot Laser", url = "https://raw.githubusercontent.com/nootmaus/IceHubLaser/refs/heads/main/maus%3A"}
+        }
+    },
+    ["blox_fruits"] = {
+        name = "Blox Fruits",
+        placeIds = {2753915549},
+        scripts = {
+            {title = "🍊 XP Farm", url = "https://raw.githubusercontent.com/wpisstestfprg/Volcano/refs/heads/main/VolcanoNewUpdated.luau"}
+        }
+    },
+    ["Natural_Disaster"] = {
+        name = "Natural Disasters",
+        placeIds = {189707},
+        scripts = {
+            {title = "🪓 Axe Hub", url = "https://raw.githubusercontent.com/zeroidxx/axe-hub/refs/heads/main/axehub%20nds.txt"}
+        }
+    },
+    ["mm2"] = {
+        name = "Murder Mystery 2",
+        placeIds = {142823291},
+        scripts = {
+            {title = "🔪 Vexon Hub", url = "https://raw.githubusercontent.com/DiosDi/VexonHub/refs/heads/main/VexonHub"},
+            {title = "💀 Traw Hub", url = "https://raw.githubusercontent.com/TomScripts/mm2/refs/heads/main/mm2"}
+        }
+    },
+    ["arsenal"] = {
+        name = "Arsenal",
+        placeIds = {286090429},
+        scripts = {
+            {title = "🔫 Arsenal Script", url = "https://raw.githubusercontent.com/HAIKATV/rp-/refs/heads/main/Arsenal.lua"}
+        }
     }
-    -- ... другие игры
 }
 
--- Основной интерфейс
-Tab7:Section({Title = "🎮 Game Selection"})
-
--- Автоопределение текущей игры
-local currentGameId = game.PlaceId
-local currentGameName = "Unknown Game"
-
-pcall(function()
-    currentGameName = game:GetService("MarketplaceService"):GetProductInfo(currentGameId).Name
-end)
-
-Tab7:Label({
-    Title = "📱 Current Game",
-    Desc = currentGameName .. "\nID: " .. currentGameId
-})
-
--- Dropdown с поиском игр
-local selectedGame = nil
-local scriptsSection = Tab7:Section({Title = "📜 Scripts"})
-
-local gameDropdown = Tab7:Dropdown({
-    Title = "🔍 Search Game",
-    Desc = "Type to search games...",
-    List = GameDatabase,
-    Value = "",
-    Multi = false,
-    Callback = function(gameName)
-        selectedGame = gameName
-        if gameName and gameName ~= "" then
-            displayGameScripts(gameName)
-        end
-    end
-})
-
--- Функция отображения скриптов
-local function displayGameScripts(gameName)
-    -- Очищаем предыдущие скрипты
-    for _, child in pairs(scriptsSection:GetChildren()) do
-        if child:IsA("TextLabel") or child:IsA("TextButton") then
-            child:Destroy()
-        end
-    end
-
-    local gameData = FullGameData[gameName]
-    
-    if not gameData then
-        Tab7:Label({
-            Title = "❌ Game not found",
-            Desc = "Game '" .. gameName .. "' is not in database"
-        })
-        return
-    end
-
-    -- Добавляем информацию об игре
-    Tab7:Label({
-        Title = "🎮 " .. gameName,
-        Desc = "Available scripts: " .. #gameData.scripts
+-- Функция загрузки скрипта
+local function loadScriptSafe(url)
+    Window:Notify({
+        Title = "⏳ Loading...",
+        Desc = "Please wait",
+        Time = 2
     })
 
-    -- Добавляем кнопки скриптов
-    for _, script in ipairs(gameData.scripts) do
-        Tab7:Button({
-            Title = script.title,
-            Desc = "Click to load script",
-            Callback = function()
+    local success, result = pcall(function()
+        local scriptContent = game:HttpGet(url, true)
+        if scriptContent and scriptContent ~= "404: Not Found" then
+            local loadedFunction = loadstring(scriptContent)
+            if loadedFunction then
+                loadedFunction()
                 Window:Notify({
-                    Title = "⏳ Loading...",
-                    Desc = "Loading " .. script.title,
-                    Time = 2
+                    Title = "✅ Success",
+                    Desc = "Script loaded successfully!",
+                    Time = 3
                 })
+            else
+                error("Script compilation error")
+            end
+        else
+            error("Script not found")
+        end
+    end)
+
+    if not success then
+        Window:Notify({
+            Title = "❌ Error",
+            Desc = "Failed to load script",
+            Time = 5
+        })
+    end
+end
+
+-- Функция поиска игры
+local function findGameByPlaceId(placeId)
+    for gameKey, gameData in pairs(GameDatabase) do
+        for _, gamePlaceId in ipairs(gameData.placeIds) do
+            if gamePlaceId == placeId then
+                return gameData
+            end
+        end
+    end
+    return nil
+end
+
+-- ОСНОВНОЙ ИНТЕРФЕЙС
+local currentGameId = game.PlaceId
+local currentGameData = findGameByPlaceId(currentGameId)
+
+-- СЕКЦИЯ 1: АВТОПОИСК (как раньше)
+Tab7:Section({Title = "🔍 Auto-Search"})
+
+if currentGameData then
+    -- Если игра найдена
+    Tab7:Label({
+        Title = "✅ Game Found!",
+        Desc = currentGameData.name
+    })
+    
+    Tab7:Section({Title = "📜 Scripts for " .. currentGameData.name})
+    
+    -- Выводим ВСЕ скрипты с Code элементами
+    for _, script in ipairs(currentGameData.scripts) do
+        -- Code элемент как было раньше
+        Tab7:Code({
+            Title = script.title,
+            Code = "loadstring(game:HttpGet('" .. script.url .. "'))()"
+        })
+        
+        -- Кнопка для загрузки
+        Tab7:Button({
+            Title = "🚀 " .. script.title,
+            Desc = "Auto load script",
+            Callback = function()
+                loadScriptSafe(script.url)
+            end
+        })
+    end
+else
+    -- Если игра не найдена
+    local gameName = "Unknown Game"
+    pcall(function()
+        gameName = MarketplaceService:GetProductInfo(currentGameId).Name
+    end)
+    
+    Tab7:Label({
+        Title = "❌ Game Not Found",
+        Desc = gameName .. "\nUse manual search below"
+    })
+end
+
+-- СЕКЦИЯ 2: РУЧНОЙ ПОИСК
+Tab7:Section({Title = "🔎 Manual Search"})
+
+-- Создаем список всех игр
+local allGamesList = {}
+for _, gameData in pairs(GameDatabase) do
+    table.insert(allGamesList, gameData.name)
+end
+
+table.sort(allGamesList)
+
+-- Dropdown для выбора игры
+local gameDropdown = Tab7:Dropdown({
+    Title = "Select Game",
+    Desc = "Choose game from list",
+    List = allGamesList,
+    Value = "",
+    Multi = false,
+    Callback = function(selectedGameName)
+        if selectedGameName and selectedGameName ~= "" then
+            -- Находим данные игры
+            local foundGameData = nil
+            for _, gameData in pairs(GameDatabase) do
+                if gameData.name == selectedGameName then
+                    foundGameData = gameData
+                    break
+                end
+            end
+            
+            if foundGameData then
+                -- Создаем новую секцию для этой игры
+                local gameSection = Tab7:Section({Title = "🎮 " .. foundGameData.name})
                 
-                local success, result = pcall(function()
-                    local scriptContent = game:HttpGet(script.url, true)
-                    if scriptContent and scriptContent ~= "404: Not Found" then
-                        local loadedFunction = loadstring(scriptContent)
-                        if loadedFunction then
-                            loadedFunction()
-                            Window:Notify({
-                                Title = "✅ Loaded",
-                                Desc = script.title .. " loaded successfully!",
-                                Time = 3
-                            })
-                        else
-                            error("Script compilation error")
+                -- Показываем все скрипты с Code элементами
+                for _, script in ipairs(foundGameData.scripts) do
+                    -- Code элемент
+                    gameSection:Code({
+                        Title = script.title,
+                        Code = "loadstring(game:HttpGet('" .. script.url .. "'))()"
+                    })
+                    
+                    -- Кнопка для загрузки
+                    gameSection:Button({
+                        Title = "🚀 Load " .. script.title,
+                        Desc = "Click to auto-load",
+                        Callback = function()
+                            loadScriptSafe(script.url)
                         end
-                    else
-                        error("Script not found")
-                    end
-                end)
+                    })
+                end
+            end
+        end
+    end
+})
+
+-- СЕКЦИЯ 3: ВСЕ ИГРЫ (полный список с Code элементами)
+Tab7:Section({Title = "📚 All Games Database"})
+
+Tab7:Label({
+    Title = "Total Games: " .. #allGamesList,
+    Desc = "Click on game to see scripts"
+})
+
+-- Выводим все игры как кнопки
+for _, gameName in ipairs(allGamesList) do
+    -- Находим данные игры
+    local gameData = nil
+    for _, data in pairs(GameDatabase) do
+        if data.name == gameName then
+            gameData = data
+            break
+        end
+    end
+    
+    if gameData then
+        Tab7:Button({
+            Title = gameName,
+            Desc = #gameData.scripts .. " scripts available",
+            Callback = function()
+                -- При клике показываем скрипты этой игры
+                local scriptsSection = Tab7:Section({Title = "📜 " .. gameName})
                 
-                if not success then
-                    Window:Notify({
-                        Title = "❌ Error",
-                        Desc = "Failed to load script",
-                        Time = 5
+                -- Выводим ВСЕ скрипты с Code элементами
+                for _, script in ipairs(gameData.scripts) do
+                    -- Code элемент как в оригинале
+                    scriptsSection:Code({
+                        Title = script.title,
+                        Code = "loadstring(game:HttpGet('" .. script.url .. "'))()"
+                    })
+                    
+                    -- Кнопка для загрузки
+                    scriptsSection:Button({
+                        Title = "🚀 Load " .. script.title,
+                        Desc = "Auto load script",
+                        Callback = function()
+                            loadScriptSafe(script.url)
+                        end
                     })
                 end
             end
         })
     end
-
-    -- Кнопка для предложения игры
-    Tab7:Button({
-        Title = "➕ Request Game Addition",
-        Desc = "Ask to add this game to database",
-        Callback = function()
-            Window:Dialog({
-                Title = "📨 Game Request",
-                Button1 = {
-                    Title = "Telegram",
-                    Color = Color3.fromRGB(0, 188, 0),
-                    Callback = function()
-                        setclipboard("https://t.me/SaulGoodmanScript")
-                        Window:Notify({
-                            Title = "📋 Copied",
-                            Desc = "Telegram link copied!",
-                            Time = 3
-                        })
-                    end
-                },
-                Button2 = {
-                    Title = "Copy ID",
-                    Color = Color3.fromRGB(226, 39, 6),
-                    Callback = function()
-                        setclipboard(tostring(game.PlaceId))
-                        Window:Notify({
-                            Title = "📋 Copied",
-                            Desc = "Game ID copied!",
-                            Time = 3
-                        })
-                    end
-                }
-            })
-        end
-    })
 end
 
--- Авто-поиск текущей игры
+-- Информация
+Tab7:Section({Title = "ℹ️ Information"})
+
+Tab7:Label({
+    Title = "Current Game ID:",
+    Desc = tostring(currentGameId)
+})
+
 Tab7:Button({
-    Title = "🎯 Auto-Detect Current Game",
-    Desc = "Try to find scripts for current game",
+    Title = "📋 Copy Game ID",
+    Desc = "Copy to clipboard",
     Callback = function()
-        -- Пытаемся найти игру по ID
-        local foundGame = nil
-        
-        for gameName, gameData in pairs(FullGameData) do
-            for _, placeId in ipairs(gameData.placeIds) do
-                if placeId == currentGameId then
-                    foundGame = gameName
-                    break
-                end
-            end
-            if foundGame then break end
-        end
-
-        -- Если не нашли по ID, ищем по имени
-        if not foundGame then
-            for gameName, _ in pairs(FullGameData) do
-                if string.find(currentGameName:lower(), gameName:lower()) then
-                    foundGame = gameName
-                    break
-                end
-            end
-        end
-
-        if foundGame then
-            -- Устанавливаем значение в dropdown
-            gameDropdown:SetValue(foundGame)
-            displayGameScripts(foundGame)
-            
-            Window:Notify({
-                Title = "✅ Game Found",
-                Desc = "Found: " .. foundGame,
-                Time = 3
-            })
-        else
-            Window:Notify({
-                Title = "❌ Game Not Found",
-                Desc = "No scripts for current game",
-                Time = 5
-            })
-            
-            -- Показываем все игры для выбора
-            Tab7:Label({
-                Title = "📋 All Available Games",
-                Desc = "Select game from list above"
-            })
-        end
+        setclipboard(tostring(currentGameId))
+        Window:Notify({
+            Title = "📋 Copied",
+            Desc = "Game ID copied!",
+            Time = 3
+        })
     end
 })
 
--- Инструкция
-Tab7:Section({Title = "📖 How to use"})
-
 Tab7:Label({
-    Title = "🔍 Step 1:",
-    Desc = "Type game name in search box"
-})
-
-Tab7:Label({
-    Title = "🎯 Step 2:",
-    Desc = "Select game from dropdown"
-})
-
-Tab7:Label({
-    Title = "🚀 Step 3:",
-    Desc = "Click on script button to load"
-})
-
-Tab7:Label({
-    Title = "💡 Tip:",
-    Desc = "Use 'Auto-Detect' button for quick start"
+    Title = "How to use:",
+    Desc = "1. Auto-search checks current game\n2. Use manual search if not found\n3. Click any game to see all scripts"
 })
 -- ВКЛАДКА LOW POP SERVERS (встроенная в UI)
 local TabServers = Window:Tab({Title = "🌐 Low Pop", Icon = "users"})
