@@ -37,7 +37,7 @@ local Window = Library:Window({
     Title = "Saul Hub",
     Desc = "Hello,I'm Saul Goodman.Did you know that you have rights?",
     Icon = 92155476988079,
-    Theme = "Dark",
+    Theme = "Midnight",
     Config = {
         Keybind = Enum.KeyCode.LeftControl,
         Size = UDim2.new(0, 550, 0, 350)
@@ -47,9 +47,6 @@ local Window = Library:Window({
         Text = "CLOSE/OPEN"
     }
 })
-
--- Функции из Admin Panel
-
 
 -- Глобальные переменные для функций Admin Panel
 local espEnabled = false
@@ -247,8 +244,8 @@ end
 -- Функция безопасной загрузки скрипта
 local function loadScriptSafe(url)
     Window:Notify({
-        Title = "⏳ Загрузка...",
-        Desc = "Пожалуйста, подождите",
+        Title = "⏳ Loading...",
+        Desc = "Please,wait",
         Time = 2
     })
 
@@ -394,18 +391,6 @@ Tab:Slider({
         end
         slidersound()
     end
-})
-
-Tab:Section({Title = "📢 Новости обновления"})
-
-Tab:Label({
-    Title = "🎉 Saul Hub v4.0",
-    Desc = "🎄 Новогоднее обновление удаленно\n✨ + Admin Panel Functions\n🎯 Новые функции: ESP, AimBot, Noclip\n⚡ Улучшенная стабильность"
-})
-
-Tab:Label({
-    Title = "Что нового:",
-    Desc = "• Функции из Admin Panel\n• ESP игроков\n• AimBot система\n• Гравитация\n• X-Ray режим\n• И многое другое!"
 })
 
 -- ВКЛАДКА MOVEMENT
