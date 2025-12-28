@@ -256,17 +256,17 @@ local function loadScriptSafe(url)
             if loadedFunction then
                 return loadedFunction()
             else
-                error("Ошибка компиляции скрипта")
+                error("Script compilation error")
             end
         else
-            error("Скрипт не найден")
+            error("Script not found")
         end
     end)
 
     if success then
         Window:Notify({
-            Title = "✅ Успешно",
-            Desc = "Скрипт загружен и выполнен!",
+            Title = "✅ successfully",
+            Desc = "The script has been successfully launched!",
             Time = 3
         })
         notifysound()
@@ -282,16 +282,16 @@ local function loadScriptSafe(url)
 end
 
 -- ВКЛАДКА MAIN
-local Tab = Window:Tab({Title = "🎮 Main", Icon = "tree-pine"})
+local Tab = Window:Tab({Title = "🎮 Main", Icon = "Home"})
 
-Tab:Section({Title = "👤 Управление персонажем"})
+Tab:Section({Title = "👤 Character management"})
 
 local walkSpeed = 16
 local jumpPower = 50
 
 Tab:Slider({
-    Title = "Скорость ходьбы",
-    Desc = "Изменяет скорость передвижения",
+    Title = "Walking speed",
+    Desc = "Change the speed of movement",
     Min = 16,
     Max = 200,
     Rounding = 0,
@@ -307,8 +307,8 @@ Tab:Slider({
 })
 
 Tab:Slider({
-    Title = "Сила прыжка",
-    Desc = "Изменяет высоту прыжка",
+    Title = "Jump Power",
+    Desc = "Change the jump power",
     Min = 50,
     Max = 500,
     Rounding = 0,
@@ -324,8 +324,8 @@ Tab:Slider({
 })
 
 Tab:Toggle({
-    Title = "⚡ Авто-применение",
-    Desc = "Автоматически применять настройки",
+    Title = "⚡ Auto application",
+    Desc = "Apply settings automatically",
     Value = true,
     Callback = function(v)
         if v then
