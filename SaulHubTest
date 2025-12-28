@@ -25,17 +25,17 @@ local MarketplaceService = game:GetService("MarketplaceService")
 local TweenService = game:GetService("TweenService")
 local CoreGui = game:GetService("CoreGui")
 
--- Пустые звуки
+-- Empty sounds
 local function btnclick() end
 local function slidersound() end
 local function togglesound() end  
 local function notifysound() end
 
--- Загружаем библиотеку
+-- Load library
 local Library = loadstring(game:HttpGet("https://raw.githubusercontent.com/SaulGoodmanScripter/library/refs/heads/main/The%20main%20code"))()
 local Window = Library:Window({
     Title = "Saul Hub",
-    Desc = "Hello,I'm Saul Goodman.Did you know that you have rights?",
+    Desc = "Hello, I'm Saul Goodman. Did you know that you have rights?",
     Icon = 92155476988079,
     Theme = "Midnight",
     Config = {
@@ -48,7 +48,7 @@ local Window = Library:Window({
     }
 })
 
--- Глобальные переменные
+-- Global variables
 local espEnabled = false
 local highlights = {}
 local infiniteJump = false
@@ -69,7 +69,7 @@ local randomizeConnection
 local playersInvisible = false
 local isInvisible = false
 
--- Функции ESP
+-- ESP functions
 local function addHighlight(player)
     if player ~= LocalPlayer and player.Character then
         local highlight = Instance.new("Highlight")
@@ -102,7 +102,7 @@ local function removeHighlight(player)
     end
 end
 
--- Функция AimBot
+-- AimBot function
 local function getClosestPlayer()
     local closestPlayer = nil
     local closestDistance = math.huge
@@ -118,22 +118,23 @@ local function getClosestPlayer()
     return closestPlayer
 end
 
--- ВКЛАДКА MAIN
+-- MAIN TAB
 local Tab = Window:Tab({Title = "Main", Icon = "house"})
 
 Tab:Section({Title = "Welcome"})
 Tab:Label({
     Title = "Saul Hub",
-    Desc = "Welcome to Saul Hib! "..localPlayer.Name.." Thanks for using script!"
+    Desc = "Welcome to Saul Hub! "..LocalPlayer.Name.." Thanks for using script!"
+})
 
-Tab:Section({Title = "👤 Character management"})
+Tab:Section({Title = "Character Management"})
 
 local walkSpeed = 16
 local jumpPower = 50
 
 Tab:Slider({
-    Title = "Walking speed",
-    Desc = "Change the speed of movement",
+    Title = "Walking Speed",
+    Desc = "Change movement speed",
     Min = 16,
     Max = 200,
     Rounding = 0,
@@ -150,7 +151,7 @@ Tab:Slider({
 
 Tab:Slider({
     Title = "Jump Power",
-    Desc = "Change the jump power",
+    Desc = "Change jump power",
     Min = 50,
     Max = 500,
     Rounding = 0,
@@ -166,7 +167,7 @@ Tab:Slider({
 })
 
 Tab:Toggle({
-    Title = "⚡ Auto application",
+    Title = "Auto Apply",
     Desc = "Apply settings automatically",
     Value = true,
     Callback = function(v)
@@ -184,7 +185,7 @@ Tab:Toggle({
 })
 
 Tab:Button({
-    Title = "throw off",
+    Title = "Reset",
     Desc = "Reset all character settings",
     Callback = function()
         btnclick()
@@ -198,14 +199,14 @@ Tab:Button({
     end
 })
 
--- ВКЛАДКА Control
+-- CONTROL TAB (объединенный с Universal)
 local Tab2 = Window:Tab({Title = "Control", Icon = "user"})
 
-Tab2:Section({Title = "Основные функции"})
+Tab2:Section({Title = "Main Functions"})
 
 Tab2:Toggle({
     Title = "Noclip",
-    Desc = "Walking through walls",
+    Desc = "Walk through walls",
     Value = false,
     Callback = function(v)
         noclip = v
@@ -252,7 +253,7 @@ Tab2:Toggle({
 })
 
 Tab2:Toggle({
-    Title = " Infinite Jump",
+    Title = "Infinite Jump",
     Desc = "Endless jumps",
     Value = false,
     Callback = function(v)
@@ -274,22 +275,13 @@ Tab2:Toggle({
     end
 })
 
-Tab2:Button({
-    Title = "🕊️ Fly GUI",
-    Desc = "Open the flight menu",
-    Callback = function()
-        btnclick()
-        loadstring(game:HttpGet("https://raw.githubusercontent.com/OBFhm5650lol/F/main/F"))()
-    end
-})
-
 Tab2:Toggle({
-    Title = "🤸 Auto Jump",
-    Desc = "Автоматически прыгать",
+    Title = "Auto Jump",
+    Desc = "Automatically jump",
     Value = false,
     Callback = function(v)
         autoJumpEnabled = v
-        
+
         if v then
             autoJumpConnection = RunService.Heartbeat:Connect(function()
                 if autoJumpEnabled and LocalPlayer.Character then
@@ -310,7 +302,7 @@ Tab2:Toggle({
 })
 
 Tab2:Slider({
-    Title = "Jump height",
+    Title = "Jump Height",
     Desc = "Height of auto-jumps",
     Min = 20,
     Max = 200,
@@ -325,13 +317,214 @@ Tab2:Slider({
     end
 })
 
--- ВКЛАДКА VISUAL
+Tab2:Section({Title = "Fly"})
+
+Tab2:Button({
+    Title = "Fly GUI",
+    Desc = "Open flight menu",
+    Callback = function()
+        btnclick()
+        loadstring(game:HttpGet("https://raw.githubusercontent.com/OBFhm5650lol/F/main/F"))()
+    end
+})
+
+Tab2:Section({Title = "Anti-Void Protection"})
+
+local antiVoidEnabled = false
+local voidYLevel = -10
+local teleportPosition = Vector3.new(0, 50, 0)
+local checkInterval = 0.1
+
+Tab2:Toggle({
+    Title = "Anti-Void",
+    Desc = "Protected from falling into the abyss",
+    Value = false,
+    Callback = function(v)
+        antiVoidEnabled = v
+        togglesound()
+    end
+})
+
+Tab2:Slider({
+    Title = "Void Level",
+    Desc = "Y coordinate below which to teleport",
+    Min = -100,
+    Max = 50,
+    Rounding = 0,
+    Value = -10,
+    Callback = function(val)
+        voidYLevel = val
+        slidersound()
+    end
+})
+
+Tab2:Button({
+    Title = "Set Safe Position",
+    Desc = "Set current position as safe",
+    Callback = function()
+        btnclick()
+        local char = LocalPlayer.Character
+        if char and char:FindFirstChild("HumanoidRootPart") then
+            teleportPosition = char.HumanoidRootPart.Position + Vector3.new(0, 5, 0)
+            Window:Notify({
+                Title = "Position Saved",
+                Desc = string.format("X:%.1f Y:%.1f Z:%.1f", 
+                    teleportPosition.X, teleportPosition.Y, teleportPosition.Z),
+                Time = 3
+            })
+        end
+    end
+})
+
+-- Anti-Void function
+local antiVoidConnection
+spawn(function()
+    while wait(checkInterval) do
+        if antiVoidEnabled and LocalPlayer.Character then
+            local char = LocalPlayer.Character
+            local rootPart = char:FindFirstChild("HumanoidRootPart")
+
+            if rootPart and rootPart.Position.Y < voidYLevel then
+                -- Teleport to safe position
+                rootPart.CFrame = CFrame.new(teleportPosition)
+
+                -- Visual effect
+                Window:Notify({
+                    Title = "Anti-Void Activated!",
+                    Desc = string.format("Teleported from Y:%.1f", rootPart.Position.Y),
+                    Time = 3
+                })
+
+                -- Sound effect
+                pcall(function()
+                    local sound = Instance.new("Sound")
+                    sound.SoundId = "rbxassetid://911882909"
+                    sound.Volume = 0.5
+                    sound.Parent = workspace
+                    sound:Play()
+                    wait(1)
+                    sound:Destroy()
+                end)
+            end
+        end
+    end
+end)
+
+Tab2:Section({Title = "Universal Scripts"})
+
+Tab2:Button({
+    Title = "Anti AFK",
+    Desc = "Protection from AFK kick",
+    Callback = function()
+        btnclick()
+        loadstring(game:HttpGet("https://raw.githubusercontent.com/ArgetnarYT/scripts/main/AntiAfk2.lua"))()
+    end
+})
+
+Tab2:Button({
+    Title = "All Emotions",
+    Desc = "Unlock all emotions",
+    Callback = function()
+        btnclick()
+        loadstring(game:HttpGet("https://pastebin.com/raw/NXZp97wG"))()
+    end
+})
+
+Tab2:Button({
+    Title = "Fast Rejoin",
+    Desc = "Instant game rejoin",
+    Callback = function()
+        btnclick()
+        TeleportService:Teleport(game.PlaceId)
+    end
+})
+
+Tab2:Button({
+    Title = "Copy Game ID",
+    Desc = "Copy game ID to clipboard",
+    Callback = function()
+        btnclick()
+        setclipboard(tostring(game.PlaceId))
+        Window:Notify({
+            Title = "Copied",
+            Desc = "Game ID copied",
+            Time = 3
+        })
+    end
+})
+
+Tab2:Button({
+    Title = "Screen Flash",
+    Desc = "Screen flash effect",
+    Callback = function()
+        btnclick()
+        local ScreenGui = Instance.new("ScreenGui")
+        ScreenGui.Parent = CoreGui
+        local flash = Instance.new("Frame")
+        flash.Size = UDim2.new(1, 0, 1, 0)
+        flash.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+        flash.BackgroundTransparency = 0
+        flash.Parent = ScreenGui
+
+        TweenService:Create(flash, TweenInfo.new(0.5, Enum.EasingStyle.Quad), {
+            BackgroundTransparency = 1
+        }):Play()
+        task.delay(0.5, function()
+            ScreenGui:Destroy()
+        end)
+    end
+})
+
+-- Teleportation functions
+Tab2:Section({Title = "Teleportation"})
+
+local function createTeleportButtons()
+    for _, player in pairs(Players:GetPlayers()) do
+        if player ~= LocalPlayer then
+            Tab2:Button({
+                Title = "TP to " .. player.Name,
+                Desc = "Teleport to player",
+                Callback = function()
+                    btnclick()
+                    if player.Character and player.Character:FindFirstChild("HumanoidRootPart") and 
+                       LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("HumanoidRootPart") then
+                        LocalPlayer.Character.HumanoidRootPart.CFrame = player.Character.HumanoidRootPart.CFrame
+                    end
+                end
+            })
+        end
+    end
+end
+
+createTeleportButtons()
+
+Tab2:Section({Title = "Special Scripts"})
+
+local specialScripts = {
+    {"InfiniteYield", "https://raw.githubusercontent.com/EdgeIY/infiniteyield/master/source"},
+    {"Lua IDE", "https://raw.githubusercontent.com/RbxNoobScripter/Admin-panel-Script-/refs/heads/main/ytrewq1234556666.lua"}
+}
+
+for _, scriptData in ipairs(specialScripts) do
+    Tab2:Button({
+        Title = scriptData[1],
+        Desc = "Load script",
+        Callback = function()
+            btnclick()
+            local success, err = pcall(function()
+                loadstring(game:HttpGet(scriptData[2], true))()
+            end)
+        end
+    })
+end
+
+-- VISUAL TAB
 local Tab3 = Window:Tab({Title = "Visual", Icon = "eye"})
 
-Tab3:Section({Title = "ESP и визуальные эффекты"})
+Tab3:Section({Title = "ESP and Visual Effects"})
 
 Tab3:Toggle({
-    Title = "👁️ ESP Player",
+    Title = "ESP Player",
     Desc = "See players through walls",
     Value = false,
     Callback = function(v)
@@ -360,7 +553,7 @@ Tab3:Toggle({
 
 Tab3:Toggle({
     Title = "AimBot",
-    Desc = "Automatic aiming at the nearest player",
+    Desc = "Automatic aiming at nearest player",
     Value = false,
     Callback = function(v)
         aimEnabled = v
@@ -407,8 +600,8 @@ Tab3:Toggle({
 })
 
 Tab3:Toggle({
-    Title = " Particle Burst",
-    Desc = "Creating particles around the character",
+    Title = "Particle Burst",
+    Desc = "Create particles around character",
     Value = false,
     Callback = function(v)
         particleBurstEnabled = v
@@ -446,8 +639,6 @@ Tab3:Toggle({
     end
 })
 
-
-
 Tab3:Toggle({
     Title = "Players Visibility",
     Desc = "Make other players invisible",
@@ -469,42 +660,40 @@ Tab3:Toggle({
         togglesound()
     end
 })
--- В Tab3 после других секций добавить:
 
 Tab3:Section({Title = "Duplicator"})
 
--- Кнопка дюпа
 Tab3:Button({
-    Title = " Dupe Item",
-    Desc = "Скопировать предмет в руках (F)",
+    Title = "Dupe Item",
+    Desc = "Copy item in hands (F)",
     Callback = function()
         btnclick()
-        
+
         local player = game.Players.LocalPlayer
         local character = player.Character
-        
+
         if not character then
             Window:Notify({
-                Title = " Error",
-                Desc = "The character is not loaded",
+                Title = "Error",
+                Desc = "Character not loaded",
                 Time = 3
             })
             return
         end
-        
+
         local tool = character:FindFirstChildOfClass("Tool")
         if tool then
             local success, err = pcall(function()
                 local clone = tool:Clone()
                 clone.Parent = player.Backpack
-                
+
                 Window:Notify({
-                    Title = "Successfully",
-                    Desc = "Tool'" .. tool.Name .. "' dupnut!",
+                    Title = "Success",
+                    Desc = "Tool '" .. tool.Name .. "' duplicated!",
                     Time = 3
                 })
             end)
-            
+
             if not success then
                 Window:Notify({
                     Title = "Error",
@@ -515,19 +704,18 @@ Tab3:Button({
         else
             Window:Notify({
                 Title = "Attention",
-                Desc = "Pick up the tool",
+                Desc = "Pick up tool",
                 Time = 3
             })
         end
     end
 })
 
--- Тоггл для горячей клавиши
 local hotkeyEnabled = true
 
 Tab3:Toggle({
-    Title = "The hotkey F",
-    Desc = "Дюпить по нажатию F",
+    Title = "Hotkey F",
+    Desc = "Duplicate on F press",
     Value = true,
     Callback = function(v)
         hotkeyEnabled = v
@@ -535,32 +723,29 @@ Tab3:Toggle({
     end
 })
 
--- Обработчик горячей клавиши
 UserInputService.InputBegan:Connect(function(input, gameProcessed)
     if gameProcessed or not hotkeyEnabled then return end
-    
+
     if input.KeyCode == Enum.KeyCode.F then
-        -- Имитируем клик по кнопке
-        local success = pcall(function()
-            -- Вызываем callback кнопки дюпа
-            Tab3.Buttons["🔄 Dupe Item"].Callback()
+        pcall(function()
+            Tab3.Buttons["Dupe Item"].Callback()
         end)
     end
 end)
 
--- Инструкция
 Tab3:Label({
     Title = "How to use:",
-    Desc = "1. Pick up the tool\n2. НPress f or the button above\n3. The item will appear in the inventory"
+    Desc = "1. Pick up tool\n2. Press F or button above\n3. Item will appear in inventory"
 })
--- ВКЛАДКА POWER
-local Tab4 = Window:Tab({Title = "⚡ Power", Icon = "zap"})
 
-Tab4:Section({Title = "Power functions"})
+-- POWER TAB
+local Tab4 = Window:Tab({Title = "Power", Icon = "zap"})
+
+Tab4:Section({Title = "Power Functions"})
 
 Tab4:Toggle({
     Title = "God Mode",
-    Desc = "The immortality of the character",
+    Desc = "Character immortality",
     Value = false,
     Callback = function(v)
         godMode = v
@@ -577,98 +762,17 @@ Tab4:Toggle({
         togglesound()
     end
 })
-Tab4:Section({Title = " Anti-Void Protection"})
 
-local antiVoidEnabled = false
-local voidYLevel = -10 -- уровень, ниже которого считается "void"
-local teleportPosition = Vector3.new(0, 50, 0) -- позиция телепортации
-local checkInterval = 0.1
-
-Tab4:Toggle({
-    Title = "Anti-Void",
-    Desc = "ru :Защита от падения в бездну\nEnProtected from falling into the abyss",
-    Value = false,
-    Callback = function(v)
-        antiVoidEnabled = v
-        togglesound()
-    end
-})
-
-Tab4:Slider({
-    Title = "level Void",
-    Desc = "Y координата, ниже которой телепортироваться",
-    Min = -100,
-    Max = 50,
-    Rounding = 0,
-    Value = -10,
-    Callback = function(val)
-        voidYLevel = val
-        slidersound()
-    end
-})
-
-Tab4:Button({
-    Title = "Set Safe Position",
-    Desc = "Установить текущую позицию как безопасную",
-    Callback = function()
-        btnclick()
-        local char = LocalPlayer.Character
-        if char and char:FindFirstChild("HumanoidRootPart") then
-            teleportPosition = char.HumanoidRootPart.Position + Vector3.new(0, 5, 0)
-            Window:Notify({
-                Title = " Позиция сохранена",
-                Desc = string.format("X:%.1f Y:%.1f Z:%.1f", 
-                    teleportPosition.X, teleportPosition.Y, teleportPosition.Z),
-                Time = 3
-            })
-        end
-    end
-})
-
--- Функция Anti-Void
-local antiVoidConnection
-spawn(function()
-    while wait(checkInterval) do
-        if antiVoidEnabled and LocalPlayer.Character then
-            local char = LocalPlayer.Character
-            local rootPart = char:FindFirstChild("HumanoidRootPart")
-            
-            if rootPart and rootPart.Position.Y < voidYLevel then
-                -- Телепортируем на безопасную позицию
-                rootPart.CFrame = CFrame.new(teleportPosition)
-                
-                -- Визуальный эффект
-                Window:Notify({
-                    Title = "Anti-Void Сработал!",
-                    Desc = string.format("Телепортирован с Y:%.1f", rootPart.Position.Y),
-                    Time = 3
-                })
-                
-                -- Звуковой эффект (если есть)
-                pcall(function()
-                    local sound = Instance.new("Sound")
-                    sound.SoundId = "rbxassetid://911882909"
-                    sound.Volume = 0.5
-                    sound.Parent = workspace
-                    sound:Play()
-                    wait(1)
-                    sound:Destroy()
-                end)
-            end
-        end
-    end
-end)
--- В Tab4:
-Tab4:Section({Title = " Virtual Auto Clicker"})
+Tab4:Section({Title = "Virtual Auto Clicker"})
 
 local virtualClickEnabled = false
-local clickPosition = Vector2.new(500, 500) -- центр экрана
+local clickPosition = Vector2.new(500, 500)
 local clickInterval = 0.5
-local clickType = "Tap" -- Tap, Hold, Swipe
+local clickType = "Tap"
 
 Tab4:Toggle({
-    Title = " Virtual Click",
-    Desc = "Виртуальные клики (работает на телефонах)",
+    Title = "Virtual Click",
+    Desc = "Virtual clicks (works on phones)",
     Value = false,
     Callback = function(v)
         virtualClickEnabled = v
@@ -690,60 +794,35 @@ Tab4:Slider({
 })
 
 Tab4:Dropdown({
-    Title = "Тип клика",
-    Desc = "Вид виртуального ввода",
-    List = {"Тап", "Удержание", "Свайп"},
-    Value = "Тап",
+    Title = "Click Type",
+    Desc = "Type of virtual input",
+    List = {"Tap", "Hold", "Swipe"},
+    Value = "Tap",
     Callback = function(val)
         clickType = val
     end
 })
 
 Tab4:Button({
-    Title = "🎮 Тест виртуального ввода",
-    Desc = "Протестировать на экране",
+    Title = "Test Virtual Input",
+    Desc = "Test on screen",
     Callback = function()
         btnclick()
         simulateVirtualClick()
         Window:Notify({
-            Title = "📱 Тест",
-            Desc = "Виртуальный клик отправлен",
+            Title = "Test",
+            Desc = "Virtual click sent",
             Time = 2
         })
     end
 })
 
--- Функция виртуального клика
 local function simulateVirtualClick()
     local VirtualInputManager = game:GetService("VirtualInputManager")
-    local GuiService = game:GetService("GuiService")
-    
-    -- Получаем размер экрана
     local viewportSize = workspace.CurrentCamera.ViewportSize
     local centerPos = Vector2.new(viewportSize.X / 2, viewportSize.Y / 2)
-    
-    if clickType == "Тап" then
-        -- Виртуальный тап (нажатие и отпускание)
-        VirtualInputManager:SendMouseButtonEvent(
-            centerPos.X, centerPos.Y, -- позиция
-            0, -- кнопка (0 = левая)
-            true, -- нажатие
-            game, -- game
-            1 -- ?
-        )
-        
-        wait(0.05)
-        
-        VirtualInputManager:SendMouseButtonEvent(
-            centerPos.X, centerPos.Y,
-            0,
-            false, -- отпускание
-            game,
-            1
-        )
-        
-    elseif clickType == "Удержание" then
-        -- Долгое нажатие
+
+    if clickType == "Tap" then
         VirtualInputManager:SendMouseButtonEvent(
             centerPos.X, centerPos.Y,
             0,
@@ -751,9 +830,9 @@ local function simulateVirtualClick()
             game,
             1
         )
-        
-        wait(0.5) -- удерживаем 0.5 секунд
-        
+
+        wait(0.05)
+
         VirtualInputManager:SendMouseButtonEvent(
             centerPos.X, centerPos.Y,
             0,
@@ -761,13 +840,30 @@ local function simulateVirtualClick()
             game,
             1
         )
-        
-    elseif clickType == "Свайп" then
-        -- Свайп (перетаскивание)
+
+    elseif clickType == "Hold" then
+        VirtualInputManager:SendMouseButtonEvent(
+            centerPos.X, centerPos.Y,
+            0,
+            true,
+            game,
+            1
+        )
+
+        wait(0.5)
+
+        VirtualInputManager:SendMouseButtonEvent(
+            centerPos.X, centerPos.Y,
+            0,
+            false,
+            game,
+            1
+        )
+
+    elseif clickType == "Swipe" then
         local startPos = Vector2.new(centerPos.X - 50, centerPos.Y)
         local endPos = Vector2.new(centerPos.X + 50, centerPos.Y)
-        
-        -- Начало касания
+
         VirtualInputManager:SendMouseButtonEvent(
             startPos.X, startPos.Y,
             0,
@@ -775,8 +871,7 @@ local function simulateVirtualClick()
             game,
             1
         )
-        
-        -- Двигаем палец
+
         for i = 1, 10 do
             local pos = startPos:Lerp(endPos, i/10)
             VirtualInputManager:SendMouseMoveEvent(
@@ -785,8 +880,7 @@ local function simulateVirtualClick()
             )
             wait(0.02)
         end
-        
-        -- Отпускаем
+
         VirtualInputManager:SendMouseButtonEvent(
             endPos.X, endPos.Y,
             0,
@@ -797,7 +891,6 @@ local function simulateVirtualClick()
     end
 end
 
--- Автокликер
 spawn(function()
     while wait() do
         if virtualClickEnabled then
@@ -806,9 +899,10 @@ spawn(function()
         end
     end
 end)
+
 Tab4:Toggle({
-    Title = "✨ Визуальные эффекты",
-    Desc = "Показывать эффекты кликов",
+    Title = "Visual Effects",
+    Desc = "Show click effects",
     Value = true,
     Callback = function(v)
         visualEffects = v
@@ -817,196 +911,78 @@ Tab4:Toggle({
 })
 
 Tab4:Button({
-    Title = "🎮 Тест кликов",
-    Desc = "Протестировать настройки",
+    Title = "Test Clicks",
+    Desc = "Test settings",
     Callback = function()
         btnclick()
         Window:Notify({
-            Title = "🖱️ Тест",
-            Desc = "Тест кликов запущен",
+            Title = "Test",
+            Desc = "Click test started",
             Time = 2
         })
     end
 })
 
-Tab4:Section({Title = "Специальные скрипты"})
-
-local specialScripts = {
-    {"⚡ InfiniteYield", "https://raw.githubusercontent.com/EdgeIY/infiniteyield/master/source"},
-    {"💻 Lua IDE", "https://raw.githubusercontent.com/RbxNoobScripter/Admin-panel-Script-/refs/heads/main/ytrewq1234556666.lua"}
-}
-
-for _, scriptData in ipairs(specialScripts) do
-    Tab4:Button({
-        Title = scriptData[1],
-        Desc = "Загрузить скрипт",
-        Callback = function()
-            btnclick()
-            loadScriptSafe(scriptData[2])
-        end
-    })
-end
-
 Tab4:Button({
-    Title = "💥 Screen Flash",
-    Desc = "Эффект вспышки на экране",
-    Callback = function()
-        btnclick()
-        local ScreenGui = Instance.new("ScreenGui")
-        ScreenGui.Parent = CoreGui
-        local flash = Instance.new("Frame")
-        flash.Size = UDim2.new(1, 0, 1, 0)
-        flash.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-        flash.BackgroundTransparency = 0
-        flash.Parent = ScreenGui
-
-        TweenService:Create(flash, TweenInfo.new(0.5, Enum.EasingStyle.Quad), {
-            BackgroundTransparency = 1
-        }):Play()
-        task.delay(0.5, function()
-            ScreenGui:Destroy()
-        end)
-    end
-})
-
-Tab4:Button({
-    Title = "📸 Freecam",
-    Desc = "Режим свободной камеры",
+    Title = "Freecam",
+    Desc = "Free camera mode",
     Callback = function()
         btnclick()
         loadstring(game:HttpGet("https://pastebin.com/raw/P4reNRiQ"))()
     end
 })
 
--- ВКЛАДКА UNIVERSAL
-local Tab5 = Window:Tab({Title = "🔧 Universal", Icon = "gift"})
+-- EXECUTOR TAB
+local Tab5 = Window:Tab({Title = "Executor", Icon = "code"})
 
-Tab5:Section({Title = "Универсальные скрипты"})
+Tab5:Section({Title = "Executor Parodies"})
 
-Tab5:Button({
-    Title = "⏰ Anti AFK",
-    Desc = "Защита от кика за бездействие",
-    Callback = function()
-        btnclick()
-        loadstring(game:HttpGet("https://raw.githubusercontent.com/ArgetnarYT/scripts/main/AntiAfk2.lua"))()
-    end
-})
-
-Tab5:Button({
-    Title = "💃 Все эмоции",
-    Desc = "Разблокировать все эмоции",
-    Callback = function()
-        btnclick()
-        loadstring(game:HttpGet("https://pastebin.com/raw/NXZp97wG"))()
-    end
-})
-
-Tab5:Section({Title = "Телепортация"})
-
--- Функция телепортации к игрокам
-local function createTeleportButtons()
-    for _, player in pairs(Players:GetPlayers()) do
-        if player ~= LocalPlayer then
-            Tab5:Button({
-                Title = "👤 TP to " .. player.Name,
-                Desc = "Телепортироваться к игроку",
-                Callback = function()
-                    btnclick()
-                    if player.Character and player.Character:FindFirstChild("HumanoidRootPart") and 
-                       LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("HumanoidRootPart") then
-                        LocalPlayer.Character.HumanoidRootPart.CFrame = player.Character.HumanoidRootPart.CFrame
-                    end
-                end
-            })
-        end
-    end
-end
-
--- Создаем кнопки телепортации
-createTeleportButtons()
-
-Tab5:Button({
-    Title = "🔄 Быстрый реджойн",
-    Desc = "Мгновенный реджойн игры",
-    Callback = function()
-        btnclick()
-        TeleportService:Teleport(game.PlaceId)
-    end
-})
-
-Tab5:Button({
-    Title = "📋 Копировать ID",
-    Desc = "Скопировать ID игры в буфер",
-    Callback = function()
-        btnclick()
-        setclipboard(tostring(game.PlaceId))
-        Window:Notify({
-            Title = "📋 Скопировано",
-            Desc = "ID игры скопирован",
-            Time = 3
-        })
-    end
-})
--- ВКЛАДКА EXECUTOR
-local Tab6 = Window:Tab({Title = "</> Executor", Icon = "code"})
-
-Tab6:Section({Title = "⚡ Executor Parodies"})
-
--- Список эксплоитов с иконками
 local executors = {
     {
         name = "Synapse X",
-        icon = "💠",
-        desc = "Самый мощный эксплоит",
+        desc = "Most powerful exploit",
         url = "https://raw.githubusercontent.com/SaulGoodmanScripter/Executers/refs/heads/main/Synapse.lua"
     },
     {
         name = "Krnl",
-        icon = "🔹",
-        desc = "Популярный бесплатный эксплоит",
+        desc = "Popular free exploit",
         url = "https://raw.githubusercontent.com/SaulGoodmanScripter/Executers/refs/heads/main/Krnl.lua"
     },
     {
         name = "Arceus X",
-        icon = "✨",
-        desc = "Android/iOS эксплоит",
+        desc = "Android/iOS exploit",
         url = "https://raw.githubusercontent.com/SaulGoodmanScripter/Executers/refs/heads/main/Arceus-X.lua"
     },
     {
         name = "Codex",
-        icon = "📜",
-        desc = "Лёгкий и быстрый эксплоит",
+        desc = "Light and fast exploit",
         url = "https://raw.githubusercontent.com/SaulGoodmanScripter/Executers/refs/heads/main/Codex.Lua"
     },
     {
         name = "Kiwi X",
-        icon = "🥝",
-        desc = "Улучшенный Kiwi эксплоит",
+        desc = "Improved Kiwi exploit",
         url = "https://raw.githubusercontent.com/SaulGoodmanScripter/Executers/refs/heads/main/Kiwi.lua"
     },
     {
         name = "Krypton",
-        icon = "💎",
-        desc = "Эксплоит для продвинутых",
+        desc = "Advanced exploit",
         url = "https://raw.githubusercontent.com/SaulGoodmanScripter/Executers/refs/heads/main/Krypton.Lua"
     }
 }
 
--- Кнопки для каждого эксплоита
 for _, exec in ipairs(executors) do
-    Tab6:Button({
-        Title = exec.icon .. " " .. exec.name,
+    Tab5:Button({
+        Title = exec.name,
         Desc = exec.desc,
         Callback = function()
             btnclick()
-            
+
             Window:Notify({
-                Title = exec.icon .. " Загрузка " .. exec.name,
-                Desc = "Пожалуйста, подождите...",
+                Title = "Loading " .. exec.name,
+                Desc = "Please wait...",
                 Time = 3
             })
-            
-            -- Загружаем скрипт эксплоита
+
             local success, result = pcall(function()
                 local scriptContent = game:HttpGet(exec.url, true)
                 if scriptContent then
@@ -1014,23 +990,23 @@ for _, exec in ipairs(executors) do
                     if fn then
                         fn()
                         Window:Notify({
-                            Title = "✅ " .. exec.name .. " Загружен",
-                            Desc = "Интерфейс эксплоита активирован!",
+                            Title = exec.name .. " Loaded",
+                            Desc = "Exploit interface activated!",
                             Time = 4
                         })
                         notifysound()
                     else
-                        error("Ошибка компиляции")
+                        error("Compilation error")
                     end
                 else
-                    error("Не удалось загрузить скрипт")
+                    error("Failed to load script")
                 end
             end)
-            
+
             if not success then
                 Window:Notify({
-                    Title = "❌ Ошибка",
-                    Desc = "Не удалось загрузить " .. exec.name,
+                    Title = "Error",
+                    Desc = "Failed to load " .. exec.name,
                     Time = 5
                 })
             end
@@ -1038,12 +1014,12 @@ for _, exec in ipairs(executors) do
     })
 end
 
-Tab6:Section({Title = "📝 Custom Script Executor"})
+Tab5:Section({Title = "Custom Script Executor"})
 
-local defaultScript = [[-- 🎄 Saul Hub Executor
+local defaultScript = [[-- Saul Hub Executor
 print("Hello from Saul Hub!")
 
--- Пример скрипта
+-- Example script
 local player = game.Players.LocalPlayer
 
 if player.Character then
@@ -1051,32 +1027,32 @@ if player.Character then
     if humanoid then
         humanoid.WalkSpeed = 50
         humanoid.JumpPower = 100
-        print("Скорость установлена!")
+        print("Speed set!")
     end
 end]]
 
 local currentScript = defaultScript
 
-local codeDisplay = Tab6:Code({
-    Title = "📝 Текущий скрипт",
+local codeDisplay = Tab5:Code({
+    Title = "Current Script",
     Code = currentScript
 })
 
-local scriptInfo = Tab6:Label({
-    Title = "📊 Информация",
-    Desc = "Символов: " .. #currentScript .. " | Строк: " .. select(2, string.gsub(currentScript, "\n", "")) + 1
+local scriptInfo = Tab5:Label({
+    Title = "Information",
+    Desc = "Characters: " .. #currentScript .. " | Lines: " .. select(2, string.gsub(currentScript, "\n", "")) + 1
 })
 
 local function updateScriptInfo()
     local charCount = #currentScript
     local lineCount = select(2, string.gsub(currentScript, "\n", "")) + 1
-    scriptInfo:SetDesc(string.format("Символов: %d | Строк: %d", charCount, lineCount))
+    scriptInfo:SetDesc(string.format("Characters: %d | Lines: %d", charCount, lineCount))
 end
 
-local scriptInput = Tab6:Textbox({
-    Title = "✏️ Редактировать скрипт",
-    Desc = "Введите ваш Lua код",
-    Placeholder = "print('Привет от Saul Hub!')",
+local scriptInput = Tab5:Textbox({
+    Title = "Edit Script",
+    Desc = "Enter your Lua code",
+    Placeholder = "print('Hello from Saul Hub!')",
     Value = "",
     ClearText = false,
     Callback = function(text)
@@ -1088,26 +1064,26 @@ local scriptInput = Tab6:Textbox({
     end
 })
 
-Tab6:Section({Title = "⚙️ Управление скриптами"})
+Tab5:Section({Title = "Script Management"})
 
-Tab6:Button({
-    Title = "🚀 Выполнить",
-    Desc = "Запустить текущий скрипт",
+Tab5:Button({
+    Title = "Execute",
+    Desc = "Run current script",
     Callback = function()
         btnclick()
 
         if not currentScript or currentScript:gsub("%s", "") == "" then
             Window:Notify({
-                Title = "⚠️ Внимание",
-                Desc = "Скрипт пустой!",
+                Title = "Warning",
+                Desc = "Script is empty!",
                 Time = 3
             })
             return
         end
 
         Window:Notify({
-            Title = "⚡ Выполнение...",
-            Desc = "Скрипт запускается",
+            Title = "Executing...",
+            Desc = "Script is running",
             Time = 2
         })
 
@@ -1116,30 +1092,30 @@ Tab6:Button({
             if fn then
                 return fn()
             else
-                error("Ошибка компиляции")
+                error("Compilation error")
             end
         end)
 
         if success then
             Window:Notify({
-                Title = "✅ Успешно",
-                Desc = "Скрипт выполнен",
+                Title = "Success",
+                Desc = "Script executed",
                 Time = 3
             })
         else
             local errorMsg = tostring(result):sub(1, 100)
             Window:Notify({
-                Title = "❌ Ошибка",
-                Desc = "Ошибка: " .. errorMsg,
+                Title = "Error",
+                Desc = "Error: " .. errorMsg,
                 Time = 5
             })
         end
     end
 })
 
-Tab6:Button({
-    Title = "📋 Вставить из буфера",
-    Desc = "Вставить скрипт из буфера обмена",
+Tab5:Button({
+    Title = "Paste from Clipboard",
+    Desc = "Paste script from clipboard",
     Callback = function()
         btnclick()
         pcall(function()
@@ -1149,8 +1125,8 @@ Tab6:Button({
                 codeDisplay:SetCode(clipboard)
                 updateScriptInfo()
                 Window:Notify({
-                    Title = "📋 Вставлено",
-                    Desc = "Скрипт загружен из буфера",
+                    Title = "Pasted",
+                    Desc = "Script loaded from clipboard",
                     Time = 3
                 })
             end
@@ -1158,62 +1134,59 @@ Tab6:Button({
     end
 })
 
-Tab6:Button({
-    Title = "🗑️ Очистить",
-    Desc = "Очистить редактор",
+Tab5:Button({
+    Title = "Clear",
+    Desc = "Clear editor",
     Callback = function()
         btnclick()
-        currentScript = "-- Введите ваш код здесь"
+        currentScript = "-- Enter your code here"
         codeDisplay:SetCode(currentScript)
         scriptInput:SetValue("")
         updateScriptInfo()
         Window:Notify({
-            Title = "🧹 Очищено",
-            Desc = "Редактор очищен",
+            Title = "Cleared",
+            Desc = "Editor cleared",
             Time = 2
         })
     end
 })
 
-Tab6:Button({
-    Title = "🎯 Примеры",
-    Desc = "Быстрые примеры скриптов",
+Tab5:Button({
+    Title = "Examples",
+    Desc = "Quick script examples",
     Callback = function()
         btnclick()
-        
+
         local examples = {
             "fly = false\nspeed = 1\nfunction startFly()\n    repeat wait()\n        if fly and game.Players.LocalPlayer.Character then\n            local char = game.Players.LocalPlayer.Character\n            char.Humanoid.PlatformStand = true\n            local bv = Instance.new('BodyVelocity')\n            bv.Parent = char.HumanoidRootPart\n            bv.Velocity = Vector3.new()\n        end\n    until not fly\nend",
-            "for _, v in pairs(game.Players:GetPlayers()) do\n    if v ~= game.Players.LocalPlayer then\n        print('Игрок: ' .. v.Name)\n    end\nend",
+            "for _, v in pairs(game.Players:GetPlayers()) do\n    if v ~= game.Players.LocalPlayer then\n        print('Player: ' .. v.Name)\n    end\nend",
             "local light = Instance.new('PointLight')\nlight.Parent = game.Players.LocalPlayer.Character.HumanoidRootPart\nlight.Brightness = 5\nlight.Range = 20\nlight.Color = Color3.fromRGB(255, 0, 0)"
         }
-        
+
         currentScript = examples[math.random(1, #examples)]
         codeDisplay:SetCode(currentScript)
         updateScriptInfo()
-        
+
         Window:Notify({
-            Title = "🎯 Пример загружен",
-            Desc = "Готов к выполнению!",
+            Title = "Example Loaded",
+            Desc = "Ready to execute!",
             Time = 3
         })
     end
 })
 
--- Информация о текущем эксплоите
-Tab6:Section({Title = "ℹ️ Информация"})
+Tab5:Section({Title = "Information"})
 
-Tab6:Label({
-    Title = "🎭 Пародии на эксплоиты",
-    Desc = "Эти скрипты создают интерфейсы,\nпохожие на популярные эксплоиты\n(только UI, не функционал)"
+Tab5:Label({
+    Title = "Exploit Parodies",
+    Desc = "These scripts create interfaces\nsimilar to popular exploits\n(UI only, not functionality)"
 })
 
--- Автоматическое определение, если есть эксплоит
 spawn(function()
     wait(2)
     local exploitDetected = false
     local exploitName = ""
-    
-    -- Проверка на наличие известных эксплоитов
+
     if syn and syn.request then
         exploitDetected = true
         exploitName = "Synapse X"
@@ -1224,128 +1197,127 @@ spawn(function()
         exploitDetected = true
         exploitName = identifyexecutor()
     end
-    
+
     if exploitDetected then
         Window:Notify({
-            Title = "🔍 Обнаружен эксплоит",
-            Desc = "Используется: " .. exploitName,
+            Title = "Exploit Detected",
+            Desc = "Using: " .. exploitName,
             Time = 5
         })
     end
 end)
- 
--- ВКЛАДКА AUTO SCRIPTS
-local Tab7 = Window:Tab({Title = "🎯 Auto-scripts", Icon = "bell"})
 
--- ВСЯ БАЗА ДАННЫХ (полностью)
+-- AUTO-SCRIPTS TAB
+local Tab6 = Window:Tab({Title = "Auto-scripts", Icon = "bell"})
+
+-- ENTIRE DATABASE
 local GameDatabase = {
     ["99_nights"] = {
         name = "99 Nights in Forest",
         placeIds = {126509999114328, 79546208627805},
         scripts = {
-            {title = "⚡ Voidware Loader", url = "https://raw.githubusercontent.com/VapeVoidware/VW-Add/main/loader.lua"},
-            {title = "☁️ Sky base", url = "https://pastebin.com/raw/5PqzEXBQ"},
-            {title = "💎 Farm days and diamond", url = "https://raw.githubusercontent.com/caomod2077/Script/refs/heads/main/FNDayFarm.lua"},
-            {title = "👨‍💼 Saul Hub|day and diamond farm", url = "https://raw.githubusercontent.com/SaulGoodmanScripter/Saul_games/refs/heads/main/day_and_diamond_farm"},
-            {title = "🌲 Sapling dupe", url = "https://raw.githubusercontent.com/nootmaus/99nights/refs/heads/main/dupe.lua"},
-            {title = "🦊 Foxname Loader", url = "https://raw.githubusercontent.com/caomod2077/Script/refs/heads/main/FoxnameHub.lua"}
+            {title = "Voidware Loader", url = "https://raw.githubusercontent.com/VapeVoidware/VW-Add/main/loader.lua"},
+            {title = "Sky base", url = "https://pastebin.com/raw/5PqzEXBQ"},
+            {title = "Farm days and diamond", url = "https://raw.githubusercontent.com/caomod2077/Script/refs/heads/main/FNDayFarm.lua"},
+            {title = "Saul Hub - day and diamond farm", url = "https://raw.githubusercontent.com/SaulGoodmanScripter/Saul_games/refs/heads/main/day_and_diamond_farm"},
+            {title = "Sapling dupe", url = "https://raw.githubusercontent.com/nootmaus/99nights/refs/heads/main/dupe.lua"},
+            {title = "Foxname Loader", url = "https://raw.githubusercontent.com/caomod2077/Script/refs/heads/main/FoxnameHub.lua"}
         }
     },
     ["brookhaven"] = {
         name = "Brookhaven",
         placeIds = {4924922222},
         scripts = {
-            {title = "🐀 R4d troll script", url = "https://raw.githubusercontent.com/M1ZZ001/BrookhavenR4D/main/Brookhaven%20R4D%20Script"},
-            {title = "🚨REDz Hub", url = "https://pastefy.app/9OoVFBCU/raw"},
-            {title = "🤡 Troll script", url = "https://raw.githubusercontent.com/as6cd0/SP_Hub/refs/heads/main/Brookhaven"}
+            {title = "R4d troll script", url = "https://raw.githubusercontent.com/M1ZZ001/BrookhavenR4D/main/Brookhaven%20R4D%20Script"},
+            {title = "REDz Hub", url = "https://pastefy.app/9OoVFBCU/raw"},
+            {title = "Troll script", url = "https://raw.githubusercontent.com/as6cd0/SP_Hub/refs/heads/main/Brookhaven"}
         }
     },
     ["dead_rails"] = {
         name = "Dead Rails",
         placeIds = {116495829188952, 70876832253163},
         scripts = {
-            {title = "🏜 Money farm", url = "https://raw.githubusercontent.com/yoursvexyyy/dead--rails/refs/heads/main/autosellvaluables"},
-            {title = "🦅 EasyScript|Bond farm", url = "https://raw.githubusercontent.com/JustKondzio0010/deadrailsbondfarm/refs/heads/main/dead"},
-            {title = "📜 Laws hub|Bond farm", url = "https://raw.githubusercontent.com/platformdiamond/Lawhub/refs/heads/main/Lawhub"},
-            {title = "🕺 Hutao Hub", url = "https://raw.githubusercontent.com/SLK-gaming/Dead-Rails/refs/heads/main/Hutao-Hub-V4.lua"}
+            {title = "Money farm", url = "https://raw.githubusercontent.com/yoursvexyyy/dead--rails/refs/heads/main/autosellvaluables"},
+            {title = "EasyScript - Bond farm", url = "https://raw.githubusercontent.com/JustKondzio0010/deadrailsbondfarm/refs/heads/main/dead"},
+            {title = "Laws hub - Bond farm", url = "https://raw.githubusercontent.com/platformdiamond/Lawhub/refs/heads/main/Lawhub"},
+            {title = "Hutao Hub", url = "https://raw.githubusercontent.com/SLK-gaming/Dead-Rails/refs/heads/main/Hutao-Hub-V4.lua"}
         }
     },
     ["babft"] = {
         name = "Build A Boat For Treasure",
         placeIds = {537413528},
         scripts = {
-            {title = "⛵ Build A Boat Script", url = "https://raw.githubusercontent.com/TheRealAsu/BABFT/refs/heads/main/Source.lua"},
-            {title = "Saul Hub|BABFT script", url = "https://raw.githubusercontent.com/SaulGoodmanScripter/Saul_games/refs/heads/main/BABFT-Farm"},
-            {title = "🥇 Farm script", url = "https://raw.githubusercontent.com/Theo985/AetherX-Hub/refs/heads/main/BABFT"},
-            {title = "➕️ lots of slots", url = "https://pastebin.com/raw/wQ7gyPC7"}
+            {title = "Build A Boat Script", url = "https://raw.githubusercontent.com/TheRealAsu/BABFT/refs/heads/main/Source.lua"},
+            {title = "Saul Hub - BABFT script", url = "https://raw.githubusercontent.com/SaulGoodmanScripter/Saul_games/refs/heads/main/BABFT-Farm"},
+            {title = "Farm script", url = "https://raw.githubusercontent.com/Theo985/AetherX-Hub/refs/heads/main/BABFT"},
+            {title = "More slots", url = "https://pastebin.com/raw/wQ7gyPC7"}
         }
     },
     ["grow_garden"] = {
         name = "Grow a Garden",
         placeIds = {126884695634066},
         scripts = {
-            {title = "🌱 Grow a Garden Script", url = "https://raw.githubusercontent.com/Kenniel123/Grow-a-garden/refs/heads/main/Grow%20A%20Garden"}
+            {title = "Grow a Garden Script", url = "https://raw.githubusercontent.com/Kenniel123/Grow-a-garden/refs/heads/main/Grow%20A%20Garden"}
         }
     },
     ["Plants_Vs_brainrot"] = {
         name = "Plants vs Brainrot",
         placeIds = {127742093697776},
         scripts = {
-            {title = "⚔️ Plants vs Brainrot Script", url = "https://raw.githubusercontent.com/Walvy666/Triplesix/main/loader.lua"}
+            {title = "Plants vs Brainrot Script", url = "https://raw.githubusercontent.com/Walvy666/Triplesix/main/loader.lua"}
         }
     },
     ["Find_the_brainrot"] = {
         name = "Find The Brainrot",
         placeIds = {136407404714539},
         scripts = {
-            {title = "🔍 Find The Brainrot", url = "https://pastebin.com/raw/5GEzkS6p"}
+            {title = "Find The Brainrot", url = "https://pastebin.com/raw/5GEzkS6p"}
         }
     },
     ["steal_brainrot"] = {
         name = "Steal a Brainrot",
         placeIds = {109983668079237},
         scripts = {
-            {title = "🌶 Chilli Hub", url = "https://raw.githubusercontent.com/tienkhanh1/spicy/main/Chilli.lua"},
-            {title = "🚪 Joiner(1m+)", url = "https://raw.githubusercontent.com/nootmaus/IceHub/refs/heads/main/Joiner"},
-            {title = "🧊 Ice hub", url = "https://pastefy.app/9OoVFBCU/raw"},
-            {title = "🎯 Aimbot Laser", url = "https://raw.githubusercontent.com/nootmaus/IceHubLaser/refs/heads/main/maus%3A"}
+            {title = "Chilli Hub", url = "https://raw.githubusercontent.com/tienkhanh1/spicy/main/Chilli.lua"},
+            {title = "Joiner (1m+)", url = "https://raw.githubusercontent.com/nootmaus/IceHub/refs/heads/main/Joiner"},
+            {title = "Ice hub", url = "https://pastefy.app/9OoVFBCU/raw"},
+            {title = "Aimbot Laser", url = "https://raw.githubusercontent.com/nootmaus/IceHubLaser/refs/heads/main/maus%3A"}
         }
     },
     ["blox_fruits"] = {
         name = "Blox Fruits",
         placeIds = {2753915549},
         scripts = {
-            {title = "🍊 XP Farm", url = "https://raw.githubusercontent.com/wpisstestfprg/Volcano/refs/heads/main/VolcanoNewUpdated.luau"}
+            {title = "XP Farm", url = "https://raw.githubusercontent.com/wpisstestfprg/Volcano/refs/heads/main/VolcanoNewUpdated.luau"}
         }
     },
     ["Natural_Disaster"] = {
         name = "Natural Disasters",
         placeIds = {189707},
         scripts = {
-            {title = "🪓 Axe Hub", url = "https://raw.githubusercontent.com/zeroidxx/axe-hub/refs/heads/main/axehub%20nds.txt"}
+            {title = "Axe Hub", url = "https://raw.githubusercontent.com/zeroidxx/axe-hub/refs/heads/main/axehub%20nds.txt"}
         }
     },
     ["mm2"] = {
         name = "Murder Mystery 2",
         placeIds = {142823291},
         scripts = {
-            {title = "🔪 Vexon Hub", url = "https://raw.githubusercontent.com/DiosDi/VexonHub/refs/heads/main/VexonHub"},
-            {title = "💀 Traw Hub", url = "https://raw.githubusercontent.com/TomScripts/mm2/refs/heads/main/mm2"}
+            {title = "Vexon Hub", url = "https://raw.githubusercontent.com/DiosDi/VexonHub/refs/heads/main/VexonHub"},
+            {title = "Traw Hub", url = "https://raw.githubusercontent.com/TomScripts/mm2/refs/heads/main/mm2"}
         }
     },
     ["arsenal"] = {
         name = "Arsenal",
         placeIds = {286090429},
         scripts = {
-            {title = "🔫 Arsenal Script", url = "https://raw.githubusercontent.com/HAIKATV/rp-/refs/heads/main/Arsenal.lua"}
+            {title = "Arsenal Script", url = "https://raw.githubusercontent.com/HAIKATV/rp-/refs/heads/main/Arsenal.lua"}
         }
     }
 }
 
--- Функция загрузки скрипта
 local function loadScriptSafe(url)
     Window:Notify({
-        Title = "⏳ Loading...",
+        Title = "Loading...",
         Desc = "Please wait",
         Time = 2
     })
@@ -1357,7 +1329,7 @@ local function loadScriptSafe(url)
             if loadedFunction then
                 loadedFunction()
                 Window:Notify({
-                    Title = "✅ Success",
+                    Title = "Success",
                     Desc = "Script loaded successfully!",
                     Time = 3
                 })
@@ -1371,20 +1343,18 @@ local function loadScriptSafe(url)
 
     if not success then
         Window:Notify({
-            Title = "❌ Error",
+            Title = "Error",
             Desc = "Failed to load script",
             Time = 5
         })
     end
 end
 
--- 1. АВТОПОИСК (КАК БЫЛО)
-Tab7:Section({Title = "🔍 Auto-Search Current Game"})
+Tab6:Section({Title = "Auto-Search Current Game"})
 
 local currentGameId = game.PlaceId
 local currentGameData = nil
 
--- Ищем игру по ID
 for _, gameData in pairs(GameDatabase) do
     for _, placeId in ipairs(gameData.placeIds) do
         if placeId == currentGameId then
@@ -1396,21 +1366,19 @@ for _, gameData in pairs(GameDatabase) do
 end
 
 if currentGameData then
-    -- Если игра найдена
-    Tab7:Label({
-        Title = "✅ Game Found!",
+    Tab6:Label({
+        Title = "Game Found!",
         Desc = currentGameData.name
     })
-    
-    -- Показываем ВСЕ скрипты для этой игры
+
     for _, script in ipairs(currentGameData.scripts) do
-        Tab7:Code({
+        Tab6:Code({
             Title = script.title,
             Code = "loadstring(game:HttpGet('" .. script.url .. "'))()"
         })
-        
-        Tab7:Button({
-            Title = "🚀 " .. script.title,
+
+        Tab6:Button({
+            Title = "Load " .. script.title,
             Desc = "Auto load script",
             Callback = function()
                 loadScriptSafe(script.url)
@@ -1418,164 +1386,144 @@ if currentGameData then
         })
     end
 else
-    -- Если игра не найдена
     local gameName = "Unknown Game"
     pcall(function()
         gameName = MarketplaceService:GetProductInfo(currentGameId).Name
     end)
-    
-    Tab7:Label({
-        Title = "❌ Game Not Found",
+
+    Tab6:Label({
+        Title = "Game Not Found",
         Desc = gameName .. "\nID: " .. currentGameId .. "\nCheck games below"
     })
 end
 
--- 2. ВСЕ ИГРЫ И ИХ СКРИПТЫ (ПРОСТО ВЫВОДИМ ВСЕ)
-Tab7:Section({Title = "📚 All Games & Scripts"})
+Tab6:Section({Title = "All Games & Scripts"})
 
--- Просто выводим ВСЕ игры по очереди
 for gameKey, gameData in pairs(GameDatabase) do
-    -- Игра
-    Tab7:Label({
-        Title = "🎮 " .. gameData.name,
+    Tab6:Label({
+        Title = gameData.name,
         Desc = "Game ID(s): " .. table.concat(gameData.placeIds, ", ")
     })
-    
-    -- ВСЕ скрипты для этой игры
+
     for _, script in ipairs(gameData.scripts) do
-        Tab7:Code({
+        Tab6:Code({
             Title = script.title,
             Code = "loadstring(game:HttpGet('" .. script.url .. "'))()"
         })
-        
-        Tab7:Button({
-            Title = "🚀 " .. script.title,
+
+        Tab6:Button({
+            Title = "Load " .. script.title,
             Desc = "Load " .. script.title,
             Callback = function()
                 loadScriptSafe(script.url)
             end
         })
     end
-    
-    -- Разделитель между играми
-    Tab7:Label({
+
+    Tab6:Label({
         Title = "─",
         Desc = ""
     })
 end
 
--- 3. ИНФО О ТЕКУЩЕЙ ИГРЕ
-Tab7:Section({Title = "ℹ️ Current Game Info"})
+Tab6:Section({Title = "Current Game Info"})
 
 local currentGameName = "Unknown Game"
 pcall(function()
     currentGameName = MarketplaceService:GetProductInfo(currentGameId).Name
 end)
 
-Tab7:Label({
+Tab6:Label({
     Title = "Current Game:",
     Desc = currentGameName
 })
 
-Tab7:Label({
+Tab6:Label({
     Title = "Game ID:",
     Desc = tostring(currentGameId)
 })
 
-Tab7:Button({
-    Title = "📋 Copy Game ID",
+Tab6:Button({
+    Title = "Copy Game ID",
     Desc = "Copy to clipboard",
     Callback = function()
         setclipboard(tostring(currentGameId))
         Window:Notify({
-            Title = "📋 Copied",
+            Title = "Copied",
             Desc = "Game ID copied!",
             Time = 3
         })
     end
 })
--- ВКЛАДКА LOW POP SERVERS (встроенная в UI)
-local TabServers = Window:Tab({Title = "🌐 Low Pop", Icon = "users"})
 
-TabServers:Section({Title = "📊 Поиск малолюдных серверов"})
+-- LOW POP SERVERS TAB
+local Tab7 = Window:Tab({Title = "Low Pop", Icon = "users"})
 
--- Переменные
+Tab7:Section({Title = "Search Low Population Servers"})
+
 local serverList = {}
 local isLoading = false
 local maxServers = 20
 
--- Статусная метка
-local statusLabel = TabServers:Label({
-    Title = "ℹ️ Готов к поиску",
-    Desc = "Нажмите 'Найти сервера' для начала"
+local statusLabel = Tab7:Label({
+    Title = "Ready to search",
+    Desc = "Press 'Find Servers' to start"
 })
 
--- Функция получения серверов
 local function fetchServers(sortOrder)
     local success, result = pcall(function()
         local url = string.format("https://games.roblox.com/v1/games/%d/servers/Public?sortOrder=%s&limit=100", 
             game.PlaceId, sortOrder or "Asc")
-        
+
         local response = game:HttpGet(url, true)
         return game:GetService("HttpService"):JSONDecode(response)
     end)
-    
+
     return success and result or nil
 end
 
--- Функция создания кнопок для серверов
 local function createServerButtons()
-    -- Очищаем секцию (кроме статических элементов)
-    -- В реальной реализации здесь нужно удалить динамические элементы
-    
     if #serverList == 0 then
-        TabServers:Label({
-            Title = "📭 Нет данных",
-            Desc = "Нажмите 'Найти сервера'"
+        Tab7:Label({
+            Title = "No data",
+            Desc = "Press 'Find Servers'"
         })
         return
     end
-    
+
     local displayed = 0
     for _, server in ipairs(serverList) do
         if displayed >= maxServers then break end
-        
+
         local playerCount = server.playing
         local maxPlayers = server.maxPlayers
         local fillPercentage = math.floor((playerCount / maxPlayers) * 100)
-        
-        -- Определяем статус сервера
+
         local status = ""
         local statusColor = ""
         if playerCount == 0 then
-            status = "🟢 ПУСТОЙ"
-            statusColor = Color3.fromRGB(0, 255, 0)
+            status = "EMPTY"
         elseif playerCount <= 3 then
-            status = "🟡 МАЛО"
-            statusColor = Color3.fromRGB(255, 255, 0)
+            status = "LOW"
         elseif playerCount <= 10 then
-            status = "🟠 СРЕДНЕ"
-            statusColor = Color3.fromRGB(255, 165, 0)
+            status = "MEDIUM"
         else
-            status = "🔴 МНОГО"
-            statusColor = Color3.fromRGB(255, 0, 0)
+            status = "HIGH"
         end
-        
-        -- Создаем кнопку для сервера
-        TabServers:Button({
-            Title = string.format("👥 %d/%d | %s", playerCount, maxPlayers, status),
-            Desc = string.format("Заполненность: %d%% | ID: %s", fillPercentage, server.id or "Unknown"),
+
+        Tab7:Button({
+            Title = string.format("%d/%d | %s", playerCount, maxPlayers, status),
+            Desc = string.format("Fill: %d%% | ID: %s", fillPercentage, server.id or "Unknown"),
             Callback = function()
                 btnclick()
-                
+
                 if server.id then
                     Window:Notify({
-                        Title = "🚀 Телепортация...",
-                        Desc = string.format("На сервер с %d игроками", playerCount),
+                        Title = "Teleporting...",
+                        Desc = string.format("To server with %d players", playerCount),
                         Time = 3
                     })
-                    
-                    -- Пытаемся телепортироваться
+
                     pcall(function()
                         game:GetService("TeleportService"):TeleportToPlaceInstance(
                             game.PlaceId,
@@ -1585,40 +1533,38 @@ local function createServerButtons()
                     end)
                 else
                     Window:Notify({
-                        Title = "❌ Ошибка",
-                        Desc = "ID сервера не найден",
+                        Title = "Error",
+                        Desc = "Server ID not found",
                         Time = 3
                     })
                 end
             end
         })
-        
+
         displayed = displayed + 1
     end
 end
 
--- Кнопки управления
-TabServers:Section({Title = "⚙️ Управление"})
+Tab7:Section({Title = "Controls"})
 
-TabServers:Button({
-    Title = "🔍 Найти сервера (Меньше игроков)",
-    Desc = "Сортировка от пустых к заполненным",
+Tab7:Button({
+    Title = "Find Servers (Less Players)",
+    Desc = "Sort from empty to full",
     Callback = function()
         btnclick()
-        
+
         if isLoading then return end
         isLoading = true
-        
-        statusLabel:SetTitle("⏳ Поиск...")
-        statusLabel:SetDesc("Запрашиваем список серверов")
-        
+
+        statusLabel:SetTitle("Searching...")
+        statusLabel:SetDesc("Requesting server list")
+
         spawn(function()
-            local data = fetchServers("Asc") -- Asc = от меньшего к большему
-            
+            local data = fetchServers("Asc")
+
             if data and data.data then
                 serverList = data.data
-                
-                -- Фильтруем только сервера с игроками меньше макс
+
                 local filtered = {}
                 for _, server in ipairs(serverList) do
                     if server.playing < server.maxPlayers then
@@ -1626,64 +1572,63 @@ TabServers:Button({
                     end
                 end
                 serverList = filtered
-                
-                statusLabel:SetTitle(string.format("✅ Найдено: %d", #serverList))
-                statusLabel:SetDesc(string.format("Серверов с < %d игроками", maxServers))
-                
+
+                statusLabel:SetTitle(string.format("Found: %d", #serverList))
+                statusLabel:SetDesc(string.format("Servers with < %d players", maxServers))
+
                 createServerButtons()
-                
+
                 Window:Notify({
-                    Title = "✅ Сервера найдены",
-                    Desc = string.format("Найдено %d доступных серверов", #serverList),
+                    Title = "Servers Found",
+                    Desc = string.format("Found %d available servers", #serverList),
                     Time = 3
                 })
             else
-                statusLabel:SetTitle("❌ Ошибка")
-                statusLabel:SetDesc("Не удалось получить список серверов")
-                
+                statusLabel:SetTitle("Error")
+                statusLabel:SetDesc("Failed to get server list")
+
                 Window:Notify({
-                    Title = "❌ Ошибка",
-                    Desc = "Проверьте интернет соединение",
+                    Title = "Error",
+                    Desc = "Check internet connection",
                     Time = 5
                 })
             end
-            
+
             isLoading = false
         end)
     end
 })
 
-TabServers:Button({
-    Title = "📊 Обновить список",
-    Desc = "Обновить текущий список серверов",
+Tab7:Button({
+    Title = "Update List",
+    Desc = "Update current server list",
     Callback = function()
         btnclick()
         if #serverList > 0 then
             createServerButtons()
             Window:Notify({
-                Title = "🔄 Обновлено",
-                Desc = "Список серверов обновлен",
+                Title = "Updated",
+                Desc = "Server list updated",
                 Time = 2
             })
         end
     end
 })
 
-TabServers:Button({
-    Title = "🎯 Быстрый реджойн",
-    Desc = "Мгновенно перезайти в игру",
+Tab7:Button({
+    Title = "Fast Rejoin",
+    Desc = "Instantly rejoin game",
     Callback = function()
         btnclick()
         game:GetService("TeleportService"):Teleport(game.PlaceId, LocalPlayer)
     end
 })
 
--- Настройки
-TabServers:Section({Title = "⚙️ Настройки"})
+Tab7:Section({Title = "Settings"})
 
-TabServers:Slider({
-    Title = "Макс. серверов",
-    Desc = "Сколько серверов показывать",
+Tab7:Slider({
+    Title = "Max Servers",
+    Desc = "How many servers to show",
     Min = 5,
     Max = 50,
     Rounding = 0,
@@ -1691,24 +1636,23 @@ TabServers:Slider({
     Callback = function(val)
         maxServers = val
         slidersound()
-        
+
         if #serverList > 0 then
             createServerButtons()
         end
     end
 })
 
-TabServers:Toggle({
-    Title = "🔄 Авто-поиск",
-    Desc = "Автоматически искать сервера при открытии",
+Tab7:Toggle({
+    Title = "Auto Search",
+    Desc = "Automatically search servers when opened",
     Value = false,
     Callback = function(v)
         autoSearch = v
         togglesound()
-        
+
         if v and #serverList == 0 then
-            -- Имитируем нажатие кнопки поиска
-            local searchBtn = TabServers.Buttons["🔍 Найти сервера (Меньше игроков)"]
+            local searchBtn = Tab7.Buttons["Find Servers (Less Players)"]
             if searchBtn then
                 searchBtn.Callback()
             end
@@ -1716,10 +1660,9 @@ TabServers:Toggle({
     end
 })
 
--- Информация о текущей игре
-TabServers:Section({Title = "🎮 Информация"})
+Tab7:Section({Title = "Information"})
 
-local gameName = "Неизвестная игра"
+local gameName = "Unknown Game"
 local gameId = game.PlaceId
 
 pcall(function()
@@ -1727,105 +1670,103 @@ pcall(function()
     gameName = info.Name or gameName
 end)
 
-TabServers:Label({
-    Title = "Текущая игра:",
+Tab7:Label({
+    Title = "Current Game:",
     Desc = gameName .. "\nID: " .. gameId
 })
 
-TabServers:Label({
-    Title = "📈 Статистика:",
-    Desc = string.format("Игроков онлайн: %d/%d", 
+Tab7:Label({
+    Title = "Statistics:",
+    Desc = string.format("Players online: %d/%d", 
         #game:GetService("Players"):GetPlayers(),
         game:GetService("Players").MaxPlayers)
 })
 
--- Показываем сервера при открытии вкладки
-TabServers:Opened(function()
+Tab7:Opened(function()
     if #serverList == 0 then
-        -- Если список пуст, показываем инструкцию
-        TabServers:Label({
-            Title = "📝 Инструкция:",
-            Desc = "1. Нажмите 'Найти сервера'\n2. Выберите сервер из списка\n3. Нажмите для телепортации"
+        Tab7:Label({
+            Title = "Instructions:",
+            Desc = "1. Press 'Find Servers'\n2. Select server from list\n3. Click to teleport"
         })
     end
 end)
 
--- Автоматически искать сервера если включен авто-поиск
 spawn(function()
     wait(2)
     if autoSearch and #serverList == 0 then
-        local searchBtn = TabServers.Buttons["🔍 Найти сервера (Меньше игроков)"]
+        local searchBtn = Tab7.Buttons["Find Servers (Less Players)"]
         if searchBtn then
             searchBtn.Callback()
         end
     end
 end)
--- ВКЛАДКА CREDITS
-local Tab8 = Window:Tab({Title = "👤 Credits", Icon = "heart"})
 
-Tab8:Section({Title = "👑 Разработчики"})
+-- CREDITS TAB
+local Tab8 = Window:Tab({Title = "Credits", Icon = "heart"})
+
+Tab8:Section({Title = "Developers"})
 
 Tab8:Label({
-    Title = "👤 Saul Goodman",
-    Desc = "Создатель и главный разработчик\nTelegram: @SaulGoodmanScript"
+    Title = "Saul Goodman",
+    Desc = "Creator and main developer\nTelegram: @SaulGoodmanScript"
 })
 
 Tab8:Button({
-    Title = "📋 Копировать Telegram",
+    Title = "Copy Telegram",
     Callback = function()
         setclipboard("https://t.me/SaulGoodmanScript")
         Window:Notify({
-            Title = "📋 Скопировано",
-            Desc = "Ссылка скопирована",
+            Title = "Copied",
+            Desc = "Link copied",
             Time = 3
         })
     end
 })
 
 Tab8:Label({
-    Title = "🤝 Lori Script",
-    Desc = "Партнер проекта\nTelegram: @loriscript"
+    Title = "Lori Script",
+    Desc = "Project partner\nTelegram: @loriscript"
 })
 
 Tab8:Button({
-    Title = "📋 Копировать Telegram",
+    Title = "Copy Telegram",
     Callback = function()
         setclipboard("https://t.me/loriscript")
         Window:Notify({
-            Title = "📋 Скопировано",
-            Desc = "Ссылка скопирована",
+            Title = "Copied",
+            Desc = "Link copied",
             Time = 3
         })
     end
 })
-Tab8:Section({Title = "📊 Техническая информация"})
+
+Tab8:Section({Title = "Technical Information"})
 
 Tab8:Label({
-    Title = "Версия",
-    Desc = "Saul Hub v4.0(Admin Panel Edition)"
+    Title = "Version",
+    Desc = "Saul Hub v4.0 (Admin Panel Edition)"
 })
 
 Tab8:Label({
-    Title = "Статус",
-    Desc = "🟢 Онлайн | ⚡ Функции Admin Panel активны"
+    Title = "Status",
+    Desc = "Online | Admin Panel functions active"
 })
 
 Tab8:Label({
-    Title = "Игроков онлайн",
-    Desc = #Players:GetPlayers() .. " из " .. Players.MaxPlayers
+    Title = "Players Online",
+    Desc = #Players:GetPlayers() .. " of " .. Players.MaxPlayers
 })
 
--- Уведомление при загрузке
 if currentGameData then
     Window:Notify({
-        Title = "🎮 Обнаружена игра: " .. currentGameData.name,
-        Desc = "Авто-скрипты доступны! 🎯",
+        Title = "Game Detected: " .. currentGameData.name,
+        Desc = "Auto-scripts available!",
         Time = 7
     })
 else
     Window:Notify({
-        Title = "🎮 Игра не найдена в базе",
-        Desc = "ID: " .. game.PlaceId .. "\nИспользуйте универсальные скрипты",
+        Title = "Game not found in database",
+        Desc = "ID: " .. game.PlaceId .. "\nUse universal scripts",
         Time = 5
     })
 end
