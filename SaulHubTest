@@ -119,7 +119,7 @@ local function getClosestPlayer()
 end
 
 -- ВКЛАДКА MAIN
-local Tab = Window:Tab({Title = "🎮 Main", Icon = "house"})
+local Tab = Window:Tab({Title = "Main", Icon = "house"})
 
 Tab:Section({Title = "Welcome"})
 Tab:Label({
@@ -198,14 +198,14 @@ Tab:Button({
     end
 })
 
--- ВКЛАДКА MOVEMENT
-local Tab2 = Window:Tab({Title = "🚀 Movement", Icon = "snowflake"})
+-- ВКЛАДКА Control
+local Tab2 = Window:Tab({Title = "Control", Icon = "user"})
 
 Tab2:Section({Title = "Основные функции"})
 
 Tab2:Toggle({
-    Title = "👻 Noclip",
-    Desc = "Ходить сквозь стены",
+    Title = "Noclip",
+    Desc = "Walking through walls",
     Value = false,
     Callback = function(v)
         noclip = v
@@ -252,8 +252,8 @@ Tab2:Toggle({
 })
 
 Tab2:Toggle({
-    Title = "🏀 Infinite Jump",
-    Desc = "Бесконечные прыжки",
+    Title = " Infinite Jump",
+    Desc = "Endless jumps",
     Value = false,
     Callback = function(v)
         infiniteJump = v
@@ -276,226 +276,13 @@ Tab2:Toggle({
 
 Tab2:Button({
     Title = "🕊️ Fly GUI",
-    Desc = "Открыть меню полета",
+    Desc = "Open the flight menu",
     Callback = function()
         btnclick()
         loadstring(game:HttpGet("https://raw.githubusercontent.com/OBFhm5650lol/F/main/F"))()
     end
 })
 
--- В Tab2 добавить секцию:
-Tab2:Section({Title = "🎯 Click Teleport"})
-
-local clickTPEnabled = false
-local tpHeight = 3
-local tpSound = true
-local tpEffect = true
-
--- Toggle для активации
-Tab2:Toggle({
-    Title = "🎯 Click TP",
-    Desc = "Телепорт по клику мыши/тапу",
-    Value = false,
-    Callback = function(v)
-        clickTPEnabled = v
-        togglesound()
-        
-        if v then
-            Window:Notify({
-                Title = "🎯 Click TP Включен",
-                Desc = "ЛКМ/тап для телепорта",
-                Time = 3
-            })
-        end
-    end
-})
-
--- Настройки
-Tab2:Slider({
-    Title = "Высота телепорта",
-    Desc = "Высота над точкой телепорта",
-    Min = 0,
-    Max = 10,
-    Rounding = 0,
-    Value = 3,
-    Callback = function(val)
-        tpHeight = val
-        slidersound()
-    end
-})
-
-Tab2:Toggle({
-    Title = "🔊 Звук телепорта",
-    Desc = "Проигрывать звук при телепорте",
-    Value = true,
-    Callback = function(v)
-        tpSound = v
-        togglesound()
-    end
-})
-
-Tab2:Toggle({
-    Title = "✨ Эффект телепорта",
-    Desc = "Показывать визуальные эффекты",
-    Value = true,
-    Callback = function(v)
-        tpEffect = v
-        togglesound()
-    end
-})
-
--- Функция телепорта
-local function teleportTo(position)
-    local char = LocalPlayer.Character
-    if not char then return end
-    
-    local rootPart = char:FindFirstChild("HumanoidRootPart")
-    if not rootPart then return end
-    
-    -- Добавляем высоту
-    local targetPosition = Vector3.new(
-        position.X,
-        position.Y + tpHeight,
-        position.Z
-    )
-    
-    -- Визуальные эффекты
-    if tpEffect then
-        spawn(function()
-            -- Эффект исчезновения
-            local originalTransparency = {}
-            for _, part in pairs(char:GetDescendants()) do
-                if part:IsA("BasePart") then
-                    originalTransparency[part] = part.Transparency
-                    part.Transparency = 0.5
-                end
-            end
-            
-            wait(0.1)
-            
-            -- Телепорт
-            rootPart.CFrame = CFrame.new(targetPosition)
-            
-            -- Эффект появления
-            for part, transparency in pairs(originalTransparency) do
-                part.Transparency = transparency
-            end
-            
-            -- Частицы
-            local particles = Instance.new("ParticleEmitter")
-            particles.Texture = "rbxassetid://242563111"
-            particles.Size = NumberSequence.new(1)
-            particles.Transparency = NumberSequence.new(0.5)
-            particles.Lifetime = NumberRange.new(1)
-            particles.Rate = 50
-            particles.Speed = NumberRange.new(5)
-            particles.Parent = rootPart
-            
-            wait(0.5)
-            particles:Destroy()
-        end)
-    else
-        -- Просто телепорт
-        rootPart.CFrame = CFrame.new(targetPosition)
-    end
-    
-    -- Звук
-    if tpSound then
-        pcall(function()
-            local sound = Instance.new("Sound")
-            sound.SoundId = "rbxassetid://911882909"
-            sound.Volume = 0.3
-            sound.Parent = rootPart
-            sound:Play()
-            game:GetService("Debris"):AddItem(sound, 2)
-        end)
-    end
-    
-    -- Уведомление
-    Window:Notify({
-        Title = "🎯 Телепортирован",
-        Desc = string.format("X: %.1f, Y: %.1f, Z: %.1f", 
-            targetPosition.X, targetPosition.Y, targetPosition.Z),
-        Time = 2
-    })
-end
-
--- Обработчик для ПК (мышь)
-local mouse = LocalPlayer:GetMouse()
-
-mouse.Button1Down:Connect(function()
-    if clickTPEnabled and not UserInputService.TouchEnabled then
-        teleportTo(mouse.Hit.Position)
-    end
-end)
-
--- Обработчик для телефонов (тап)
-if UserInputService.TouchEnabled then
-    local touchConnections = {}
-    
-    Tab2:Toggle({
-        Title = "📱 Телепорт по тапу",
-        Desc = "Тап по экрану для телепорта",
-        Value = false,
-        Callback = function(v)
-            if v then
-                -- Создаем невидимую кнопку на весь экран
-                local touchFrame = Instance.new("Frame")
-                touchFrame.Size = UDim2.new(1, 0, 1, 0)
-                touchFrame.BackgroundTransparency = 1
-                touchFrame.Active = true
-                touchFrame.Parent = ClickTPGui
-                
-                local function onTouch(inputObject)
-                    if clickTPEnabled and inputObject.UserInputType == Enum.UserInputType.Touch then
-                        -- Получаем позицию тапа в мировых координатах
-                        local camera = workspace.CurrentCamera
-                        local screenPos = inputObject.Position
-                        
-                        -- Создаем луч от камеры
-                        local ray = camera:ViewportPointToRay(screenPos.X, screenPos.Y)
-                        local raycastParams = RaycastParams.new()
-                        raycastParams.FilterType = Enum.RaycastFilterType.Exclude
-                        raycastParams.FilterDescendantsInstances = {LocalPlayer.Character}
-                        
-                        local result = workspace:Raycast(ray.Origin, ray.Direction * 1000, raycastParams)
-                        
-                        if result then
-                            teleportTo(result.Position)
-                        else
-                            -- Телепорт вдаль
-                            teleportTo(ray.Origin + ray.Direction * 100)
-                        end
-                    end
-                end
-                
-                table.insert(touchConnections, touchFrame.InputBegan:Connect(onTouch))
-            else
-                -- Отключаем все соединения
-                for _, conn in pairs(touchConnections) do
-                    conn:Disconnect()
-                end
-                touchConnections = {}
-            end
-            togglesound()
-        end
-    })
-end
-
--- Горячая клавиша для быстрого переключения
-UserInputService.InputBegan:Connect(function(input, gameProcessed)
-    if gameProcessed then return end
-    
-    if input.KeyCode == Enum.KeyCode.Y then
-        clickTPEnabled = not clickTPEnabled
-        
-        Window:Notify({
-            Title = clickTPEnabled and "🎯 Click TP Включен" or "🎯 Click TP Выключен",
-            Desc = clickTPEnabled and "ЛКМ для телепорта" or "Нажми Y чтобы включить",
-            Time = 2
-        })
-    end
-end)
 Tab2:Toggle({
     Title = "🤸 Auto Jump",
     Desc = "Автоматически прыгать",
@@ -523,8 +310,8 @@ Tab2:Toggle({
 })
 
 Tab2:Slider({
-    Title = "Высота прыжка",
-    Desc = "Высота авто-прыжков",
+    Title = "Jump height",
+    Desc = "Height of auto-jumps",
     Min = 20,
     Max = 200,
     Rounding = 0,
@@ -538,23 +325,14 @@ Tab2:Slider({
     end
 })
 
-Tab2:Toggle({
-    Title = "🔄 Smart Jump",
-    Desc = "Автоматически настраивает высоту",
-    Value = true,
-    Callback = function(v)
-        togglesound()
-    end
-})
-
 -- ВКЛАДКА VISUAL
-local Tab3 = Window:Tab({Title = "👁️ Visual", Icon = "eye"})
+local Tab3 = Window:Tab({Title = "Visual", Icon = "eye"})
 
 Tab3:Section({Title = "ESP и визуальные эффекты"})
 
 Tab3:Toggle({
-    Title = "👁️ ESP Игроков",
-    Desc = "Видеть игроков сквозь стены",
+    Title = "👁️ ESP Player",
+    Desc = "See players through walls",
     Value = false,
     Callback = function(v)
         espEnabled = v
@@ -581,8 +359,8 @@ Tab3:Toggle({
 })
 
 Tab3:Toggle({
-    Title = "🎯 AimBot",
-    Desc = "Автоматическое прицеливание на ближайшего игрока",
+    Title = "AimBot",
+    Desc = "Automatic aiming at the nearest player",
     Value = false,
     Callback = function(v)
         aimEnabled = v
@@ -607,8 +385,8 @@ Tab3:Toggle({
 })
 
 Tab3:Toggle({
-    Title = "🌀 Spin",
-    Desc = "Быстрое вращение персонажа",
+    Title = "Spin",
+    Desc = "Fast character rotation",
     Value = false,
     Callback = function(v)
         flingEnabled = v
@@ -629,8 +407,8 @@ Tab3:Toggle({
 })
 
 Tab3:Toggle({
-    Title = "✨ Particle Burst",
-    Desc = "Создание частиц вокруг персонажа",
+    Title = " Particle Burst",
+    Desc = "Creating particles around the character",
     Value = false,
     Callback = function(v)
         particleBurstEnabled = v
@@ -671,8 +449,8 @@ Tab3:Toggle({
 
 
 Tab3:Toggle({
-    Title = "👻 Players Visibility",
-    Desc = "Сделать других игроков невидимыми",
+    Title = "Players Visibility",
+    Desc = "Make other players invisible",
     Value = false,
     Callback = function(v)
         playersInvisible = v
@@ -693,11 +471,11 @@ Tab3:Toggle({
 })
 -- В Tab3 после других секций добавить:
 
-Tab3:Section({Title = "📦 Duplicator"})
+Tab3:Section({Title = "Duplicator"})
 
 -- Кнопка дюпа
 Tab3:Button({
-    Title = "🔄 Dupe Item",
+    Title = " Dupe Item",
     Desc = "Скопировать предмет в руках (F)",
     Callback = function()
         btnclick()
@@ -707,8 +485,8 @@ Tab3:Button({
         
         if not character then
             Window:Notify({
-                Title = "❌ Ошибка",
-                Desc = "Персонаж не загружен",
+                Title = " Error",
+                Desc = "The character is not loaded",
                 Time = 3
             })
             return
@@ -721,23 +499,23 @@ Tab3:Button({
                 clone.Parent = player.Backpack
                 
                 Window:Notify({
-                    Title = "✅ Успех",
-                    Desc = "Предмет '" .. tool.Name .. "' дюпнут!",
+                    Title = "Successfully",
+                    Desc = "Tool'" .. tool.Name .. "' dupnut!",
                     Time = 3
                 })
             end)
             
             if not success then
                 Window:Notify({
-                    Title = "❌ Ошибка",
-                    Desc = "Ошибка при копировании",
+                    Title = "Error",
+                    Desc = "Error when copying",
                     Time = 3
                 })
             end
         else
             Window:Notify({
-                Title = "⚠️ Внимание",
-                Desc = "Возьми предмет в руки!",
+                Title = "Attention",
+                Desc = "Pick up the tool",
                 Time = 3
             })
         end
@@ -748,7 +526,7 @@ Tab3:Button({
 local hotkeyEnabled = true
 
 Tab3:Toggle({
-    Title = "🔑 Горячая клавиша F",
+    Title = "The hotkey F",
     Desc = "Дюпить по нажатию F",
     Value = true,
     Callback = function(v)
@@ -772,17 +550,17 @@ end)
 
 -- Инструкция
 Tab3:Label({
-    Title = "📝 Как использовать:",
-    Desc = "1. Возьми предмет в руки\n2. Нажми F или кнопку выше\n3. Предмет появится в рюкзаке"
+    Title = "How to use:",
+    Desc = "1. Pick up the tool\n2. НPress f or the button above\n3. The item will appear in the inventory"
 })
 -- ВКЛАДКА POWER
 local Tab4 = Window:Tab({Title = "⚡ Power", Icon = "zap"})
 
-Tab4:Section({Title = "Силовые функции"})
+Tab4:Section({Title = "Power functions"})
 
 Tab4:Toggle({
-    Title = "🛡️ God Mode",
-    Desc = "Бессмертие персонажа",
+    Title = "God Mode",
+    Desc = "The immortality of the character",
     Value = false,
     Callback = function(v)
         godMode = v
@@ -799,8 +577,7 @@ Tab4:Toggle({
         togglesound()
     end
 })
--- В Tab4 добавить секцию:
-Tab4:Section({Title = "🛡️ Anti-Void Protection"})
+Tab4:Section({Title = " Anti-Void Protection"})
 
 local antiVoidEnabled = false
 local voidYLevel = -10 -- уровень, ниже которого считается "void"
@@ -808,8 +585,8 @@ local teleportPosition = Vector3.new(0, 50, 0) -- позиция телепор�
 local checkInterval = 0.1
 
 Tab4:Toggle({
-    Title = "🛡️ Anti-Void",
-    Desc = "Защита от падения в бездну",
+    Title = "Anti-Void",
+    Desc = "ru :Защита от падения в бездну\nEnProtected from falling into the abyss",
     Value = false,
     Callback = function(v)
         antiVoidEnabled = v
@@ -818,8 +595,8 @@ Tab4:Toggle({
 })
 
 Tab4:Slider({
-    Title = "Уровень Void",
-    Desc = "Y координата, ниже которой телепортирует",
+    Title = "level Void",
+    Desc = "Y координата, ниже которой телепортироваться",
     Min = -100,
     Max = 50,
     Rounding = 0,
@@ -831,7 +608,7 @@ Tab4:Slider({
 })
 
 Tab4:Button({
-    Title = "📍 Set Safe Position",
+    Title = "Set Safe Position",
     Desc = "Установить текущую позицию как безопасную",
     Callback = function()
         btnclick()
@@ -839,7 +616,7 @@ Tab4:Button({
         if char and char:FindFirstChild("HumanoidRootPart") then
             teleportPosition = char.HumanoidRootPart.Position + Vector3.new(0, 5, 0)
             Window:Notify({
-                Title = "📍 Позиция сохранена",
+                Title = " Позиция сохранена",
                 Desc = string.format("X:%.1f Y:%.1f Z:%.1f", 
                     teleportPosition.X, teleportPosition.Y, teleportPosition.Z),
                 Time = 3
@@ -862,7 +639,7 @@ spawn(function()
                 
                 -- Визуальный эффект
                 Window:Notify({
-                    Title = "🛡️ Anti-Void Сработал!",
+                    Title = "Anti-Void Сработал!",
                     Desc = string.format("Телепортирован с Y:%.1f", rootPart.Position.Y),
                     Time = 3
                 })
@@ -882,7 +659,7 @@ spawn(function()
     end
 end)
 -- В Tab4:
-Tab4:Section({Title = "📱 Virtual Auto Clicker"})
+Tab4:Section({Title = " Virtual Auto Clicker"})
 
 local virtualClickEnabled = false
 local clickPosition = Vector2.new(500, 500) -- центр экрана
@@ -890,7 +667,7 @@ local clickInterval = 0.5
 local clickType = "Tap" -- Tap, Hold, Swipe
 
 Tab4:Toggle({
-    Title = "📱 Virtual Click",
+    Title = " Virtual Click",
     Desc = "Виртуальные клики (работает на телефонах)",
     Value = false,
     Callback = function(v)
@@ -900,8 +677,8 @@ Tab4:Toggle({
 })
 
 Tab4:Slider({
-    Title = "Интервал",
-    Desc = "Задержка между кликами",
+    Title = "Interval",
+    Desc = "Delay between clicks",
     Min = 0.1,
     Max = 2,
     Rounding = 1,
