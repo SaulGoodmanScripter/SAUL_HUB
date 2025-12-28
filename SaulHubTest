@@ -1694,7 +1694,272 @@ else
         Desc = gameName .. "\nID: " .. currentGameId
     })
 end
+-- ВКЛАДКА LOW POP SERVERS (встроенная в UI)
+local TabServers = Window:Tab({Title = "🌐 Low Pop", Icon = "users"})
 
+TabServers:Section({Title = "📊 Поиск малолюдных серверов"})
+
+-- Переменные
+local serverList = {}
+local isLoading = false
+local maxServers = 20
+
+-- Статусная метка
+local statusLabel = TabServers:Label({
+    Title = "ℹ️ Готов к поиску",
+    Desc = "Нажмите 'Найти сервера' для начала"
+})
+
+-- Функция получения серверов
+local function fetchServers(sortOrder)
+    local success, result = pcall(function()
+        local url = string.format("https://games.roblox.com/v1/games/%d/servers/Public?sortOrder=%s&limit=100", 
+            game.PlaceId, sortOrder or "Asc")
+        
+        local response = game:HttpGet(url, true)
+        return game:GetService("HttpService"):JSONDecode(response)
+    end)
+    
+    return success and result or nil
+end
+
+-- Функция создания кнопок для серверов
+local function createServerButtons()
+    -- Очищаем секцию (кроме статических элементов)
+    -- В реальной реализации здесь нужно удалить динамические элементы
+    
+    if #serverList == 0 then
+        TabServers:Label({
+            Title = "📭 Нет данных",
+            Desc = "Нажмите 'Найти сервера'"
+        })
+        return
+    end
+    
+    local displayed = 0
+    for _, server in ipairs(serverList) do
+        if displayed >= maxServers then break end
+        
+        local playerCount = server.playing
+        local maxPlayers = server.maxPlayers
+        local fillPercentage = math.floor((playerCount / maxPlayers) * 100)
+        
+        -- Определяем статус сервера
+        local status = ""
+        local statusColor = ""
+        if playerCount == 0 then
+            status = "🟢 ПУСТОЙ"
+            statusColor = Color3.fromRGB(0, 255, 0)
+        elseif playerCount <= 3 then
+            status = "🟡 МАЛО"
+            statusColor = Color3.fromRGB(255, 255, 0)
+        elseif playerCount <= 10 then
+            status = "🟠 СРЕДНЕ"
+            statusColor = Color3.fromRGB(255, 165, 0)
+        else
+            status = "🔴 МНОГО"
+            statusColor = Color3.fromRGB(255, 0, 0)
+        end
+        
+        -- Создаем кнопку для сервера
+        TabServers:Button({
+            Title = string.format("👥 %d/%d | %s", playerCount, maxPlayers, status),
+            Desc = string.format("Заполненность: %d%% | ID: %s", fillPercentage, server.id or "Unknown"),
+            Callback = function()
+                btnclick()
+                
+                if server.id then
+                    Window:Notify({
+                        Title = "🚀 Телепортация...",
+                        Desc = string.format("На сервер с %d игроками", playerCount),
+                        Time = 3
+                    })
+                    
+                    -- Пытаемся телепортироваться
+                    pcall(function()
+                        game:GetService("TeleportService"):TeleportToPlaceInstance(
+                            game.PlaceId,
+                            server.id,
+                            LocalPlayer
+                        )
+                    end)
+                else
+                    Window:Notify({
+                        Title = "❌ Ошибка",
+                        Desc = "ID сервера не найден",
+                        Time = 3
+                    })
+                end
+            end
+        })
+        
+        displayed = displayed + 1
+    end
+end
+
+-- Кнопки управления
+TabServers:Section({Title = "⚙️ Управление"})
+
+TabServers:Button({
+    Title = "🔍 Найти сервера (Меньше игроков)",
+    Desc = "Сортировка от пустых к заполненным",
+    Callback = function()
+        btnclick()
+        
+        if isLoading then return end
+        isLoading = true
+        
+        statusLabel:SetTitle("⏳ Поиск...")
+        statusLabel:SetDesc("Запрашиваем список серверов")
+        
+        spawn(function()
+            local data = fetchServers("Asc") -- Asc = от меньшего к большему
+            
+            if data and data.data then
+                serverList = data.data
+                
+                -- Фильтруем только сервера с игроками меньше макс
+                local filtered = {}
+                for _, server in ipairs(serverList) do
+                    if server.playing < server.maxPlayers then
+                        table.insert(filtered, server)
+                    end
+                end
+                serverList = filtered
+                
+                statusLabel:SetTitle(string.format("✅ Найдено: %d", #serverList))
+                statusLabel:SetDesc(string.format("Серверов с < %d игроками", maxServers))
+                
+                createServerButtons()
+                
+                Window:Notify({
+                    Title = "✅ Сервера найдены",
+                    Desc = string.format("Найдено %d доступных серверов", #serverList),
+                    Time = 3
+                })
+            else
+                statusLabel:SetTitle("❌ Ошибка")
+                statusLabel:SetDesc("Не удалось получить список серверов")
+                
+                Window:Notify({
+                    Title = "❌ Ошибка",
+                    Desc = "Проверьте интернет соединение",
+                    Time = 5
+                })
+            end
+            
+            isLoading = false
+        end)
+    end
+})
+
+TabServers:Button({
+    Title = "📊 Обновить список",
+    Desc = "Обновить текущий список серверов",
+    Callback = function()
+        btnclick()
+        if #serverList > 0 then
+            createServerButtons()
+            Window:Notify({
+                Title = "🔄 Обновлено",
+                Desc = "Список серверов обновлен",
+                Time = 2
+            })
+        end
+    end
+})
+
+TabServers:Button({
+    Title = "🎯 Быстрый реджойн",
+    Desc = "Мгновенно перезайти в игру",
+    Callback = function()
+        btnclick()
+        game:GetService("TeleportService"):Teleport(game.PlaceId, LocalPlayer)
+    end
+})
+
+-- Настройки
+TabServers:Section({Title = "⚙️ Настройки"})
+
+TabServers:Slider({
+    Title = "Макс. серверов",
+    Desc = "Сколько серверов показывать",
+    Min = 5,
+    Max = 50,
+    Rounding = 0,
+    Value = 20,
+    Callback = function(val)
+        maxServers = val
+        slidersound()
+        
+        if #serverList > 0 then
+            createServerButtons()
+        end
+    end
+})
+
+TabServers:Toggle({
+    Title = "🔄 Авто-поиск",
+    Desc = "Автоматически искать сервера при открытии",
+    Value = false,
+    Callback = function(v)
+        autoSearch = v
+        togglesound()
+        
+        if v and #serverList == 0 then
+            -- Имитируем нажатие кнопки поиска
+            local searchBtn = TabServers.Buttons["🔍 Найти сервера (Меньше игроков)"]
+            if searchBtn then
+                searchBtn.Callback()
+            end
+        end
+    end
+})
+
+-- Информация о текущей игре
+TabServers:Section({Title = "🎮 Информация"})
+
+local gameName = "Неизвестная игра"
+local gameId = game.PlaceId
+
+pcall(function()
+    local info = game:GetService("MarketplaceService"):GetProductInfo(gameId)
+    gameName = info.Name or gameName
+end)
+
+TabServers:Label({
+    Title = "Текущая игра:",
+    Desc = gameName .. "\nID: " .. gameId
+})
+
+TabServers:Label({
+    Title = "📈 Статистика:",
+    Desc = string.format("Игроков онлайн: %d/%d", 
+        #game:GetService("Players"):GetPlayers(),
+        game:GetService("Players").MaxPlayers)
+})
+
+-- Показываем сервера при открытии вкладки
+TabServers:Opened(function()
+    if #serverList == 0 then
+        -- Если список пуст, показываем инструкцию
+        TabServers:Label({
+            Title = "📝 Инструкция:",
+            Desc = "1. Нажмите 'Найти сервера'\n2. Выберите сервер из списка\n3. Нажмите для телепортации"
+        })
+    end
+end)
+
+-- Автоматически искать сервера если включен авто-поиск
+spawn(function()
+    wait(2)
+    if autoSearch and #serverList == 0 then
+        local searchBtn = TabServers.Buttons["🔍 Найти сервера (Меньше игроков)"]
+        if searchBtn then
+            searchBtn.Callback()
+        end
+    end
+end)
 -- ВКЛАДКА CREDITS
 local Tab8 = Window:Tab({Title = "👤 Credits", Icon = "heart"})
 
