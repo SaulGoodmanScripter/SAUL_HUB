@@ -121,6 +121,11 @@ end
 -- ВКЛАДКА MAIN
 local Tab = Window:Tab({Title = "🎮 Main", Icon = "house"})
 
+Tab:Section({Title = "Welcome"})
+Tab:Label({
+    Title = "Saul Hub",
+    Desc = "Welcome to Saul Hib! "..localPlayer.Name.." Thanks for using script!"
+
 Tab:Section({Title = "👤 Character management"})
 
 local walkSpeed = 16
