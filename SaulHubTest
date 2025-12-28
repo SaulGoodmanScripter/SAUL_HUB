@@ -1488,11 +1488,11 @@ spawn(function()
         })
     end
 end)
-
+ 
 -- ВКЛАДКА AUTO SCRIPTS
 local Tab7 = Window:Tab({Title = "🎯 Auto-scripts", Icon = "bell"})
 
--- ПОЛНАЯ БАЗА ДАННЫХ (ВСЕ ССЫЛКИ КАК БЫЛО)
+-- ВСЯ БАЗА ДАННЫХ (полностью)
 local GameDatabase = {
     ["99_nights"] = {
         name = "99 Nights in Forest",
@@ -1633,7 +1633,7 @@ local function loadScriptSafe(url)
     end
 end
 
--- 1. АВТОПОИСК ТЕКУЩЕЙ ИГРЫ
+-- 1. АВТОПОИСК (КАК БЫЛО)
 Tab7:Section({Title = "🔍 Auto-Search Current Game"})
 
 local currentGameId = game.PlaceId
@@ -1681,145 +1681,73 @@ else
     
     Tab7:Label({
         Title = "❌ Game Not Found",
-        Desc = gameName .. "\nID: " .. currentGameId .. "\nSearch for it below"
-    })
-    
-    Tab7:Button({
-        Title = "📋 Copy Game ID",
-        Desc = "Copy to clipboard",
-        Callback = function()
-            setclipboard(tostring(currentGameId))
-            Window:Notify({
-                Title = "📋 Copied",
-                Desc = "Game ID copied!",
-                Time = 3
-            })
-        end
+        Desc = gameName .. "\nID: " .. currentGameId .. "\nCheck games below"
     })
 end
 
--- 2. ПОИСК ИГР (ВРУЧНУЮ)
-Tab7:Section({Title = "🔎 Search Games Manually"})
+-- 2. ВСЕ ИГРЫ И ИХ СКРИПТЫ (ПРОСТО ВЫВОДИМ ВСЕ)
+Tab7:Section({Title = "📚 All Games & Scripts"})
 
--- Создаем список ВСЕХ игр для поиска
-local allGamesList = {}
-for _, gameData in pairs(GameDatabase) do
-    table.insert(allGamesList, gameData.name)
-end
-
-table.sort(allGamesList)
-
--- Dropdown с ВСЕМИ играми
-local gameDropdown = Tab7:Dropdown({
-    Title = "Select Game",
-    Desc = "Choose from " .. #allGamesList .. " games",
-    List = allGamesList,
-    Value = "",
-    Multi = false,
-    Callback = function(selectedGameName)
-        if selectedGameName and selectedGameName ~= "" then
-            -- Находим выбранную игру
-            local foundGameData = nil
-            for _, gameData in pairs(GameDatabase) do
-                if gameData.name == selectedGameName then
-                    foundGameData = gameData
-                    break
-                end
-            end
-            
-            if foundGameData then
-                -- Создаем новую секцию для этой игры
-                local gameSection = Tab7:Section({
-                    Title = "🎮 " .. foundGameData.name,
-                    Desc = #foundGameData.scripts .. " scripts available"
-                })
-                
-                -- Показываем ВСЕ скрипты этой игры
-                for _, script in ipairs(foundGameData.scripts) do
-                    gameSection:Code({
-                        Title = script.title,
-                        Code = "loadstring(game:HttpGet('" .. script.url .. "'))()"
-                    })
-                    
-                    gameSection:Button({
-                        Title = "🚀 Load " .. script.title,
-                        Desc = "Click to auto-load",
-                        Callback = function()
-                            loadScriptSafe(script.url)
-                        end
-                    })
-                end
-            end
-        end
-    end
-})
-
--- 3. ВСЕ ИГРЫ СПИСКОМ (КЛИКАБЕЛЬНЫЕ)
-Tab7:Section({Title = "📚 All Games (" .. #allGamesList .. ")"})
-
-Tab7:Label({
-    Title = "Click any game to see its scripts:",
-    Desc = ""
-})
-
--- Выводим ВСЕ игры как кнопки
-for _, gameName in ipairs(allGamesList) do
-    -- Находим данные игры
-    local gameData = nil
-    for _, data in pairs(GameDatabase) do
-        if data.name == gameName then
-            gameData = data
-            break
-        end
-    end
+-- Просто выводим ВСЕ игры по очереди
+for gameKey, gameData in pairs(GameDatabase) do
+    -- Игра
+    Tab7:Label({
+        Title = "🎮 " .. gameData.name,
+        Desc = "Game ID(s): " .. table.concat(gameData.placeIds, ", ")
+    })
     
-    if gameData then
+    -- ВСЕ скрипты для этой игры
+    for _, script in ipairs(gameData.scripts) do
+        Tab7:Code({
+            Title = script.title,
+            Code = "loadstring(game:HttpGet('" .. script.url .. "'))()"
+        })
+        
         Tab7:Button({
-            Title = gameName,
-            Desc = #gameData.scripts .. " scripts",
+            Title = "🚀 " .. script.title,
+            Desc = "Load " .. script.title,
             Callback = function()
-                -- При клике показываем скрипты этой игры
-                local scriptsSection = Tab7:Section({
-                    Title = "📜 " .. gameName,
-                    Desc = "All available scripts"
-                })
-                
-                -- Показываем ВСЕ скрипты
-                for _, script in ipairs(gameData.scripts) do
-                    scriptsSection:Code({
-                        Title = script.title,
-                        Code = "loadstring(game:HttpGet('" .. script.url .. "'))()"
-                    })
-                    
-                    scriptsSection:Button({
-                        Title = "🚀 Load " .. script.title,
-                        Desc = "Auto load script",
-                        Callback = function()
-                            loadScriptSafe(script.url)
-                        end
-                    })
-                end
+                loadScriptSafe(script.url)
             end
         })
     end
+    
+    -- Разделитель между играми
+    Tab7:Label({
+        Title = "─",
+        Desc = ""
+    })
 end
 
--- 4. ИНФОРМАЦИЯ
-Tab7:Section({Title = "ℹ️ Information"})
+-- 3. ИНФО О ТЕКУЩЕЙ ИГРЕ
+Tab7:Section({Title = "ℹ️ Current Game Info"})
+
+local currentGameName = "Unknown Game"
+pcall(function()
+    currentGameName = MarketplaceService:GetProductInfo(currentGameId).Name
+end)
 
 Tab7:Label({
-    Title = "Current Game ID:",
+    Title = "Current Game:",
+    Desc = currentGameName
+})
+
+Tab7:Label({
+    Title = "Game ID:",
     Desc = tostring(currentGameId)
 })
 
-Tab7:Label({
-    Title = "Total Games in Database:",
-    Desc = #allGamesList .. " games"
-})
-
-Tab7:Label({
-    Title = "How it works:",
-    Desc = "1. Auto-search checks current game\n2. If not found, use search dropdown\n3. Or click any game from list below"
+Tab7:Button({
+    Title = "📋 Copy Game ID",
+    Desc = "Copy to clipboard",
+    Callback = function()
+        setclipboard(tostring(currentGameId))
+        Window:Notify({
+            Title = "📋 Copied",
+            Desc = "Game ID copied!",
+            Time = 3
+        })
+    end
 })
 -- ВКЛАДКА LOW POP SERVERS (встроенная в UI)
 local TabServers = Window:Tab({Title = "🌐 Low Pop", Icon = "users"})
