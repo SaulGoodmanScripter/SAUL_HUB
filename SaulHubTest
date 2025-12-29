@@ -1704,40 +1704,194 @@ end)
 -- CREDITS TAB
 local Tab8 = Window:Tab({Title = "Credits", Icon = "heart"})
 
-Tab8:Section({Title = "Developers"})
+Tab8:Section({Title = "Development Team"})
 
 Tab8:Label({
-    Title = "Saul Goodman",
-    Desc = "Creator and main developer\nTelegram: @SaulGoodmanScript"
+    Title = "Creator & Main Developer",
+    Desc = "Saul Goodman\nTelegram: @SaulGoodmanScript"
 })
 
 Tab8:Button({
     Title = "Copy Telegram",
+    Desc = "Copy Telegram link to clipboard",
     Callback = function()
+        btnclick()
         setclipboard("https://t.me/SaulGoodmanScript")
         Window:Notify({
             Title = "Copied",
-            Desc = "Link copied",
+            Desc = "Telegram link copied",
             Time = 3
         })
     end
 })
 
 Tab8:Label({
-    Title = "Lori Script",
-    Desc = "Project partner\nTelegram: @loriscript"
+    Title = "Project Partner",
+    Desc = "Lori Script\nTelegram: @loriscript"
 })
 
 Tab8:Button({
     Title = "Copy Telegram",
+    Desc = "Copy Telegram link to clipboard",
     Callback = function()
+        btnclick()
         setclipboard("https://t.me/loriscript")
         Window:Notify({
             Title = "Copied",
-            Desc = "Link copied",
+            Desc = "Telegram link copied",
             Time = 3
         })
     end
+})
+
+Tab8:Section({Title = "Social Links & Repositories"})
+
+-- GitHub
+Tab8:Label({
+    Title = "GitHub",
+    Desc = "All source code and repositories"
+})
+
+Tab8:Button({
+    Title = "Visit GitHub",
+    Desc = "Open GitHub profile",
+    Callback = function()
+        btnclick()
+        setclipboard("https://github.com/SaulGoodmanScripter/")
+        Window:Notify({
+            Title = "GitHub",
+            Desc = "Link copied to clipboard\nOpening in browser...",
+            Time = 4
+        })
+        
+        -- Пытаемся открыть в браузере
+        pcall(function()
+            local HttpService = game:GetService("HttpService")
+            HttpService:GetAsync("https://github.com/SaulGoodmanScripter/", true)
+        end)
+    end
+})
+
+-- ScriptBlox
+Tab8:Label({
+    Title = "ScriptBlox",
+    Desc = "Published scripts and tools"
+})
+
+Tab8:Button({
+    Title = "Visit ScriptBlox",
+    Desc = "Open ScriptBlox profile",
+    Callback = function()
+        btnclick()
+        setclipboard("https://scriptblox.com/u/SaulGoodmanScripter")
+        Window:Notify({
+            Title = "ScriptBlox",
+            Desc = "Link copied to clipboard\nOpening in browser...",
+            Time = 4
+        })
+        
+        pcall(function()
+            local HttpService = game:GetService("HttpService")
+            HttpService:GetAsync("https://scriptblox.com/u/SaulGoodmanScripter", true)
+        end)
+    end
+})
+
+-- Все ссылки в одном месте
+Tab8:Section({Title = "Quick Links"})
+
+Tab8:Button({
+    Title = "Copy All Links",
+    Desc = "Copy all social links at once",
+    Callback = function()
+        btnclick()
+        local allLinks = [[Saul Goodman Links:
+        
+Telegram: https://t.me/SaulGoodmanScript
+GitHub: https://github.com/SaulGoodmanScripter/
+ScriptBlox: https://scriptblox.com/u/SaulGoodmanScripter
+        
+Lori Script:
+Telegram: https://t.me/loriscript]]
+        
+        setclipboard(allLinks)
+        Window:Notify({
+            Title = "All Links Copied",
+            Desc = "All social links copied to clipboard",
+            Time = 5
+        })
+    end
+})
+
+Tab8:Section({Title = "Project Information"})
+
+Tab8:Label({
+    Title = "Saul Hub",
+    Desc = "Universal Roblox admin panel\nVersion: 4.0 (Admin Panel Edition)"
+})
+
+Tab8:Label({
+    Title = "Status",
+    Desc = "🟢 Online | ⚡ All modules active"
+})
+
+Tab8:Label({
+    Title = "Statistics",
+    Desc = "Players in server: " .. #Players:GetPlayers() .. "/" .. Players.MaxPlayers .. 
+           "\nGame ID: " .. game.PlaceId
+})
+
+-- Кнопка поддержки
+Tab8:Section({Title = "Support"})
+
+Tab8:Button({
+    Title = "Report Issue",
+    Desc = "Report bug or suggest feature",
+    Callback = function()
+        btnclick()
+        local issueMessage = [[Saul Hub Issue Report:
+        
+Game: PlaceID ]] .. game.PlaceId .. [[
+Time: ]] .. os.date("%Y-%m-%d %H:%M:%S") .. [[
+        
+Issue Description:
+]]
+        
+        setclipboard(issueMessage)
+        Window:Notify({
+            Title = "Report Template",
+            Desc = "Template copied to clipboard\nDescribe issue and send to developer",
+            Time = 5
+        })
+    end
+})
+
+Tab8:Button({
+    Title = "Check for Updates",
+    Desc = "Get latest version",
+    Callback = function()
+        btnclick()
+        Window:Notify({
+            Title = "Updates",
+            Desc = "Current: v4.0\nCheck GitHub for new releases",
+            Time = 4
+        })
+        
+        setclipboard("https://github.com/SaulGoodmanScripter/SaulHub")
+    end
+})
+
+-- Информация о библиотеке
+Tab8:Section({Title = "Technical"})
+
+Tab8:Label({
+    Title = "UI Library",
+    Desc = "Custom library by Saul Goodman\nOptimized for admin panels"
+})
+
+Tab8:Label({
+    Title = "Last Updated",
+    Desc = os.date("%Y-%m-%d")
 })
 
 Tab8:Section({Title = "Technical Information"})
