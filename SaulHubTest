@@ -324,7 +324,7 @@ Tab2:Button({
     Desc = "Open flight menu",
     Callback = function()
         btnclick()
-        loadstring(game:HttpGet("https://raw.githubusercontent.com/OBFhm5650lol/F/main/F"))()
+        loadstring(game:HttpGet("https://raw.githubusercontent.com/SaulGoodmanScripter/Utilit/refs/heads/main/Fly"))()
     end
 })
 
